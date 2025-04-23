@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: Pousada
+  jpa:
+    database: postgresql
+    hibernate:
+      ddl-auto: create
+    show-sql: on
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/pousada
+    username: postgres
+    password: root
+
+server:
+  port: 8081
