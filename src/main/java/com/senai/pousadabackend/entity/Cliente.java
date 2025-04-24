@@ -1,5 +1,6 @@
 package com.senai.pousadabackend.entity;
 
+import com.senai.pousadabackend.entity.enums.Sexo;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -31,6 +32,10 @@ public class Cliente {
 
     @Column
     private String celular;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Sexo sexo;
 
     @JoinColumn(name = "endereco_id")
     @ManyToOne(fetch = FetchType.LAZY)
