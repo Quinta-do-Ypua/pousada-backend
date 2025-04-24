@@ -1,30 +1,15 @@
 package com.senai.pousadabackend.service.cliente;
 
 import com.senai.pousadabackend.entity.Cliente;
+import com.senai.pousadabackend.repository.ClienteRepository;
+import com.senai.pousadabackend.service.BaseServiceImpl;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ClienteServiceProxy implements ClienteService {
+public class ClienteServiceProxy extends BaseServiceImpl<Cliente, Long, ClienteRepository> implements ClienteService {
 
-    private final ClienteServiceImpl clienteService;
-
-    public ClienteServiceProxy(ClienteServiceImpl clienteService) {
-        this.clienteService = clienteService;
-    }
-
-    @Override
-    public Cliente salvar(Cliente cliente) {
-        return clienteService.salvar(cliente);
-    }
-
-    @Override
-    public Cliente buscarPorId(Long id) {
-        return clienteService.buscarPorId(id);
-    }
-
-    @Override
-    public Cliente excluir(Long id) {
-        return clienteService.excluir(id);
+    public ClienteServiceProxy(ClienteRepository repo) {
+        super(repo);
     }
 
 }
