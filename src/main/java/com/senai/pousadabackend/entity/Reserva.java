@@ -35,6 +35,9 @@ public class Reserva {
     @Enumerated(EnumType.STRING)
     private StatusDaReserva status;
 
+    @Column
+    private String observacao;
+
     @Column(nullable = false)
     private LocalDateTime checkIn;
 
