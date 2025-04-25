@@ -8,4 +8,6 @@ public interface BaseService<T, ID> {
 
     T excluir(ID id);
 
+    T alterar(T t);
+
 }
