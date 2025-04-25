@@ -1,5 +1,6 @@
 package com.senai.pousadabackend.entity;
 
+import com.senai.pousadabackend.entity.enums.StatusDaReserva;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,6 +30,10 @@ public class Reserva {
 
     @Column
     private BigDecimal valorComplementos;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private StatusDaReserva status;
 
     @Column(nullable = false)
     private LocalDateTime checkIn;
