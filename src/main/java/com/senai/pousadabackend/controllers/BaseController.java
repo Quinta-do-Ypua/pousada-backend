@@ -26,4 +26,9 @@ public class BaseController<T, ID> {
         return baseService.excluir(id);
     }
 
+    @PutMapping
+    public T alterarPorId(@RequestBody T t) {
+        return baseService.alterar(t);
+    }
+
 }
