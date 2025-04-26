@@ -12,6 +12,8 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 
+import java.time.LocalDate;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -33,11 +35,11 @@ public class Cupom {
     private String nome;
 
     @Column(name = "data-inicio", nullable = false)
-    private String dataDeInicio;
+    private LocalDate dataDeInicio;
 
     @Column(name = "data-vencimento", nullable = false)
-    private String dataDeVencimento;
+    private LocalDate dataDeVencimento;
 
     @Column(name = "porcentagem-desconto", nullable = false)
-    private String porcentagemDeDesconto;
+    private Double porcentagemDeDesconto;
 }
