@@ -1,17 +1,17 @@
 package com.senai.pousadabackend.controllers;
 
-import com.senai.pousadabackend.entity.Endereco;
+import com.senai.pousadabackend.dto.ComplementoDTO;
+import com.senai.pousadabackend.dto.UsuarioDTO;
 import com.senai.pousadabackend.service.BaseServiceInterface;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("enderecos")
-public class EnderecoController extends BaseController<Endereco, Long> {
+@RequestMapping("complementos")
+public class ComplementoController extends BaseController<ComplementoDTO, Long> {
 
-    public EnderecoController(@Qualifier("enderecoServiceImpl") BaseServiceInterface<Endereco, Long> baseServiceInterface) {
+    public ComplementoController(@Qualifier("complementoServiceProxy") BaseServiceInterface<ComplementoDTO, Long> baseServiceInterface) {
         super(baseServiceInterface);
     }
-
 }

@@ -1,7 +1,7 @@
 package com.senai.pousadabackend.service.cliente;
 
 import com.senai.pousadabackend.entity.Cliente;
-import com.senai.pousadabackend.service.BaseService;
+import com.senai.pousadabackend.service.BaseServiceInterface;
 
-public interface ClienteService extends BaseService<Cliente, Long> {
+public interface ClienteService extends BaseServiceInterface<Cliente, Long> {
 }
