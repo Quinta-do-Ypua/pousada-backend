@@ -1,6 +1,8 @@
 package com.senai.pousadabackend.controllers;
 
 import com.senai.pousadabackend.service.BaseServiceInterface;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 public class BaseController<T, ID> {
@@ -29,6 +31,11 @@ public class BaseController<T, ID> {
     @PutMapping
     public T alterarPorId(@RequestBody T t) {
         return baseServiceInterface.alterar(t);
+    }
+
+    @GetMapping
+    public Page<T> buscarPorSpecification(String parametro, Pageable pageable) {
+        return baseServiceInterface.buscarPorSpecification(parametro, pageable);
     }
 
 }

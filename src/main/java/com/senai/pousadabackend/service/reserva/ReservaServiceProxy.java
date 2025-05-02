@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 public class ReservaServiceProxy extends BaseService<Reserva, Long, ReservaRepository> implements ReservaService {
 
     private final ReservaService reservaService;
+
     public ReservaServiceProxy(ReservaRepository repo, @Qualifier("reservaServiceProxy") ReservaService reservaService) {
         super(repo);
         this.reservaService = reservaService;
