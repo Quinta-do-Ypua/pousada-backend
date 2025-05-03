@@ -11,7 +11,7 @@ public class ReservaServiceProxy extends BaseService<Reserva, Long, ReservaRepos
 
     private final ReservaService reservaService;
 
-    public ReservaServiceProxy(ReservaRepository repo, @Qualifier("reservaServiceProxy") ReservaService reservaService) {
+    public ReservaServiceProxy(ReservaRepository repo, @Qualifier("reservaServiceImpl") ReservaService reservaService) {
         super(repo);
         this.reservaService = reservaService;
     }
