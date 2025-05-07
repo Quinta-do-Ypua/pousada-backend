@@ -28,8 +28,4 @@ public class Quarto {
     @Column(nullable = false)
     private BigDecimal valorDiaria;
 
-    @JoinColumn(name = "cliente_id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Cliente cliente;
-
 }

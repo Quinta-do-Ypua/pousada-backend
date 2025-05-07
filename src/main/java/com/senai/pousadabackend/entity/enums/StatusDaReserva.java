@@ -1,8 +1,8 @@
 package com.senai.pousadabackend.entity.enums;
 
 public enum StatusDaReserva {
-    Aberta,
-    Fechada,
-    Cancelada,
-    Concluida
+    ABERTA,
+    FECHADA,
+    CANCELADA,
+    CONCLUIDA
 }

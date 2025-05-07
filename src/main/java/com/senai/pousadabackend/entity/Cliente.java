@@ -10,8 +10,8 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Cliente {
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
+public class Cliente extends EntityAudit{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
