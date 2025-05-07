@@ -38,7 +38,7 @@ public class Usuario {
     @Column(name = "senha", nullable = false)
     private String senha;
 
-    private Set<Role> permissoes;
+//    private Set<Role> permissoes;
 
     public boolean isNovo() {
         return getId() == null;

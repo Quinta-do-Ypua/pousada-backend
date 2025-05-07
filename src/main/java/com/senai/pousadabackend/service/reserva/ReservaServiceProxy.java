@@ -1,10 +1,13 @@
 package com.senai.pousadabackend.service.reserva;
 
+import com.senai.pousadabackend.entity.Quarto;
 import com.senai.pousadabackend.entity.Reserva;
 import com.senai.pousadabackend.repository.ReservaRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
 import com.senai.pousadabackend.service.BaseService;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Service
 public class ReservaServiceProxy extends BaseService<Reserva, Long, ReservaRepository> implements ReservaService {
@@ -19,5 +22,10 @@ public class ReservaServiceProxy extends BaseService<Reserva, Long, ReservaRepos
     @Override
     public Reserva cancelarPorId(Long id) {
         return reservaService.cancelarPorId(id);
+    }
+
+    @Override
+    public Reserva salvar(Reserva reserva) {
+        return super.salvar(reserva);
     }
 }

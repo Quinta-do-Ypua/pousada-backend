@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "reservas")
@@ -13,8 +14,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Reserva {
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
+public class Reserva extends EntityAudit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +27,13 @@ public class Reserva {
     private Quarto quarto;
 
     @Column(nullable = false)
-    private BigDecimal valorDoQuarto;
+    private BigDecimal valorTotalDoQuarto;
+
+    @Column(nullable = false)
+    private BigDecimal valorDaDiariaDoQuarto;
+
+    @Column(nullable = false)
+    private BigDecimal valorDaReserva;
 
     @Column
     private BigDecimal valorComplementos;
@@ -43,5 +50,17 @@ public class Reserva {
 
     @Column(nullable = false)
     private LocalDateTime checkOut;
+
+    @JoinColumn(name = "cliente_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Cliente cliente;
+
+    @JoinTable(
+            name = "reserva_complemento",
+            joinColumns = @JoinColumn(name = "reserva_id"),
+            inverseJoinColumns = @JoinColumn(name = "complemento_id"))
+    @ManyToMany(fetch = FetchType.LAZY)
+    private List<Complemento> complementos;
+
 
 }
