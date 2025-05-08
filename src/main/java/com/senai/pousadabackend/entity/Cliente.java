@@ -21,16 +21,13 @@ public class Cliente extends EntityAudit{
     @Column(nullable = false)
     private String nome;
 
-    @Column
+    @Column(nullable = false)
     private String cpf;
 
     @Column(nullable = false)
     private String email;
 
     @Column(nullable = false)
-    private String senha;
-
-    @Column
     private String celular;
 
     @Column(nullable = false)
@@ -38,7 +35,7 @@ public class Cliente extends EntityAudit{
     private Sexo sexo;
 
     @JoinColumn(name = "endereco_id")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Endereco endereco;
 
 }

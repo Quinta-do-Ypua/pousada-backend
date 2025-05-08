@@ -19,6 +19,7 @@ public class BaseService<T, ID, R extends BaseRepository<T, ID>> implements Base
     public BaseService(R repo) {
         this.repo = repo;
     }
+
     @Override
     public T salvar(T t) {
         return repo.save(t);

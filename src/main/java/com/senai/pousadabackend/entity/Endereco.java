@@ -23,6 +23,9 @@ public class Endereco {
     @Column(nullable = false)
     private String estado;
 
+    @Column(nullable = false)
+    private String rua;
+
     @Column
     private String cep;
 
@@ -34,4 +37,5 @@ public class Endereco {
 
     @Column
     private String complemento;
+
 }
