@@ -4,6 +4,8 @@ import com.senai.pousadabackend.entity.enums.Sexo;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "clientes")
 @Data
@@ -29,6 +31,9 @@ public class Cliente extends EntityAudit{
 
     @Column(nullable = false)
     private String celular;
+
+    @Column(nullable = false, name = "data_de_nascimento")
+    private LocalDate dataDeNascimento;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
