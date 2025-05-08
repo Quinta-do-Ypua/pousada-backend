@@ -1,41 +1,45 @@
 package com.senai.pousadabackend.controllers;
 
+import com.senai.pousadabackend.mappers.BaseMapper;
 import com.senai.pousadabackend.service.BaseServiceInterface;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
-public class BaseController<T, ID> {
+public class BaseController<T, DTO, ID, Mapper extends BaseMapper<T, DTO>> {
+
+    private final Mapper mapper;
 
     private final BaseServiceInterface<T, ID> baseServiceInterface;
 
-    public BaseController(BaseServiceInterface<T, ID> baseServiceInterface) {
+    public BaseController(Mapper mapper, BaseServiceInterface<T, ID> baseServiceInterface) {
+        this.mapper = mapper;
         this.baseServiceInterface = baseServiceInterface;
     }
 
     @PostMapping
-    public T salvar(@RequestBody T t) {
-        return baseServiceInterface.salvar(t);
+    public DTO salvar(@RequestBody T t) {
+        return mapper.toDTO(baseServiceInterface.salvar(t));
     }
 
     @GetMapping("/{id}")
-    public T buscarPorId(@PathVariable(name = "id") ID id) {
-        return baseServiceInterface.buscarPorId(id);
+    public DTO buscarPorId(@PathVariable(name = "id") ID id) {
+        return mapper.toDTO(baseServiceInterface.buscarPorId(id));
     }
 
     @DeleteMapping("/{id}")
-    public T deletarPorId(@PathVariable(name = "id") ID id) {
-        return baseServiceInterface.excluir(id);
+    public DTO deletarPorId(@PathVariable(name = "id") ID id) {
+        return mapper.toDTO(baseServiceInterface.excluir(id));
     }
 
     @PutMapping
-    public T alterarPorId(@RequestBody T t) {
-        return baseServiceInterface.alterar(t);
+    public DTO alterarPorId(@RequestBody T t) {
+        return mapper.toDTO(baseServiceInterface.alterar(t));
     }
 
     @GetMapping
-    public Page<T> buscarPorSpecification(String parametro, Pageable pageable) {
-        return baseServiceInterface.buscarPorSpecification(parametro, pageable);
+    public Page<DTO> buscarPorSpecification(String parametro, Pageable pageable) {
+        return baseServiceInterface.buscarPorSpecification(parametro, pageable).map(mapper::toDTO);
     }
 
 }
