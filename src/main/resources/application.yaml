@@ -15,3 +15,6 @@ spring:
     password: ${DB_PASSWORD}
 server:
   port: 8081
+sendgrid:
+  email: ${SENGRID_EMAIL}
+  key: ${SENDGRID_KEY}
