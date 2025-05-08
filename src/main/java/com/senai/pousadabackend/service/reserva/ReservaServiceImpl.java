@@ -14,91 +14,98 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.Duration;
-import java.util.Objects;
 
 @Service
 public class ReservaServiceImpl extends BaseService<Reserva, Long, ReservaRepository> implements ReservaService {
 
     private final ReservaRepository reservaRepository;
 
-    public ReservaServiceImpl(ReservaRepository repo, ReservaRepository reservaRepository) {
+    public ReservaServiceImpl(ReservaRepository repo, ReservaRepository reservaRepository, ReservaRepository reservaRepository1) {
         super(repo);
-        this.reservaRepository = reservaRepository;
-    }
-
-    @Override
-    public Reserva salvar(Reserva reserva) {
-
-        if (reserva.isNovo()) {
-            checarSePodeReservar(reserva);
-            prepararReservaNova(reserva);
-        }
-
-        return super.salvar(reserva);
+        this.reservaRepository = reservaRepository1;
     }
 
     @Override
     public Reserva cancelarPorId(Long id) {
         Reserva reserva = buscarPorId(id);
-        checarSeReservaPodeCancelar(reserva);
+        validarCancelamento(reserva);
         reserva.setStatus(StatusDaReserva.CANCELADA);
         this.salvar(reserva);
         return reserva;
     }
 
-    private void checarSeReservaPodeCancelar(Reserva reserva) {
-        if (reserva.getStatus().equals(StatusDaReserva.CONCLUIDA)
-                || reserva.getStatus().equals(StatusDaReserva.FECHADA))
-            throw new CancelamentoDeReservaConcluidaException();
+    private void validarNovaReserva(Reserva reserva) {
+        validarDatas(reserva);
+        validarStatusInicial(reserva);
+        validarDisponibilidadeDoQuarto(reserva);
+        validarPendenciasDoCliente(reserva.getCliente());
     }
 
-    private void prepararReservaNova(Reserva reserva) {
-        if (Objects.isNull(reserva.getStatus())) {
-            reserva.setStatus(StatusDaReserva.ABERTA);
-        } else {
-            if (reserva.getStatus().equals(StatusDaReserva.CANCELADA)
-                    || reserva.getStatus().equals(StatusDaReserva.FECHADA))
-                throw new CancelamentoDeReservaConcluidaException("Não é possível criar uma reserva cancelada ou fechada.");
+    private void inicializarReserva(Reserva reserva) {
+        definirStatusPadrao(reserva);
+        calcularValoresDaReserva(reserva);
+    }
+
+    private void validarCancelamento(Reserva reserva) {
+        if (reserva.getStatus() == StatusDaReserva.CONCLUIDA
+                || reserva.getStatus() == StatusDaReserva.FECHADA) {
+            throw new CancelamentoDeReservaConcluidaException();
+        }
+    }
+
+    private void validarDatas(Reserva reserva) {
+        if (reserva.getCheckIn() == null || reserva.getCheckOut() == null) {
+            throw new NullPointerException("A data de CheckIn e CheckOut são obrigatórias");
         }
 
+        if (!reserva.getCheckIn().isBefore(reserva.getCheckOut())) {
+            throw new DataDaReservaInvalida();
+        }
+    }
+
+    private void validarStatusInicial(Reserva reserva) {
+        if (reserva.getStatus() == StatusDaReserva.CANCELADA
+                || reserva.getStatus() == StatusDaReserva.FECHADA) {
+            throw new CancelamentoDeReservaConcluidaException("Não é possível criar uma reserva cancelada ou fechada.");
+        }
+    }
+
+    private void validarDisponibilidadeDoQuarto(Reserva reserva) {
+        boolean quartoOcupado = !reservaRepository.findQuartosEntreCheckInECheckOut(
+                reserva.getCheckIn(), reserva.getCheckOut(), reserva.getQuarto()).isEmpty();
+
+        if (quartoOcupado) {
+            throw new ExisteReservaParaEssaDataException();
+        }
+    }
+
+    private void validarPendenciasDoCliente(Cliente cliente) {
+        boolean clienteTemReservaAberta = reservaRepository.findReservaByCliente(cliente).stream()
+                .anyMatch(r -> r.getStatus() == StatusDaReserva.ABERTA);
+
+        if (clienteTemReservaAberta) {
+            throw new ExisteReservaAbertaParaEsseCliente();
+        }
+    }
+
+    private void definirStatusPadrao(Reserva reserva) {
+        if (reserva.getStatus() == null) {
+            reserva.setStatus(StatusDaReserva.ABERTA);
+        }
+    }
+
+    private void calcularValoresDaReserva(Reserva reserva) {
         reserva.setValorDaDiariaDoQuarto(reserva.getQuarto().getValorDiaria());
 
         BigDecimal valorComplementos = reserva.getComplementos().stream()
                 .map(Complemento::getValor)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-
         reserva.setValorComplementos(valorComplementos);
 
         long dias = Duration.between(reserva.getCheckIn(), reserva.getCheckOut()).toDays();
-        reserva.setValorTotalDoQuarto(reserva.getValorDaDiariaDoQuarto().multiply(BigDecimal.valueOf(dias)));
-
+        reserva.setValorTotalDoQuarto(
+                reserva.getValorDaDiariaDoQuarto().multiply(BigDecimal.valueOf(dias))
+        );
     }
 
-
-
-    private void checarSePodeReservar(Reserva reserva) {
-
-        verificarPendenciasDoCliente(reserva.getCliente());
-
-        if (reserva.getCheckIn() == null || reserva.getCheckOut() == null) {
-            throw new NullPointerException("A data de CheckIn e CheckOut são obrigatórias");
-        }
-
-        if (reserva.getCheckIn().isAfter(reserva.getCheckOut())
-                || reserva.getCheckOut().isBefore(reserva.getCheckIn())) {
-            throw new DataDaReservaInvalida();
-        }
-
-        if(!reservaRepository.findQuartosEntreCheckInECheckOut(reserva.getCheckIn(), reserva.getCheckOut(), reserva.getQuarto()).isEmpty())
-            throw new ExisteReservaParaEssaDataException();
-    }
-
-    private void verificarPendenciasDoCliente(Cliente cliente) {
-        var reservas = reservaRepository.findReservaByCliente(cliente);
-        boolean hasReservaAberta = reservas.stream()
-                .anyMatch(r -> r.getStatus() == StatusDaReserva.ABERTA);
-        if (hasReservaAberta) {
-            throw new ExisteReservaAbertaParaEsseCliente();
-        }
-    }
 }
