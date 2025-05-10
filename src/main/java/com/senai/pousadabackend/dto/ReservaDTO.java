@@ -37,6 +37,4 @@ public class ReservaDTO {
 
     private Cliente cliente;
 
-    private List<Complemento> complementos;
-
 }
