@@ -1,8 +1,6 @@
 package com.senai.pousadabackend.service.complemento;
 
 import com.senai.pousadabackend.entity.Complemento;
-import com.senai.pousadabackend.repository.ComplementoRepository;
-import com.senai.pousadabackend.service.BaseService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,10 +9,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class ComplementoServiceProxy implements ComplementoService {
 
-    @Qualifier("complementoServiceImpl")
     private final ComplementoService service;
 
-    public ComplementoServiceProxy(ComplementoService service) {
+    public ComplementoServiceProxy(@Qualifier("complementoServiceImpl") ComplementoService service) {
         this.service = service;
     }
 
