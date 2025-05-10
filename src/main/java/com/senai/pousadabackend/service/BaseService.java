@@ -73,4 +73,9 @@ public class BaseService<T, ID, R extends BaseRepository<T, ID>> implements Base
         return repo.findAll(spec, pageable);
     }
 
+    @Override
+    public Page<T> listarPaginado(Pageable pageable) {
+        return repo.findAll(pageable);
+    }
+
 }

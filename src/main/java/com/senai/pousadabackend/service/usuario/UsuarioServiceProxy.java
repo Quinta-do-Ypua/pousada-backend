@@ -45,4 +45,9 @@ public class UsuarioServiceProxy implements UsuarioService {
     public Page<Usuario> buscarPorSpecification(String parametro, Pageable pageable) {
         return service.buscarPorSpecification(parametro, pageable);
     }
+
+    @Override
+    public Page<Usuario> listarPaginado(Pageable pageable) {
+        return service.listarPaginado(pageable);
+    }
 }

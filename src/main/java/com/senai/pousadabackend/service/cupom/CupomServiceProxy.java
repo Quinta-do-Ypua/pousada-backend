@@ -9,10 +9,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class CupomServiceProxy implements CupomService {
 
-    @Qualifier("cupomServiceImpl")
     private final CupomService service;
 
-    public CupomServiceProxy(CupomService service) {
+    public CupomServiceProxy(@Qualifier("cupomServiceImpl") CupomService service) {
         this.service = service;
     }
 
@@ -44,5 +43,10 @@ public class CupomServiceProxy implements CupomService {
     @Override
     public Page<Cupom> buscarPorSpecification(String parametro, Pageable pageable) {
         return service.buscarPorSpecification(parametro, pageable);
+    }
+
+    @Override
+    public Page<Cupom> listarPaginado(Pageable pageable) {
+        return service.listarPaginado(pageable);
     }
 }

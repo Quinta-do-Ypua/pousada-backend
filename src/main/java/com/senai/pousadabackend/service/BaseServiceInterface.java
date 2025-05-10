@@ -17,4 +17,6 @@ public interface BaseServiceInterface<T, ID> {
 
     Page<T> buscarPorSpecification(String parametro, Pageable pageable);
 
+    Page<T> listarPaginado(Pageable pageable);
+
 }
