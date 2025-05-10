@@ -1,11 +1,7 @@
 package com.senai.pousadabackend.entity;
 
-import jakarta.persistence.Table;
-import jakarta.persistence.Id;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import com.senai.pousadabackend.entity.enums.Status;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -20,7 +16,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Entity(name = "Cupom")
 @Table(name = "cupons")
-public class Cupom {
+public class Cupom extends EntityAudit {
 
     @Id
     @Column(name = "id", nullable = false)
@@ -42,4 +38,16 @@ public class Cupom {
 
     @Column(name = "porcentagem-desconto", nullable = false)
     private Double porcentagemDeDesconto;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private Status status;
+
+    @Column(name = "quantidade-maxima-uso", nullable = false)
+    private Integer quantidadeMaximaDeUso;
+
+    @Transient
+    public boolean isExistente() {
+        return getId() != null;
+    }
 }

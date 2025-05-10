@@ -1,4 +1,4 @@
-package com.senai.pousadabackend.service.Complemento;
+package com.senai.pousadabackend.service.complemento;
 
 import com.senai.pousadabackend.entity.Complemento;
 import com.senai.pousadabackend.service.BaseServiceInterface;

@@ -13,6 +13,8 @@ public interface BaseServiceInterface<T, ID> {
 
     T alterar(T t);
 
+    void isExists(ID id);
+
     Page<T> buscarPorSpecification(String parametro, Pageable pageable);
 
 }

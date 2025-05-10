@@ -55,12 +55,4 @@ public class Reserva extends EntityAudit {
     @ManyToOne(fetch = FetchType.LAZY)
     private Cliente cliente;
 
-    @JoinTable(
-            name = "reserva_complemento",
-            joinColumns = @JoinColumn(name = "reserva_id"),
-            inverseJoinColumns = @JoinColumn(name = "complemento_id"))
-    @ManyToMany(fetch = FetchType.LAZY)
-    private List<Complemento> complementos;
-
-
 }

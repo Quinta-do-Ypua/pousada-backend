@@ -1,4 +1,4 @@
-package com.senai.pousadabackend.service.Cupom;
+package com.senai.pousadabackend.service.cupom;
 
 import com.senai.pousadabackend.entity.Cupom;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -12,7 +12,7 @@ public class CupomServiceProxy implements CupomService {
     @Qualifier("cupomServiceImpl")
     private final CupomService service;
 
-    public CupomServiceProxy(@Qualifier("cupomServiceImpl") CupomService service) {
+    public CupomServiceProxy(CupomService service) {
         this.service = service;
     }
 
@@ -37,7 +37,12 @@ public class CupomServiceProxy implements CupomService {
     }
 
     @Override
+    public void isExists(Long id) {
+        service.isExists(id);
+    }
+
+    @Override
     public Page<Cupom> buscarPorSpecification(String parametro, Pageable pageable) {
-        return null;
+        return service.buscarPorSpecification(parametro, pageable);
     }
 }
