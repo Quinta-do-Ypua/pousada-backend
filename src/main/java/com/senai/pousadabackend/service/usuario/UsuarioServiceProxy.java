@@ -1,4 +1,4 @@
-package com.senai.pousadabackend.service.Usuario;
+package com.senai.pousadabackend.service.usuario;
 
 import com.senai.pousadabackend.entity.Usuario;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -37,7 +37,12 @@ public class UsuarioServiceProxy implements UsuarioService {
     }
 
     @Override
+    public void isExists(Long id) {
+        service.isExists(id);
+    }
+
+    @Override
     public Page<Usuario> buscarPorSpecification(String parametro, Pageable pageable) {
-        return null;
+        return service.buscarPorSpecification(parametro, pageable);
     }
 }

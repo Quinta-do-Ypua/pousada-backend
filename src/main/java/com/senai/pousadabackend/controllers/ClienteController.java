@@ -5,6 +5,7 @@ import com.senai.pousadabackend.entity.Cliente;
 import com.senai.pousadabackend.mappers.ClienteMapper;
 import com.senai.pousadabackend.service.cliente.ClienteService;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 

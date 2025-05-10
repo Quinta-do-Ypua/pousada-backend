@@ -54,6 +54,17 @@ public class BaseService<T, ID, R extends BaseRepository<T, ID>> implements Base
     }
 
     @Override
+    public void isExists(ID id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Para validar a existência o id é obrigatório");
+        }
+
+        if (!repo.existsById(id)) {
+            throw new RegistroNaoEncontradoException("O registro com o id '" + id + "' não foi encontrado");
+        }
+    }
+
+    @Override
     public Page<T> buscarPorSpecification(String parametro, Pageable pageable) {
         if (parametro == null || parametro.isBlank()) {
             return repo.findAll(pageable);

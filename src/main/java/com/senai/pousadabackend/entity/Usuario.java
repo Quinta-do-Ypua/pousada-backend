@@ -1,11 +1,7 @@
 package com.senai.pousadabackend.entity;
 
-import jakarta.persistence.Table;
-import jakarta.persistence.Id;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import com.senai.pousadabackend.entity.enums.Status;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -21,7 +17,7 @@ import java.util.Set;
 @Entity(name = "Usuario")
 @Table(name = "usuarios")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
-public class Usuario {
+public class Usuario extends EntityAudit {
 
     @Id
     @Column(name = "id", nullable = false)
@@ -38,9 +34,20 @@ public class Usuario {
     @Column(name = "senha", nullable = false)
     private String senha;
 
-//    private Set<Role> permissoes;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private Status status;
 
-    public boolean isNovo() {
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "usuario_role",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles;
+
+    @Transient
+    public boolean isExistente() {
         return getId() == null;
     }
 }

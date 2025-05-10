@@ -1,11 +1,7 @@
 package com.senai.pousadabackend.entity;
 
-import jakarta.persistence.Table;
-import jakarta.persistence.Id;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import com.senai.pousadabackend.entity.enums.Status;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -21,7 +17,7 @@ import java.math.BigDecimal;
 @Entity(name = "Complemento")
 @Table(name = "complementos")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
-public class Complemento {
+public class Complemento extends EntityAudit {
 
     @Id
     @Column(name = "id", nullable = false)
@@ -37,4 +33,13 @@ public class Complemento {
 
     @Column(name = "descricao", nullable = false)
     private String descricao;
+
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
+    @Transient
+    public boolean isExistente() {
+        return getId() != null;
+    }
 }

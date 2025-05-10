@@ -97,10 +97,10 @@ public class ReservaServiceImpl extends BaseService<Reserva, Long, ReservaReposi
     private void calcularValoresDaReserva(Reserva reserva) {
         reserva.setValorDaDiariaDoQuarto(reserva.getQuarto().getValorDiaria());
 
-        BigDecimal valorComplementos = reserva.getComplementos().stream()
-                .map(Complemento::getValor)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-        reserva.setValorComplementos(valorComplementos);
+//        BigDecimal valorComplementos = reserva.getComplementos().stream()
+//                .map(Complemento::getValor)
+//                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        //reserva.setValorComplementos(valorComplementos);
 
         long dias = Duration.between(reserva.getCheckIn(), reserva.getCheckOut()).toDays();
         reserva.setValorTotalDoQuarto(
