@@ -15,7 +15,6 @@ public class ReservaMapper implements BaseMapper<Reserva, ReservaDTO> {
                 .quarto(reserva.getQuarto())
                 .valorDaReserva(reserva.getValorDaReserva())
                 .checkIn(reserva.getCheckIn())
-                .complementos(reserva.getComplementos())
                 .checkOut(reserva.getCheckOut())
                 .cliente(reserva.getCliente())
                 .observacao(reserva.getObservacao())
