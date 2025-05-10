@@ -9,10 +9,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class UsuarioServiceProxy implements UsuarioService {
 
-    @Qualifier("usuarioServiceImpl")
     private final UsuarioService service;
 
-    public UsuarioServiceProxy(UsuarioService service) {
+    public UsuarioServiceProxy(@Qualifier("usuarioServiceImpl") UsuarioService service) {
         this.service = service;
     }
 
