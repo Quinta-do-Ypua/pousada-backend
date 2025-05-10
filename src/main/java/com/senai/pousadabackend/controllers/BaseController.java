@@ -4,6 +4,7 @@ import com.senai.pousadabackend.mappers.BaseMapper;
 import com.senai.pousadabackend.service.BaseServiceInterface;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 public class BaseController<T, DTO, ID, Mapper extends BaseMapper<T, DTO>> {
@@ -37,9 +38,14 @@ public class BaseController<T, DTO, ID, Mapper extends BaseMapper<T, DTO>> {
         return mapper.toDTO(baseServiceInterface.alterar(t));
     }
 
-    @GetMapping
+    @GetMapping(params = "search")
     public Page<DTO> buscarPorSpecification(String parametro, Pageable pageable) {
         return baseServiceInterface.buscarPorSpecification(parametro, pageable).map(mapper::toDTO);
+    }
+
+    @GetMapping
+    public Page<DTO> listarPaginado(@PageableDefault(size = 15) Pageable pageable) {
+        return baseServiceInterface.listarPaginado(pageable).map(mapper::toDTO);
     }
 
 }

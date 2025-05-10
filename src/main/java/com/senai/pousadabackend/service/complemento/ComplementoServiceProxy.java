@@ -47,4 +47,10 @@ public class ComplementoServiceProxy implements ComplementoService {
     public Page<Complemento> buscarPorSpecification(String parametro, Pageable pageable) {
         return service.buscarPorSpecification(parametro, pageable);
     }
+
+    @Override
+    public Page<Complemento> listarPaginado(Pageable pageable) {
+        return service.listarPaginado(pageable);
+    }
+
 }
