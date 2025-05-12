@@ -1,5 +1,6 @@
 package com.senai.pousadabackend.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.senai.pousadabackend.entity.enums.Sexo;
 import jakarta.persistence.*;
 import lombok.*;
@@ -32,6 +33,7 @@ public class Cliente extends EntityAudit{
     @Column(nullable = false)
     private String celular;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @Column(nullable = false, name = "data_de_nascimento")
     private LocalDate dataDeNascimento;
 
