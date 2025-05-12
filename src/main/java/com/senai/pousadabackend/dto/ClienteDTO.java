@@ -5,6 +5,8 @@ import com.senai.pousadabackend.entity.enums.Sexo;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDate;
+
 @Data
 @Builder
 public class ClienteDTO {
@@ -21,6 +23,8 @@ public class ClienteDTO {
 
     private Sexo sexo;
 
-    private Endereco endereco;
+    private LocalDate dataDeNascimento;
+
+    private EnderecoDTO endereco;
 
 }
