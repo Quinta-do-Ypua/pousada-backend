@@ -33,7 +33,7 @@ public class BaseController<T, DTO, ID, Mapper extends BaseMapper<T, DTO>> {
         return mapper.toDTO(baseServiceInterface.excluir(id));
     }
 
-    @PutMapping
+    @PutMapping("/{id}")
     public DTO alterarPorId(@RequestBody T t) {
         return mapper.toDTO(baseServiceInterface.alterar(t));
     }
