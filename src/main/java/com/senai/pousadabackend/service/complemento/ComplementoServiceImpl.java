@@ -1,8 +1,6 @@
 package com.senai.pousadabackend.service.complemento;
 
 import com.senai.pousadabackend.entity.Complemento;
-import com.senai.pousadabackend.entity.Cupom;
-import com.senai.pousadabackend.entity.enums.Status;
 import com.senai.pousadabackend.exceptions.BusinessException;
 import com.senai.pousadabackend.repository.ComplementoRepository;
 import com.senai.pousadabackend.service.BaseService;
@@ -20,7 +18,7 @@ public class ComplementoServiceImpl extends BaseService<Complemento, Long, Compl
 
     @Override
     public Complemento salvar(Complemento complemento) {
-        this.validar(complemento);
+        this.validarNomesIguaisDo(complemento);
         return super.salvar(complemento);
     }
 
@@ -32,24 +30,6 @@ public class ComplementoServiceImpl extends BaseService<Complemento, Long, Compl
     @Override
     public Complemento excluir(Long aLong) {
         return null;
-    }
-
-    @Override
-    public Complemento alterar(Complemento complemento) {
-        this.validar(complemento);
-        return super.alterar(complemento);
-    }
-
-    public void validar(Complemento complemento) {
-        if (complemento.isExistente()) {
-            if (Status.I.equals(complemento.getStatus())) {
-                throw new BusinessException("O novo complemento não pode conter o status inativo");
-            }
-        } else {
-            super.isExists(complemento.getId());
-        }
-
-        validarNomesIguaisDo(complemento);
     }
 
     private void validarNomesIguaisDo(Complemento complemento) {

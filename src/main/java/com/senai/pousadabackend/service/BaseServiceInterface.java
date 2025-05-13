@@ -11,12 +11,12 @@ public interface BaseServiceInterface<T, ID> {
 
     T excluir(ID id);
 
-    T alterar(T t);
-
     void isExists(ID id);
 
     Page<T> buscarPorSpecification(String parametro, Pageable pageable);
 
     Page<T> listarPaginado(Pageable pageable);
+
+    Page<T> listarInativos(Pageable pageable);
 
 }

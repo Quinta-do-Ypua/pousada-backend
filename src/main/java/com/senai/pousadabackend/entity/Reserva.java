@@ -6,8 +6,6 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
-
 @Entity
 @Table(name = "reservas")
 @Data
@@ -38,9 +36,9 @@ public class Reserva extends EntityAudit {
     @Column
     private BigDecimal valorComplementos;
 
-    @Column(nullable = false)
+    @Column(name = "status_reserva", nullable = false)
     @Enumerated(EnumType.STRING)
-    private StatusDaReserva status;
+    private StatusDaReserva statusDaReserva;
 
     @Column
     private String observacao;

@@ -1,7 +1,6 @@
 package com.senai.pousadabackend.service.cupom;
 
 import com.senai.pousadabackend.entity.Cupom;
-import com.senai.pousadabackend.entity.enums.Status;
 import com.senai.pousadabackend.exceptions.BusinessException;
 import com.senai.pousadabackend.repository.CupomRepository;
 import com.senai.pousadabackend.service.BaseService;
@@ -25,21 +24,7 @@ public class CupomServiceImpl extends BaseService<Cupom, Long, CupomRepository> 
         return super.salvar(cupom);
     }
 
-    @Override
-    public Cupom alterar(Cupom cupom) {
-        this.validar(cupom);
-        return super.alterar(cupom);
-    }
-
-    public void validar(Cupom cupom) {
-        if (cupom.isExistente()) {
-            if (Status.I.equals(cupom.getStatus())) {
-                throw new BusinessException("O novo cupom não pode conter o status inativo");
-            }
-        } else {
-            super.isExists(cupom.getId());
-        }
-
+    private void validar(Cupom cupom) {
         validarPeriodoDo(cupom);
         validarNomesIguaisDo(cupom);
     }
