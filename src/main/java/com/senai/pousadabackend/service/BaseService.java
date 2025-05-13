@@ -1,5 +1,8 @@
 package com.senai.pousadabackend.service;
 
+import com.senai.pousadabackend.entity.EntityAudit;
+import com.senai.pousadabackend.entity.enums.Status;
+import com.senai.pousadabackend.exceptions.InativoException;
 import com.senai.pousadabackend.exceptions.RegistroNaoEncontradoException;
 import com.senai.pousadabackend.repository.BaseRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +15,7 @@ import java.lang.reflect.Field;
 import static io.github.perplexhub.rsql.RSQLJPASupport.toSpecification;
 
 @Slf4j
-public class BaseService<T, ID, R extends BaseRepository<T, ID>> implements BaseServiceInterface<T, ID> {
+public class BaseService<T extends EntityAudit, ID, R extends BaseRepository<T, ID>> implements BaseServiceInterface<T, ID> {
 
     private final R repo;
 
@@ -22,6 +25,10 @@ public class BaseService<T, ID, R extends BaseRepository<T, ID>> implements Base
 
     @Override
     public T salvar(T t) {
+        if (!t.isNovo()) {
+            return alterar(t);
+        }
+        if (t.getStatus() == null || !t.getStatus().isAtivo()) t.setStatus(Status.ATIVO);
         return repo.save(t);
     }
 
@@ -35,15 +42,17 @@ public class BaseService<T, ID, R extends BaseRepository<T, ID>> implements Base
     @Override
     public T excluir(ID id) {
         T t = buscarPorId(id);
-        repo.deleteById(id);
+        if (t.getStatus() != null && !t.getStatus().isAtivo()) {
+            throw new InativoException(t.getClass().getName() + " já está inativo.");
+        }
+        t.setStatus(Status.INATIVO);
+        t = this.alterar(t);
         return t;
     }
 
-    @Override
-    public T alterar(T t) {
+    private T alterar(T t) {
         try {
             Field field = t.getClass().getDeclaredField("id");
-            field.setAccessible(true);
             ID valorId = (ID) field.get(t);
             buscarPorId(valorId);
             return this.salvar(t);
@@ -52,6 +61,7 @@ public class BaseService<T, ID, R extends BaseRepository<T, ID>> implements Base
             throw new IllegalArgumentException("O campo id é obrigatório no corpo da requisição");
         }
     }
+
 
     @Override
     public void isExists(ID id) {
@@ -76,6 +86,11 @@ public class BaseService<T, ID, R extends BaseRepository<T, ID>> implements Base
     @Override
     public Page<T> listarPaginado(Pageable pageable) {
         return repo.findAll(pageable);
+    }
+
+    @Override
+    public Page<T> listarInativos(Pageable pageable) {
+        return repo.findByStatus(Status.INATIVO, pageable);
     }
 
 }

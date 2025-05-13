@@ -13,6 +13,8 @@ public class BaseController<T, DTO, ID, Mapper extends BaseMapper<T, DTO>> {
 
     private final BaseServiceInterface<T, ID> baseServiceInterface;
 
+    private static final int PAGE_SIZE = 15;
+
     public BaseController(Mapper mapper, BaseServiceInterface<T, ID> baseServiceInterface) {
         this.mapper = mapper;
         this.baseServiceInterface = baseServiceInterface;
@@ -33,19 +35,24 @@ public class BaseController<T, DTO, ID, Mapper extends BaseMapper<T, DTO>> {
         return mapper.toDTO(baseServiceInterface.excluir(id));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping
     public DTO alterarPorId(@RequestBody T t) {
-        return mapper.toDTO(baseServiceInterface.alterar(t));
+        return mapper.toDTO(baseServiceInterface.salvar(t));
     }
 
     @GetMapping(params = "search")
-    public Page<DTO> buscarPorSpecification(String parametro, Pageable pageable) {
-        return baseServiceInterface.buscarPorSpecification(parametro, pageable).map(mapper::toDTO);
+    public Page<DTO> buscarPorSpecification(@RequestParam(name = "search") String search, Pageable pageable) {
+        return baseServiceInterface.buscarPorSpecification(search, pageable).map(mapper::toDTO);
     }
 
     @GetMapping
-    public Page<DTO> listarPaginado(@PageableDefault(size = 15) Pageable pageable) {
+    public Page<DTO> listarPaginado(@PageableDefault(size = PAGE_SIZE) Pageable pageable) {
         return baseServiceInterface.listarPaginado(pageable).map(mapper::toDTO);
+    }
+
+    @GetMapping("inativos")
+    public Page<DTO> listarInativos(@PageableDefault(size = PAGE_SIZE) Pageable pageable) {
+        return baseServiceInterface.listarInativos(pageable).map(mapper::toDTO);
     }
 
 }

@@ -1,9 +1,7 @@
 package com.senai.pousadabackend.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.MappedSuperclass;
-import jakarta.persistence.Transient;
+import com.senai.pousadabackend.entity.enums.Status;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedBy;
@@ -18,6 +16,7 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
+
 public abstract class EntityAudit {
 
     @CreatedDate
@@ -33,6 +32,10 @@ public abstract class EntityAudit {
 
     @LastModifiedBy
     private String alteradoPor;
+
+    @Column(nullable = false, columnDefinition = "VARCHAR(255) DEFAULT 'ATIVO'")
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     public boolean isNovo() {
         return dataCriacao == null;

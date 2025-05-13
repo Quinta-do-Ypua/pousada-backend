@@ -12,8 +12,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Quarto {
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
+public class Quarto extends EntityAudit{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

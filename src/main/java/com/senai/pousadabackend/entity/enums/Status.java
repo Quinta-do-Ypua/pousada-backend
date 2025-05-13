@@ -1,7 +1,11 @@
 package com.senai.pousadabackend.entity.enums;
 
 public enum Status {
+    ATIVO,
+    INATIVO;
 
-    A,
-    I
+    public boolean isAtivo() {
+        return this.equals(ATIVO);
+    }
+
 }

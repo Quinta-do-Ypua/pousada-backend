@@ -11,7 +11,7 @@ public class ReservaMapper implements BaseMapper<Reserva, ReservaDTO> {
     public ReservaDTO toDTO(Reserva reserva) {
         return ReservaDTO.builder()
                 .id(reserva.getId())
-                .status(reserva.getStatus())
+                .statusDaReserva(reserva.getStatusDaReserva())
                 .quarto(reserva.getQuarto())
                 .valorDaReserva(reserva.getValorDaReserva())
                 .checkIn(reserva.getCheckIn())
@@ -28,7 +28,7 @@ public class ReservaMapper implements BaseMapper<Reserva, ReservaDTO> {
     public Reserva toEntity(ReservaDTO reservaDTO) {
         return Reserva.builder()
                 .id(reservaDTO.getId())
-                .status(reservaDTO.getStatus())
+                .statusDaReserva(reservaDTO.getStatusDaReserva())
                 .quarto(reservaDTO.getQuarto())
                 .valorDaReserva(reservaDTO.getValorDaReserva())
                 .checkIn(reservaDTO.getCheckIn())
