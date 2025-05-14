@@ -1,10 +1,7 @@
 package com.senai.pousadabackend.exceptions.handler;
 
 import com.fasterxml.jackson.databind.exc.InvalidDefinitionException;
-import com.senai.pousadabackend.exceptions.BusinessException;
-import com.senai.pousadabackend.exceptions.ErroDaApi;
-import com.senai.pousadabackend.exceptions.IntegracaoException;
-import com.senai.pousadabackend.exceptions.RegistroNaoEncontradoException;
+import com.senai.pousadabackend.exceptions.*;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.InvalidDataAccessResourceUsageException;
@@ -57,30 +54,18 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ConstraintViolationException.class)
     public Map<String, Map<String, String>> handle(ConstraintViolationException cve){
-
         Map<String, Map<String, String>> body = new HashMap<>();
-
         Map<String, String> msgs = new HashMap<>();
-
         body.put("errors", msgs);
-
         cve.getConstraintViolations().forEach((error) -> {
-
             String[] paths = error.getPropertyPath().toString().split("\\.");
-
             String atributo = paths[paths.length - 1];
-
             String errorMessage = error.getMessage();
-
             String mensagemCompleta = "O atributo '" + atributo +
                     "' apresentou o seguinte erro: '" + errorMessage + "'";
-
             String plainJsonError = "{ mensagem: " + mensagemCompleta + " }";
-
             msgs.put("{ codigo:" + ErroDaApi.CONDICAO_VIOLADA.getCodigo(), plainJsonError);
-
         });
-
         return body;
     }
 
@@ -131,6 +116,13 @@ public class GlobalExceptionHandler {
     public Map<String, Map<String, Object>> handle(InvalidDataAccessResourceUsageException ie){
         return criarMapDeErro(ErroDaApi.INTEGRACAO_INVALIDA,
                 "Ocorreu um erro de integração com a Api externa");
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(InativoException.class)
+    public Map<String, Map<String, Object>> handle(InativoException ie){
+        return criarMapDeErro(ErroDaApi.PARAMETRO_INVALIDO,
+                ie.getMessage());
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
