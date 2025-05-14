@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.senai.pousadabackend.entity.enums.Sexo;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDate;
 
@@ -15,7 +14,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
-@SQLRestriction("ativo = true")
 public class Cliente extends EntityAudit{
 
     @Id
@@ -46,8 +44,5 @@ public class Cliente extends EntityAudit{
     @JoinColumn(name = "endereco_id")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Endereco endereco;
-
-    @Column(nullable = false)
-    private boolean ativo;
 
 }
