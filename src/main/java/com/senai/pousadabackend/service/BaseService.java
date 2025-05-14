@@ -41,13 +41,12 @@ public class BaseService<T extends EntityAudit, ID, R extends BaseRepository<T, 
 
     @Override
     public T excluir(ID id) {
-        T t = buscarPorId(id);
-        if (t.getStatus() != null && !t.getStatus().isAtivo()) {
-            throw new InativoException(t.getClass().getName() + " já está inativo.");
+        T entidade = buscarPorId(id);
+        if (entidade.getStatus() != null && !entidade.getStatus().isAtivo()) {
+            throw new InativoException(entidade.getClass().getSimpleName() + " já está inativo.");
         }
-        t.setStatus(Status.INATIVO);
-        t = this.alterar(t);
-        return t;
+        entidade.setStatus(Status.INATIVO);
+        return repo.save(entidade);
     }
 
     private T alterar(T t) {
