@@ -1,32 +1,60 @@
 package com.senai.pousadabackend.service.cliente;
 
 import com.senai.pousadabackend.entity.Cliente;
-import com.senai.pousadabackend.repository.ClienteRepository;
-import com.senai.pousadabackend.service.BaseService;
 import com.senai.pousadabackend.service.email.EmailService;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ClienteServiceProxy extends BaseService<Cliente, Long, ClienteRepository> implements ClienteService {
+public class ClienteServiceProxy implements ClienteService {
 
-    private final ClienteService clienteService;
+    private final ClienteService delegate;
 
     private final EmailService emailService;
 
-    public ClienteServiceProxy(ClienteRepository repo,
-                               @Qualifier("clienteServiceImpl") ClienteService clienteService,
+    public ClienteServiceProxy(@Qualifier("clienteServiceImpl") ClienteService clienteService,
                                EmailService emailService) {
-        super(repo);
-        this.clienteService = clienteService;
+        this.delegate = clienteService;
         this.emailService = emailService;
     }
 
     @Override
+    public Cliente salvar(Cliente cliente) {
+        return delegate.salvar(cliente);
+    }
+
+    @Override
+    public Cliente buscarPorId(Long aLong) {
+        return delegate.buscarPorId(aLong);
+    }
+
+    @Override
     public Cliente excluir(Long id) {
-        Cliente cliente = clienteService.buscarPorId(id);
+        Cliente cliente = delegate.buscarPorId(id);
         emailService.enviar("Inativação de perfil", "Seu perfil foi inativado", cliente);
-        return clienteService.excluir(id);
+        return delegate.excluir(id);
+    }
+
+    @Override
+    public void throwIfNotExists(Long aLong) {
+        delegate.throwIfNotExists(aLong);
+    }
+
+    @Override
+    public Page<Cliente> buscarPorSpecification(String parametro, Pageable pageable) {
+        return delegate.buscarPorSpecification(parametro, pageable);
+    }
+
+    @Override
+    public Page<Cliente> listarPaginado(Pageable pageable) {
+        return delegate.listarPaginado(pageable);
+    }
+
+    @Override
+    public Page<Cliente> listarInativos(Pageable pageable) {
+        return delegate.listarInativos(pageable);
     }
 
 }

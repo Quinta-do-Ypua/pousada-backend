@@ -63,7 +63,7 @@ public class BaseService<T extends EntityAudit, ID, R extends BaseRepository<T, 
 
 
     @Override
-    public void isExists(ID id) {
+    public void throwIfNotExists(ID id) {
         if (id == null) {
             throw new IllegalArgumentException("Para validar a existência o id é obrigatório");
         }

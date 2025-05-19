@@ -39,10 +39,6 @@ public class Cupom extends EntityAudit {
     @Column(name = "porcentagem-desconto", nullable = false)
     private Double porcentagemDeDesconto;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
-    private Status status;
-
     @Column(name = "quantidade-maxima-uso", nullable = false)
     private Integer quantidadeMaximaDeUso;
 

@@ -34,10 +34,6 @@ public class Usuario extends EntityAudit {
     @Column(name = "senha", nullable = false)
     private String senha;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
-    private Status status;
-
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "usuario_role",
