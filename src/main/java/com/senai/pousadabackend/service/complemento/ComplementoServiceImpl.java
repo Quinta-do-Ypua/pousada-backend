@@ -22,16 +22,6 @@ public class ComplementoServiceImpl extends BaseService<Complemento, Long, Compl
         return super.salvar(complemento);
     }
 
-    @Override
-    public Complemento buscarPorId(Long aLong) {
-        return null;
-    }
-
-    @Override
-    public Complemento excluir(Long aLong) {
-        return null;
-    }
-
     private void validarNomesIguaisDo(Complemento complemento) {
         Complemento complementoEncontrado = repository.buscarPor(complemento.getNome());
         boolean isNomeExistente = false;
