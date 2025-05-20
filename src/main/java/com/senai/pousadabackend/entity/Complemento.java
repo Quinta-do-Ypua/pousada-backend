@@ -34,10 +34,6 @@ public class Complemento extends EntityAudit {
     @Column(name = "descricao", nullable = false)
     private String descricao;
 
-    @Column(name = "status")
-    @Enumerated(EnumType.STRING)
-    private Status status;
-
     @Transient
     public boolean isExistente() {
         return getId() != null;

@@ -1,22 +1,22 @@
 package com.senai.pousadabackend.service.reserva;
 
 import com.senai.pousadabackend.entity.Reserva;
-import com.senai.pousadabackend.repository.ReservaRepository;
 import com.senai.pousadabackend.service.email.EmailService;
 import org.springframework.beans.factory.annotation.Qualifier;
-import com.senai.pousadabackend.service.BaseService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ReservaServiceProxy extends BaseService<Reserva, Long, ReservaRepository> implements ReservaService {
+public class ReservaServiceProxy implements ReservaService {
 
-    private final ReservaService reservaService;
+    private final ReservaService delegate;
 
     private final EmailService emailService;
 
-    public ReservaServiceProxy(ReservaRepository repo, @Qualifier("reservaServiceImpl") ReservaService reservaService, EmailService emailService) {
-        super(repo);
-        this.reservaService = reservaService;
+    public ReservaServiceProxy(@Qualifier("reservaServiceImpl") ReservaService reservaService,
+                               EmailService emailService) {
+        this.delegate = reservaService;
         this.emailService = emailService;
     }
 
@@ -26,7 +26,7 @@ public class ReservaServiceProxy extends BaseService<Reserva, Long, ReservaRepos
         emailService.enviar("Cancelamento de reserva",
                 "Estamos passando para avisar que sua reserva do quarto: " + reserva.getQuarto() + " de número: " + reserva.getId() + " Foi cancelada.",
                 reserva.getCliente());
-        return reservaService.cancelarPorId(id);
+        return delegate.cancelarPorId(id);
     }
 
     @Override
@@ -40,6 +40,36 @@ public class ReservaServiceProxy extends BaseService<Reserva, Long, ReservaRepos
                     "Estamos passando para avisar que sua reserva foi alterada: " + reserva,
                     reserva.getCliente());
         }
-        return super.salvar(reserva);
+        return delegate.salvar(reserva);
+    }
+
+    @Override
+    public Reserva buscarPorId(Long id) {
+        return delegate.buscarPorId(id);
+    }
+
+    @Override
+    public Reserva excluir(Long id) {
+        return delegate.excluir(id);
+    }
+
+    @Override
+    public void throwIfNotExists(Long aLong) {
+        delegate.throwIfNotExists(aLong);
+    }
+
+    @Override
+    public Page<Reserva> buscarPorSpecification(String parametro, Pageable pageable) {
+        return delegate.buscarPorSpecification(parametro, pageable);
+    }
+
+    @Override
+    public Page<Reserva> listarPaginado(Pageable pageable) {
+        return delegate.listarPaginado(pageable);
+    }
+
+    @Override
+    public Page<Reserva> listarInativos(Pageable pageable) {
+        return delegate.listarInativos(pageable);
     }
 }
