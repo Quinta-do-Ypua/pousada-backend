@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
-public class Cliente extends EntityAudit{
+public class Cliente extends EntityAudit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -11,7 +11,7 @@ public interface BaseServiceInterface<T, ID> {
 
     T excluir(ID id);
 
-    void isExists(ID id);
+    void throwIfNotExists(ID id);
 
     Page<T> buscarPorSpecification(String parametro, Pageable pageable);
 
