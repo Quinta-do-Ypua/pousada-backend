@@ -6,6 +6,7 @@ import jakarta.validation.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.InvalidDataAccessResourceUsageException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,6 +31,17 @@ public class GlobalExceptionHandler {
     public Map<String, Map<String, Object>> handle(){
         return criarMapDeErro(ErroDaApi.BODY_INVALIDO,
                 "O corpo (body) da requisição possui erros ou não existe");
+    }
+
+    @ExceptionHandler(RegistroDuplicadoException.class)
+    public Map<String, Map<String, Object>> handle(RegistroDuplicadoException e){
+        return criarMapDeErro(ErroDaApi.FORMATO_INVALIDO, e.getMessage());
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, Map<String, Object>> handle(MethodArgumentNotValidException ex) {
+        var error = ex.getBindingResult().getFieldErrors().getFirst();
+        return criarMapDeErro(ErroDaApi.FORMATO_INVALIDO, error.getField() + " " + error.getDefaultMessage());
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -123,29 +136,6 @@ public class GlobalExceptionHandler {
     public Map<String, Map<String, Object>> handle(InativoException ie){
         return criarMapDeErro(ErroDaApi.PARAMETRO_INVALIDO,
                 ie.getMessage());
-    }
-
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public Map<String, Map<String, Object>> handlePSQLExceptions(
-            DataIntegrityViolationException dve){
-        return criarMapDeErro(ErroDaApi.PARAMETRO_INVALIDO,
-                "Ocorreu um erro de integridade referencial na base de dados");
-    }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, Map<String, Object>> handle(MethodArgumentNotValidException manve){
-
-        var errors = manve.getFieldErrors();
-        Map<String, Map<String, Object>> body = new HashMap<>();
-        Map<String, Object> details = new HashMap<>();
-        errors.forEach((error) -> {
-            details.put("codigo", ErroDaApi.CAMPO_INVALIDO.getCodigo());
-            details.put("mensagem", error.getDefaultMessage());
-        });
-        body.put("erros", details);
-        return body;
     }
 
     private Map<String, Map<String, Object>> criarMapDeErro(ErroDaApi erroDaApi, String msgDeErro){

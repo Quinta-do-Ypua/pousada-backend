@@ -2,6 +2,7 @@ package com.senai.pousadabackend.controllers;
 
 import com.senai.pousadabackend.mappers.BaseMapper;
 import com.senai.pousadabackend.service.BaseServiceInterface;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -21,8 +22,8 @@ public class BaseController<T, DTO, ID, Mapper extends BaseMapper<T, DTO>> {
     }
 
     @PostMapping
-    public DTO salvar(@RequestBody T t) {
-        return mapper.toDTO(baseServiceInterface.salvar(t));
+    public DTO salvar(@Valid @RequestBody DTO dto) {
+        return mapper.toDTO(baseServiceInterface.salvar(mapper.toEntity(dto)));
     }
 
     @GetMapping("/{id}")

@@ -109,13 +109,7 @@ public class ReservaServiceImpl extends BaseService<Reserva, Long, ReservaReposi
 
     private void calcularValoresDaReserva(Reserva reserva) {
         reserva.setQuarto(quartoService.buscarPorId(reserva.getQuarto().getId()));
-
-        reserva.setValorDaDiariaDoQuarto(reserva.getQuarto().getValorDiaria());
-
-        long dias = Duration.between(reserva.getCheckIn(), reserva.getCheckOut()).toDays();
-        reserva.setValorTotalDoQuarto(
-                reserva.getValorDaDiariaDoQuarto().multiply(BigDecimal.valueOf(dias))
-        );
+        //TODO: criar nota fiscal
     }
 
 }

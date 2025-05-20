@@ -1,5 +1,6 @@
 package com.senai.pousadabackend.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Data;
 
@@ -9,17 +10,24 @@ public class EnderecoDTO {
 
     private Long id;
 
+    @NotBlank
     private String cidade;
 
+    @NotBlank
     private String estado;
 
+    @NotBlank
     private String rua;
 
+    @NotBlank
     private String cep;
 
+    @NotBlank
     private String bairro;
 
+    @NotBlank
     private String numero;
 
+    @NotBlank
     private String complemento;
 }

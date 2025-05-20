@@ -7,20 +7,24 @@ import org.springframework.stereotype.Component;
 @Component
 public class ReservaMapper implements BaseMapper<Reserva, ReservaDTO> {
 
+
+    private final QuartoMapper quartoMapper;
+
+    public ReservaMapper(QuartoMapper quartoMapper) {
+        this.quartoMapper = quartoMapper;
+    }
+
     @Override
     public ReservaDTO toDTO(Reserva reserva) {
         return ReservaDTO.builder()
                 .id(reserva.getId())
                 .statusDaReserva(reserva.getStatusDaReserva())
-                .quarto(reserva.getQuarto())
+                .quarto(quartoMapper.toDTO(reserva.getQuarto()))
                 .valorDaReserva(reserva.getValorDaReserva())
                 .checkIn(reserva.getCheckIn())
                 .checkOut(reserva.getCheckOut())
                 .cliente(reserva.getCliente())
                 .observacao(reserva.getObservacao())
-                .valorComplementos(reserva.getValorComplementos())
-                .valorDaDiariaDoQuarto(reserva.getValorDaDiariaDoQuarto())
-                .valorTotalDoQuarto(reserva.getValorTotalDoQuarto())
                 .build();
     }
 
@@ -29,20 +33,16 @@ public class ReservaMapper implements BaseMapper<Reserva, ReservaDTO> {
         return Reserva.builder()
                 .id(reservaDTO.getId())
                 .statusDaReserva(reservaDTO.getStatusDaReserva())
-                .quarto(reservaDTO.getQuarto())
+                .quarto(quartoMapper.toEntity(reservaDTO.getQuarto()))
                 .valorDaReserva(reservaDTO.getValorDaReserva())
                 .checkIn(reservaDTO.getCheckIn())
                 .checkOut(reservaDTO.getCheckOut())
                 .cliente(reservaDTO.getCliente())
                 .observacao(reservaDTO.getObservacao())
-                .valorComplementos(reservaDTO.getValorComplementos())
                 .checkOut(reservaDTO.getCheckOut())
                 .cliente(reservaDTO.getCliente())
                 .observacao(reservaDTO.getObservacao())
-                .valorComplementos(reservaDTO.getValorComplementos())
                 .valorDaReserva(reservaDTO.getValorDaReserva())
-                .valorDaDiariaDoQuarto(reservaDTO.getValorDaDiariaDoQuarto())
-                .valorTotalDoQuarto(reservaDTO.getValorTotalDoQuarto())
                 .build();
     }
 }
