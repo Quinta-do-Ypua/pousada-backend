@@ -75,16 +75,22 @@ public class BaseService<T extends EntityAudit, ID, R extends BaseRepository<T, 
 
     @Override
     public Page<T> buscarPorSpecification(String parametro, Pageable pageable) {
+        Specification<T> statusAtivoSpec = (root, query, cb) ->
+                cb.equal(root.get("status"), Status.ATIVO);
+        Specification<T> specFinal;
         if (parametro == null || parametro.isBlank()) {
-            return repo.findAll(pageable);
+            specFinal = statusAtivoSpec;
+        } else {
+            Specification<T> specParametro = toSpecification(parametro);
+            specFinal = statusAtivoSpec.and(specParametro);
         }
-        Specification<T> spec = toSpecification(parametro);
-        return repo.findAll(spec, pageable);
+        return repo.findAll(specFinal, pageable);
     }
+
 
     @Override
     public Page<T> listarPaginado(Pageable pageable) {
-        return repo.findAll(pageable);
+        return repo.findByStatus(Status.ATIVO, pageable);
     }
 
     @Override
