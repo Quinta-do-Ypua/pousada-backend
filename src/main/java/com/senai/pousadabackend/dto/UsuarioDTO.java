@@ -29,9 +29,6 @@ public class UsuarioDTO {
     @NotBlank(message = "A senha é obrigatória")
     private String senha;
 
-    @NotBlank(message = "O status é obrigatório")
-    private String status;
-
     @NotEmpty(message = "É necessário vincular permissões ao usuário")
     private Set<Role> permissoes;
 }

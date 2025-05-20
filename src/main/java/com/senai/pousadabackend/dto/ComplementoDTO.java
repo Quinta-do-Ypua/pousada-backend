@@ -30,6 +30,4 @@ public class ComplementoDTO {
     @Size(max = 200, message = "A descrição deve ter no máximo 200 caracteres")
     private String descricao;
 
-    @NotBlank(message = "O status é obrigatório")
-    private String status;
 }
