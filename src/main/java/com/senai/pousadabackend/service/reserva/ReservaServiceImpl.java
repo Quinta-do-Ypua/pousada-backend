@@ -9,6 +9,8 @@ import com.senai.pousadabackend.exceptions.ExisteReservaAbertaParaEsseCliente;
 import com.senai.pousadabackend.exceptions.ExisteReservaParaEssaDataException;
 import com.senai.pousadabackend.repository.ReservaRepository;
 import com.senai.pousadabackend.service.BaseService;
+import com.senai.pousadabackend.service.quarto.QuartoService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -19,9 +21,12 @@ public class ReservaServiceImpl extends BaseService<Reserva, Long, ReservaReposi
 
     private final ReservaRepository reservaRepository;
 
-    public ReservaServiceImpl(ReservaRepository repo) {
+    private final QuartoService quartoService;
+
+    public ReservaServiceImpl(ReservaRepository repo, @Qualifier("quartoServiceProxy") QuartoService quartoService) {
         super(repo);
         this.reservaRepository = repo;
+        this.quartoService = quartoService;
     }
 
     @Override
@@ -103,6 +108,8 @@ public class ReservaServiceImpl extends BaseService<Reserva, Long, ReservaReposi
     }
 
     private void calcularValoresDaReserva(Reserva reserva) {
+        reserva.setQuarto(quartoService.buscarPorId(reserva.getQuarto().getId()));
+
         reserva.setValorDaDiariaDoQuarto(reserva.getQuarto().getValorDiaria());
 
         long dias = Duration.between(reserva.getCheckIn(), reserva.getCheckOut()).toDays();

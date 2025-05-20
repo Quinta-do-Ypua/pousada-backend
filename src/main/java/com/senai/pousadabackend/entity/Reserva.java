@@ -30,7 +30,7 @@ public class Reserva extends EntityAudit {
     @Column(nullable = false)
     private BigDecimal valorDaDiariaDoQuarto;
 
-    @Column(nullable = false)
+    @Column
     private BigDecimal valorDaReserva;
 
     @Column
