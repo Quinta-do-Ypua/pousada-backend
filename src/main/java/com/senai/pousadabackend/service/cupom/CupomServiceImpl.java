@@ -33,11 +33,13 @@ public class CupomServiceImpl extends BaseService<Cupom, Long, CupomRepository> 
         Cupom cupomEncontrado = repository.buscarPor(cupom.getNome());
         boolean isNomeExistente = false;
 
-        if (cupom.isExistente()) {
-            isNomeExistente = true;
-        } else {
-            if (!cupom.getId().equals(cupomEncontrado.getId())) {
+        if (cupomEncontrado != null) {
+            if (cupom.isExistente()) {
                 isNomeExistente = true;
+            } else {
+                if (!cupomEncontrado.getId().equals(cupom.getId())) {
+                    isNomeExistente = true;
+                }
             }
         }
 

@@ -35,7 +35,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidDefinitionException.class)
     public Map<String, Map<String, Object>> handle(InvalidDefinitionException ide){
         String atributo = ide.getPath().getLast().getFieldName();
-        String msgDeErro = "O atributo '" + atributo + "' possui formato inválido";
+        String msgDeErro = "O campo '" + atributo + "' possui formato inválido";
         return criarMapDeErro(ErroDaApi.FORMATO_INVALIDO, msgDeErro);
     }
 

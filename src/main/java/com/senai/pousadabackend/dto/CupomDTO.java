@@ -41,7 +41,4 @@ public class CupomDTO {
 
     @NotNull(message = "A quantidade máxima é obrigatória")
     private Integer quantidadeMaximaDeUso;
-
-    @NotNull(message = "O id da reserva é obrigatório")
-    private Long reservaId;
 }
