@@ -24,17 +24,8 @@ public class Reserva extends EntityAudit {
     @ManyToOne(fetch = FetchType.LAZY)
     private Quarto quarto;
 
-    @Column(nullable = false)
-    private BigDecimal valorTotalDoQuarto;
-
-    @Column(nullable = false)
-    private BigDecimal valorDaDiariaDoQuarto;
-
     @Column
     private BigDecimal valorDaReserva;
-
-    @Column
-    private BigDecimal valorComplementos;
 
     @Column(name = "status_reserva", nullable = false)
     @Enumerated(EnumType.STRING)
