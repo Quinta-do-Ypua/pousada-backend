@@ -36,9 +36,6 @@ public class CupomDTO {
     @Digits(integer = 3, fraction = 2, message = "A porcentagem deve conter no máximo 3 números inteiros e 2 decimais")
     private Double porcentagemDeDesconto;
 
-    @NotBlank(message = "O status é obrigatório")
-    private String status;
-
     @NotNull(message = "A quantidade máxima é obrigatória")
     private Integer quantidadeMaximaDeUso;
 }
