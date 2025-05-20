@@ -2,6 +2,7 @@ package com.senai.pousadabackend.service;
 
 import com.senai.pousadabackend.entity.EntityAudit;
 import com.senai.pousadabackend.entity.enums.Status;
+import com.senai.pousadabackend.exceptions.BusinessException;
 import com.senai.pousadabackend.exceptions.InativoException;
 import com.senai.pousadabackend.exceptions.RegistroNaoEncontradoException;
 import com.senai.pousadabackend.repository.BaseRepository;
@@ -28,6 +29,7 @@ public class BaseService<T extends EntityAudit, ID, R extends BaseRepository<T, 
         if (!t.isNovo()) {
             return alterar(t);
         }
+
         if (t.getStatus() == null || !t.getStatus().isAtivo()) t.setStatus(Status.ATIVO);
         return repo.save(t);
     }

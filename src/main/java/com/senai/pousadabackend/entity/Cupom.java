@@ -44,6 +44,6 @@ public class Cupom extends EntityAudit {
 
     @Transient
     public boolean isExistente() {
-        return getId() != null;
+        return getId() == null;
     }
 }

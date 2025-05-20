@@ -26,11 +26,13 @@ public class ComplementoServiceImpl extends BaseService<Complemento, Long, Compl
         Complemento complementoEncontrado = repository.buscarPor(complemento.getNome());
         boolean isNomeExistente = false;
 
-        if (complementoEncontrado.isExistente()) {
-            isNomeExistente = true;
-        } else {
-            if (!complemento.getId().equals(complementoEncontrado.getId())) {
+        if (complementoEncontrado != null) {
+            if (complemento.isExistente()) {
                 isNomeExistente = true;
+            } else {
+                if (!complementoEncontrado.getId().equals(complemento.getId())) {
+                    isNomeExistente = true;
+                }
             }
         }
 
