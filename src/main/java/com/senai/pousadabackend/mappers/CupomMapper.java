@@ -2,6 +2,7 @@ package com.senai.pousadabackend.mappers;
 
 import com.senai.pousadabackend.dto.CupomDTO;
 import com.senai.pousadabackend.entity.Cupom;
+import com.senai.pousadabackend.entity.enums.Status;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -16,6 +17,8 @@ public class CupomMapper implements BaseMapper<Cupom, CupomDTO> {
                 .dataDeInicio(cupom.getDataDeInicio())
                 .dataDeVencimento(cupom.getDataDeVencimento())
                 .porcentagemDeDesconto(cupom.getPorcentagemDeDesconto())
+                .status(cupom.getStatus().toString())
+                .quantidadeMaximaDeUso(cupom.getQuantidadeMaximaDeUso())
                 .build();
     }
 
@@ -28,6 +31,8 @@ public class CupomMapper implements BaseMapper<Cupom, CupomDTO> {
                 .dataDeInicio(cupomDTO.getDataDeInicio())
                 .dataDeVencimento(cupomDTO.getDataDeVencimento())
                 .porcentagemDeDesconto(cupomDTO.getPorcentagemDeDesconto())
+                .status(Status.toStatus(cupomDTO.getStatus()))
+                .quantidadeMaximaDeUso(cupomDTO.getQuantidadeMaximaDeUso())
                 .build();
     }
 

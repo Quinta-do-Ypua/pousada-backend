@@ -26,11 +26,13 @@ public class UsuarioServiceImpl extends BaseService<Usuario, Long, UsuarioReposi
         Usuario usuarioEncontrado = repository.buscarPor(usuario.getNome());
         boolean isNomeExistente = false;
 
-        if (usuario.isExistente()) {
-            isNomeExistente = true;
-        } else {
-            if (!usuario.getId().equals(usuarioEncontrado.getId())) {
+        if (usuarioEncontrado != null) {
+            if (usuario.isExistente()) {
                 isNomeExistente = true;
+            } else {
+                if (!usuarioEncontrado.getId().equals(usuario.getId())) {
+                    isNomeExistente = true;
+                }
             }
         }
 
