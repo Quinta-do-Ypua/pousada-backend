@@ -9,6 +9,7 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Builder
@@ -33,5 +34,7 @@ public class ReservaDTO {
 
     @NotNull
     private Cliente cliente;
+
+    private List<ComplementoDTO> complementos;
 
 }

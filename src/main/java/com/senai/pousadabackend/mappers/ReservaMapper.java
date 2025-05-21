@@ -4,14 +4,18 @@ import com.senai.pousadabackend.dto.ReservaDTO;
 import com.senai.pousadabackend.entity.Reserva;
 import org.springframework.stereotype.Component;
 
+import java.util.stream.Collectors;
+
 @Component
 public class ReservaMapper implements BaseMapper<Reserva, ReservaDTO> {
 
 
     private final QuartoMapper quartoMapper;
+    private final ComplementoMapper complementoMapper;
 
-    public ReservaMapper(QuartoMapper quartoMapper) {
+    public ReservaMapper(QuartoMapper quartoMapper, ComplementoMapper complementoMapper) {
         this.quartoMapper = quartoMapper;
+        this.complementoMapper = complementoMapper;
     }
 
     @Override
@@ -25,6 +29,7 @@ public class ReservaMapper implements BaseMapper<Reserva, ReservaDTO> {
                 .checkOut(reserva.getCheckOut())
                 .cliente(reserva.getCliente())
                 .observacao(reserva.getObservacao())
+                .complementos(reserva.getComplementos().stream().map(complementoMapper::toDTO).collect(Collectors.toList()))
                 .build();
     }
 
@@ -43,6 +48,7 @@ public class ReservaMapper implements BaseMapper<Reserva, ReservaDTO> {
                 .cliente(reservaDTO.getCliente())
                 .observacao(reservaDTO.getObservacao())
                 .valorDaReserva(reservaDTO.getValorDaReserva())
+                .complementos(reservaDTO.getComplementos().stream().map(complementoMapper::toEntity).collect(Collectors.toList()))
                 .build();
     }
 }
