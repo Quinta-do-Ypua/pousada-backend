@@ -6,6 +6,8 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
+
 @Entity
 @Table(name = "reservas")
 @Data
@@ -43,5 +45,14 @@ public class Reserva extends EntityAudit {
     @JoinColumn(name = "cliente_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Cliente cliente;
+
+    @ManyToMany
+    @JoinTable(
+            name = "reserva_complemento",
+            joinColumns = @JoinColumn(name = "reserva_id"),
+            inverseJoinColumns = @JoinColumn(name = "complemento_id")
+    )
+    private List<Complemento> complementos;
+
 
 }

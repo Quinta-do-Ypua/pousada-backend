@@ -37,7 +37,7 @@ public abstract class EntityAudit {
     @LastModifiedBy
     private String alteradoPor;
 
-    @Column(nullable = false, columnDefinition = "VARCHAR(255) DEFAULT 'ATIVO'")
+    @Column(columnDefinition = "VARCHAR(255) DEFAULT 'ATIVO'")
     @Enumerated(EnumType.STRING)
     private Status status;
 
