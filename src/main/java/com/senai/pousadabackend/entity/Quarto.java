@@ -35,14 +35,17 @@ public class Quarto extends EntityAudit{
     @Column(nullable = false)
     private BigDecimal valorDiaria;
 
-    @JoinTable(
-            name = "quarto_complemento",
-            joinColumns = @JoinColumn(name = "quarto_id"),
-            inverseJoinColumns = @JoinColumn(name = "complemento_id"))
-    @ManyToMany(fetch = FetchType.LAZY)
-    private List<Complemento> complementos;
-
     @Column
     private String observacao;
+
+
+    @ManyToMany
+    @JoinTable(
+            name = "quarto_amenidade",
+            joinColumns = @JoinColumn(name = "quarto_id"),
+            inverseJoinColumns = @JoinColumn(name = "amenidade_id")
+    )
+    private List<Amenidade> amenidades;
+
 
 }

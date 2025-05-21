@@ -4,16 +4,23 @@ import com.senai.pousadabackend.dto.QuartoDTO;
 import com.senai.pousadabackend.entity.Quarto;
 import org.springframework.stereotype.Component;
 
+import java.util.stream.Collectors;
+
 @Component
 public class QuartoMapper implements BaseMapper<Quarto, QuartoDTO> {
 
+    private final AmenidadeMapper amenidadeMapper;
+
+    public QuartoMapper(AmenidadeMapper amenidadeMapper) {
+        this.amenidadeMapper = amenidadeMapper;
+    }
 
     @Override
     public QuartoDTO toDTO(Quarto quarto) {
         return QuartoDTO.builder()
                 .id(quarto.getId())
                 .nome(quarto.getNome())
-                .complementos(quarto.getComplementos())
+                .amenidades(quarto.getAmenidades().stream().map(amenidadeMapper::toDTO).toList())
                 .capacidade(quarto.getCapacidade())
                 .observacao(quarto.getObservacao())
                 .qtdCamaCasal(quarto.getQtdCamaCasal())
@@ -27,7 +34,7 @@ public class QuartoMapper implements BaseMapper<Quarto, QuartoDTO> {
         return Quarto.builder()
                 .id(quartoDTO.getId())
                 .nome(quartoDTO.getNome())
-                .complementos(quartoDTO.getComplementos())
+                .amenidades(quartoDTO.getAmenidades().stream().map(amenidadeMapper::toEntity).toList())
                 .capacidade(quartoDTO.getCapacidade())
                 .observacao(quartoDTO.getObservacao())
                 .qtdCamaCasal(quartoDTO.getQtdCamaCasal())
