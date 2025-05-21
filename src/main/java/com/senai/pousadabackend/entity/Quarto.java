@@ -20,7 +20,7 @@ public class Quarto extends EntityAudit{
     @EqualsAndHashCode.Include
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String numero;
 
     @Column(nullable = false)
