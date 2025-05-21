@@ -21,10 +21,16 @@ public class Quarto extends EntityAudit{
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String numero;
+    private String nome;
 
     @Column(nullable = false)
     private Integer capacidade;
+
+    @Column
+    private Integer qtdCamaSolteiro;
+
+    @Column
+    private Integer qtdCamaCasal;
 
     @Column(nullable = false)
     private BigDecimal valorDiaria;
@@ -35,5 +41,8 @@ public class Quarto extends EntityAudit{
             inverseJoinColumns = @JoinColumn(name = "complemento_id"))
     @ManyToMany(fetch = FetchType.LAZY)
     private List<Complemento> complementos;
+
+    @Column
+    private String observacao;
 
 }
