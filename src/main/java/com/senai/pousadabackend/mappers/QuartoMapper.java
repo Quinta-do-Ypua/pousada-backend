@@ -12,8 +12,12 @@ public class QuartoMapper implements BaseMapper<Quarto, QuartoDTO> {
     public QuartoDTO toDTO(Quarto quarto) {
         return QuartoDTO.builder()
                 .id(quarto.getId())
-                .numero(quarto.getNumero())
+                .nome(quarto.getNome())
+                .complementos(quarto.getComplementos())
                 .capacidade(quarto.getCapacidade())
+                .observacao(quarto.getObservacao())
+                .qtdCamaCasal(quarto.getQtdCamaCasal())
+                .qtdCamaSolteiro(quarto.getQtdCamaSolteiro())
                 .valorDiaria(quarto.getValorDiaria())
                 .build();
     }
@@ -22,8 +26,12 @@ public class QuartoMapper implements BaseMapper<Quarto, QuartoDTO> {
     public Quarto toEntity(QuartoDTO quartoDTO) {
         return Quarto.builder()
                 .id(quartoDTO.getId())
-                .numero(quartoDTO.getNumero())
+                .nome(quartoDTO.getNome())
+                .complementos(quartoDTO.getComplementos())
                 .capacidade(quartoDTO.getCapacidade())
+                .observacao(quartoDTO.getObservacao())
+                .qtdCamaCasal(quartoDTO.getQtdCamaCasal())
+                .qtdCamaSolteiro(quartoDTO.getQtdCamaSolteiro())
                 .valorDiaria(quartoDTO.getValorDiaria())
                 .build();
     }
