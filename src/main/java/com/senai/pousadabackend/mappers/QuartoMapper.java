@@ -4,6 +4,8 @@ import com.senai.pousadabackend.dto.QuartoDTO;
 import com.senai.pousadabackend.entity.Quarto;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -17,29 +19,36 @@ public class QuartoMapper implements BaseMapper<Quarto, QuartoDTO> {
 
     @Override
     public QuartoDTO toDTO(Quarto quarto) {
-        return QuartoDTO.builder()
+        var quartoDto = QuartoDTO.builder()
                 .id(quarto.getId())
                 .nome(quarto.getNome())
-                .amenidades(quarto.getAmenidades().stream().map(amenidadeMapper::toDTO).toList())
                 .capacidade(quarto.getCapacidade())
                 .observacao(quarto.getObservacao())
                 .qtdCamaCasal(quarto.getQtdCamaCasal())
                 .qtdCamaSolteiro(quarto.getQtdCamaSolteiro())
                 .valorDiaria(quarto.getValorDiaria())
                 .build();
+
+        if (quarto.getAmenidades() != null)
+            quartoDto.setAmenidades(quarto.getAmenidades().stream().map(amenidadeMapper::toDTO).toList());
+
+        return quartoDto;
     }
 
     @Override
     public Quarto toEntity(QuartoDTO quartoDTO) {
-        return Quarto.builder()
+        var quarto = Quarto.builder()
                 .id(quartoDTO.getId())
-                .nome(quartoDTO.getNome())
-                .amenidades(quartoDTO.getAmenidades().stream().map(amenidadeMapper::toEntity).toList())
-                .capacidade(quartoDTO.getCapacidade())
+                .nome(quartoDTO.getNome())        .capacidade(quartoDTO.getCapacidade())
                 .observacao(quartoDTO.getObservacao())
                 .qtdCamaCasal(quartoDTO.getQtdCamaCasal())
                 .qtdCamaSolteiro(quartoDTO.getQtdCamaSolteiro())
                 .valorDiaria(quartoDTO.getValorDiaria())
                 .build();
+
+        if (quartoDTO.getAmenidades() != null)
+            quarto.setAmenidades(quartoDTO.getAmenidades().stream().map(amenidadeMapper::toEntity).toList());
+
+        return quarto;
     }
 }
