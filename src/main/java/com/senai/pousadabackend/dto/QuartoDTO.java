@@ -28,7 +28,7 @@ public class QuartoDTO {
     @NotNull(message = "O valor da diaria é obrigatório")
     private BigDecimal valorDiaria;
 
-    private List<Complemento> complementos;
+    private List<AmenidadeDto> amenidades;
 
     private String observacao;
 }
