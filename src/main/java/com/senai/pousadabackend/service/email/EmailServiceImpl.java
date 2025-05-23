@@ -1,6 +1,6 @@
 package com.senai.pousadabackend.service.email;
 
-import com.senai.pousadabackend.entity.Cliente;
+import com.senai.pousadabackend.domain.cliente.Cliente;
 import com.senai.pousadabackend.exceptions.FalhaAoEnviarEmailException;
 import com.sendgrid.*;
 import com.sendgrid.helpers.mail.Mail;

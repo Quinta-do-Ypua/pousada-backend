@@ -1,9 +1,9 @@
 package com.senai.pousadabackend.controllers;
 
-import com.senai.pousadabackend.dto.QuartoDTO;
-import com.senai.pousadabackend.entity.Quarto;
-import com.senai.pousadabackend.mappers.QuartoMapper;
-import com.senai.pousadabackend.service.quarto.QuartoService;
+import com.senai.pousadabackend.domain.quarto.QuartoDTO;
+import com.senai.pousadabackend.domain.quarto.Quarto;
+import com.senai.pousadabackend.domain.quarto.QuartoMapper;
+import com.senai.pousadabackend.domain.quarto.service.QuartoService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

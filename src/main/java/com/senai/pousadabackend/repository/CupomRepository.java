@@ -1,6 +1,6 @@
 package com.senai.pousadabackend.repository;
 
-import com.senai.pousadabackend.entity.Cupom;
+import com.senai.pousadabackend.domain.cupom.Cupom;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 

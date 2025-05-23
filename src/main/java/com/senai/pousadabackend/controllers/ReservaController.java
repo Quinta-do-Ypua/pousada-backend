@@ -1,9 +1,9 @@
 package com.senai.pousadabackend.controllers;
 
-import com.senai.pousadabackend.dto.ReservaDTO;
-import com.senai.pousadabackend.entity.Reserva;
-import com.senai.pousadabackend.mappers.ReservaMapper;
-import com.senai.pousadabackend.service.reserva.ReservaService;
+import com.senai.pousadabackend.domain.reserva.ReservaDTO;
+import com.senai.pousadabackend.domain.reserva.Reserva;
+import com.senai.pousadabackend.domain.reserva.ReservaMapper;
+import com.senai.pousadabackend.domain.reserva.service.ReservaService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
