@@ -1,6 +1,7 @@
 package com.senai.pousadabackend.domain.usuario.service;
 
 import com.senai.pousadabackend.domain.usuario.Usuario;
+import com.senai.pousadabackend.entity.Status;
 import com.senai.pousadabackend.exceptions.BusinessException;
 import com.senai.pousadabackend.repository.UsuarioRepository;
 import com.senai.pousadabackend.service.BaseService;
@@ -27,7 +28,7 @@ public class UsuarioServiceImpl extends BaseService<Usuario, Long, UsuarioReposi
         boolean isNomeExistente = false;
 
         if (usuarioEncontrado != null) {
-            if (usuario.isExistente()) {
+            if (!usuario.isExistente()) {
                 isNomeExistente = true;
             } else {
                 if (!usuarioEncontrado.getId().equals(usuario.getId())) {

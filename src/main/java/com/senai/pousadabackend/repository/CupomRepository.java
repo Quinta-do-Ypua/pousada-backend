@@ -9,6 +9,7 @@ public interface CupomRepository extends BaseRepository<Cupom, Long> {
 
     @Query("SELECT c "
             + "FROM Cupom c "
-            + "WHERE c.nome = :nome ")
-    Cupom buscarPor(String nome);
+            + "WHERE UPPER(c.codigo) = UPPER(:codigo) "
+            + "AND c.status != 'INATIVO' ")
+    Cupom buscarPor(String codigo);
 }

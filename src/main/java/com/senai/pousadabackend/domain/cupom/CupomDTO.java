@@ -31,11 +31,12 @@ public class CupomDTO {
     private LocalDate dataDeVencimento;
 
     @NotNull(message = "A porcentagem é obrigatória")
-    @DecimalMin(value = "0.01", message = "A porcentagem tem um limite mínimo de 0,01 %")
-    @DecimalMax(value = "100.00", message = "A porcentagem tem um limite máximo de 100,00 %")
-    @Digits(integer = 3, fraction = 2, message = "A porcentagem deve conter no máximo 3 números inteiros e 2 decimais")
+    @Min(value = 1, message = "A porcentagem tem um limite mínimo de 1 %")
+    @Max(value = 100, message = "A porcentagem tem um limite máximo de 100 %")
+    @Digits(integer = 3, fraction = 0, message = "A porcentagem deve conter no máximo 3 números inteiros")
     private Double porcentagemDeDesconto;
 
     @NotNull(message = "A quantidade máxima é obrigatória")
+    @Min(value = 1, message = "A quantidade máxima tem um limite mínimo de 1 unidade")
     private Integer quantidadeMaximaDeUso;
 }

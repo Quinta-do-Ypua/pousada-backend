@@ -4,6 +4,7 @@ import com.senai.pousadabackend.domain.cupom.CupomDTO;
 import com.senai.pousadabackend.domain.cupom.Cupom;
 import com.senai.pousadabackend.domain.cupom.CupomMapper;
 import com.senai.pousadabackend.domain.cupom.service.CupomService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

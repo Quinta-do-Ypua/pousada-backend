@@ -1,11 +1,13 @@
 package com.senai.pousadabackend.controllers;
 
+import com.senai.pousadabackend.config.validation.GrupoValidacaoInserir;
 import com.senai.pousadabackend.mappers.BaseMapper;
 import com.senai.pousadabackend.service.BaseServiceInterface;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 public class BaseController<T, DTO, ID, Mapper extends BaseMapper<T, DTO>> {
@@ -22,7 +24,7 @@ public class BaseController<T, DTO, ID, Mapper extends BaseMapper<T, DTO>> {
     }
 
     @PostMapping
-    public DTO salvar(@Valid @RequestBody DTO dto) {
+    public DTO salvar(@Validated(GrupoValidacaoInserir.class) @RequestBody DTO dto) {
         return mapper.toDTO(baseServiceInterface.salvar(mapper.toEntity(dto)));
     }
 

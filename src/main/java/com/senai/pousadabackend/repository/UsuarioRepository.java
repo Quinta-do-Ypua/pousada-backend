@@ -9,6 +9,7 @@ public interface UsuarioRepository extends BaseRepository<Usuario, Long> {
 
     @Query("SELECT u "
             + "FROM Usuario u "
-            + "WHERE u.nome = :nome ")
+            + "WHERE u.nome = :nome "
+            + "AND u.status != 'INATIVO' ")
     Usuario buscarPor(String nome);
 }
