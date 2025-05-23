@@ -39,10 +39,20 @@ public class GlobalExceptionHandler {
         return criarMapDeErro(ErroDaApi.FORMATO_INVALIDO, e.getMessage());
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Map<String, Map<String, Object>> handle(MethodArgumentNotValidException ex) {
-        var error = ex.getBindingResult().getFieldErrors().getFirst();
-        return criarMapDeErro(ErroDaApi.FORMATO_INVALIDO, error.getField() + " " + error.getDefaultMessage());
+        Map<String, Map<String, Object>> errosTratados = new HashMap<>();
+
+        ex.getBindingResult().getFieldErrors().forEach(error -> {
+            Map<String, Object> detalheDoErro = new HashMap<>();
+            detalheDoErro.put("codigo", ErroDaApi.FORMATO_INVALIDO.getCodigo());
+            detalheDoErro.put("mensagem", error.getDefaultMessage());
+
+            errosTratados.put(error.getField(), detalheDoErro);
+        });
+
+        return errosTratados;
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

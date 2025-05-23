@@ -1,6 +1,7 @@
 package com.senai.pousadabackend.domain.complemento.service;
 
 import com.senai.pousadabackend.domain.complemento.Complemento;
+import com.senai.pousadabackend.entity.Status;
 import com.senai.pousadabackend.exceptions.BusinessException;
 import com.senai.pousadabackend.repository.ComplementoRepository;
 import com.senai.pousadabackend.service.BaseService;
@@ -27,7 +28,7 @@ public class ComplementoServiceImpl extends BaseService<Complemento, Long, Compl
         boolean isNomeExistente = false;
 
         if (complementoEncontrado != null) {
-            if (complemento.isExistente()) {
+            if (!complemento.isExistente()) {
                 isNomeExistente = true;
             } else {
                 if (!complementoEncontrado.getId().equals(complemento.getId())) {

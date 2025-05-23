@@ -1,6 +1,7 @@
 package com.senai.pousadabackend.domain.cupom.service;
 
 import com.senai.pousadabackend.domain.cupom.Cupom;
+import com.senai.pousadabackend.entity.Status;
 import com.senai.pousadabackend.exceptions.BusinessException;
 import com.senai.pousadabackend.repository.CupomRepository;
 import com.senai.pousadabackend.service.BaseService;
@@ -30,11 +31,11 @@ public class CupomServiceImpl extends BaseService<Cupom, Long, CupomRepository> 
     }
 
     private void validarNomesIguaisDo(Cupom cupom) {
-        Cupom cupomEncontrado = repository.buscarPor(cupom.getNome());
+        Cupom cupomEncontrado = repository.buscarPor(cupom.getCodigo());
         boolean isNomeExistente = false;
 
         if (cupomEncontrado != null) {
-            if (cupom.isExistente()) {
+            if (!cupom.isExistente()) {
                 isNomeExistente = true;
             } else {
                 if (!cupomEncontrado.getId().equals(cupom.getId())) {
@@ -44,7 +45,7 @@ public class CupomServiceImpl extends BaseService<Cupom, Long, CupomRepository> 
         }
 
         if (isNomeExistente) {
-            throw new BusinessException("Já existe um cupom salvo com o mesmo nome");
+            throw new BusinessException("Já existe um cupom salvo com o mesmo código");
         }
     }
 

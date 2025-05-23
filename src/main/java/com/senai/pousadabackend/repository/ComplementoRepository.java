@@ -9,6 +9,7 @@ public interface ComplementoRepository extends BaseRepository<Complemento, Long>
 
     @Query("SELECT c "
             + "FROM Complemento c "
-            + "WHERE c.nome = :nome ")
+            + "WHERE c.nome = :nome "
+            + "AND c.status != 'INATIVO' ")
     Complemento buscarPor(String nome);
 }
