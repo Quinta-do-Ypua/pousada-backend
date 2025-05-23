@@ -1,8 +1,8 @@
 package com.senai.pousadabackend.domain.amenidade.service;
 
 import com.senai.pousadabackend.domain.amenidade.Amenidade;
-import com.senai.pousadabackend.repository.AmenidadeRepository;
-import com.senai.pousadabackend.service.BaseService;
+import com.senai.pousadabackend.domain.amenidade.AmenidadeRepository;
+import com.senai.pousadabackend.core.BaseService;
 import org.springframework.stereotype.Service;
 
 @Service

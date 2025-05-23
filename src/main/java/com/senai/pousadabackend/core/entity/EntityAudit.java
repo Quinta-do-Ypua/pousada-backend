@@ -1,4 +1,4 @@
-package com.senai.pousadabackend.entity;
+package com.senai.pousadabackend.core.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;

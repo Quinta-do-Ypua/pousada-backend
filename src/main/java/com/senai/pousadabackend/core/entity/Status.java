@@ -1,4 +1,4 @@
-package com.senai.pousadabackend.entity;
+package com.senai.pousadabackend.core.entity;
 
 public enum Status {
     ATIVO,

@@ -1,10 +1,9 @@
 package com.senai.pousadabackend.domain.cupom.service;
 
 import com.senai.pousadabackend.domain.cupom.Cupom;
-import com.senai.pousadabackend.entity.Status;
 import com.senai.pousadabackend.exceptions.BusinessException;
-import com.senai.pousadabackend.repository.CupomRepository;
-import com.senai.pousadabackend.service.BaseService;
+import com.senai.pousadabackend.domain.cupom.CupomRepository;
+import com.senai.pousadabackend.core.BaseService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;

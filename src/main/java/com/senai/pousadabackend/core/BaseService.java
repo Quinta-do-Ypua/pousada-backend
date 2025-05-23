@@ -1,10 +1,10 @@
-package com.senai.pousadabackend.service;
+package com.senai.pousadabackend.core;
 
-import com.senai.pousadabackend.entity.EntityAudit;
-import com.senai.pousadabackend.entity.Status;
+import com.senai.pousadabackend.core.entity.EntityAudit;
+import com.senai.pousadabackend.core.entity.Status;
 import com.senai.pousadabackend.exceptions.InativoException;
 import com.senai.pousadabackend.exceptions.RegistroNaoEncontradoException;
-import com.senai.pousadabackend.repository.BaseRepository;
+import com.senai.pousadabackend.core.repository.BaseRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

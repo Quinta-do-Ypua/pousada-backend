@@ -1,6 +1,6 @@
 package com.senai.pousadabackend.domain.nota_fiscal.item_nf;
 
-import com.senai.pousadabackend.entity.EntityAudit;
+import com.senai.pousadabackend.core.entity.EntityAudit;
 import com.senai.pousadabackend.domain.nota_fiscal.item.Item;
 import com.senai.pousadabackend.domain.nota_fiscal.NotaFiscal;
 import jakarta.persistence.*;

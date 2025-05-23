@@ -1,7 +1,7 @@
 package com.senai.pousadabackend.domain.reserva.service;
 
 import com.senai.pousadabackend.domain.reserva.Reserva;
-import com.senai.pousadabackend.service.email.EmailService;
+import com.senai.pousadabackend.domain.email.EmailService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -1,6 +1,6 @@
 package com.senai.pousadabackend.domain.usuario;
 
-import com.senai.pousadabackend.entity.EntityAudit;
+import com.senai.pousadabackend.core.entity.EntityAudit;
 import com.senai.pousadabackend.domain.role.Role;
 import jakarta.persistence.*;
 import lombok.Data;

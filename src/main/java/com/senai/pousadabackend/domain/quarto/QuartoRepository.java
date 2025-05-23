@@ -1,6 +1,6 @@
-package com.senai.pousadabackend.repository;
+package com.senai.pousadabackend.domain.quarto;
 
-import com.senai.pousadabackend.domain.quarto.Quarto;
+import com.senai.pousadabackend.core.repository.BaseRepository;
 
 public interface QuartoRepository extends BaseRepository<Quarto, Long> {
 

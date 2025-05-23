@@ -1,4 +1,4 @@
-package com.senai.pousadabackend.mappers;
+package com.senai.pousadabackend.core;
 
 public interface BaseMapper<T, DTO> {
 
