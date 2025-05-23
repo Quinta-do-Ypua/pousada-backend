@@ -4,5 +4,6 @@ import com.senai.pousadabackend.entity.Quarto;
 
 public interface QuartoRepository extends BaseRepository<Quarto, Long> {
 
-    boolean existsByNome(String numero);
+    Quarto findByNome(String nome);
+
 }

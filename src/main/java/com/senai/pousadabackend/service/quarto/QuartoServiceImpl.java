@@ -27,7 +27,11 @@ public class QuartoServiceImpl extends BaseService<Quarto, Long, QuartoRepositor
     }
 
     private void validarViolacaoDeUnique(Quarto quarto) {
-        if (quartoRepository.existsByNome(quarto.getNome()))
+        if (quarto.isNovo()) {
+            Quarto quartoEncontrado = quartoRepository.findByNome(quarto.getNome());
+            if (quartoEncontrado != null && !quartoEncontrado.getId().equals(quarto.getId())) {
                 throw new RegistroDuplicadoException("Já existe um quarto com esse nome");
+            }
+        }
     }
 }
