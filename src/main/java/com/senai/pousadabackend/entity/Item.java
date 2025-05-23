@@ -6,13 +6,13 @@ import lombok.*;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "item_nf")
+@Table(name = "item")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
-public class ItemNF extends EntityAudit {
+public class Item extends EntityAudit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
