@@ -33,6 +33,7 @@ public class GlobalExceptionHandler {
                 "O corpo (body) da requisição possui erros ou não existe");
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(RegistroDuplicadoException.class)
     public Map<String, Map<String, Object>> handle(RegistroDuplicadoException e){
         return criarMapDeErro(ErroDaApi.FORMATO_INVALIDO, e.getMessage());
