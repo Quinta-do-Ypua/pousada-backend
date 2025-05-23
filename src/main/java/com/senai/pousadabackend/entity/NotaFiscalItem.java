@@ -1,7 +1,6 @@
 package com.senai.pousadabackend.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -26,7 +25,7 @@ public class NotaFiscalItem extends EntityAudit {
 
     @JoinColumn(name = "item_nf_id")
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private ItemNF item;
+    private Item item;
 
     @Column(nullable = false)
     private Integer quantidade;
@@ -36,4 +35,5 @@ public class NotaFiscalItem extends EntityAudit {
 
     @Column(nullable = false)
     private BigDecimal valorTotal;
+
 }
