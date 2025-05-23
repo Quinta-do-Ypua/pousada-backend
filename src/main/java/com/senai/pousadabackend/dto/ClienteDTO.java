@@ -1,11 +1,13 @@
 package com.senai.pousadabackend.dto;
 
 import com.senai.pousadabackend.entity.enums.Sexo;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 import org.hibernate.validator.constraints.UniqueElements;
+import org.hibernate.validator.constraints.br.CPF;
 
 import java.time.LocalDate;
 
@@ -18,10 +20,12 @@ public class ClienteDTO {
     @NotBlank
     private String nome;
 
-    @NotBlank
+    @NotBlank(message = "O cpf é obrigatório")
+    @CPF(message = "O cpf deve ser valido")
     private String cpf;
 
     @NotBlank
+    @Email
     private String email;
 
     @NotBlank
