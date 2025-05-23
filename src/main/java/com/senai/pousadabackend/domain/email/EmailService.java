@@ -1,4 +1,4 @@
-package com.senai.pousadabackend.service.email;
+package com.senai.pousadabackend.domain.email;
 
 import com.senai.pousadabackend.domain.cliente.Cliente;
 

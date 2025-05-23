@@ -1,7 +1,7 @@
 package com.senai.pousadabackend.domain.quarto;
 
 import com.senai.pousadabackend.domain.amenidade.AmenidadeMapper;
-import com.senai.pousadabackend.mappers.BaseMapper;
+import com.senai.pousadabackend.core.BaseMapper;
 import org.springframework.stereotype.Component;
 
 @Component

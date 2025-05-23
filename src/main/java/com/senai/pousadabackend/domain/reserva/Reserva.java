@@ -2,7 +2,7 @@ package com.senai.pousadabackend.domain.reserva;
 
 import com.senai.pousadabackend.domain.cliente.Cliente;
 import com.senai.pousadabackend.domain.complemento.Complemento;
-import com.senai.pousadabackend.entity.EntityAudit;
+import com.senai.pousadabackend.core.entity.EntityAudit;
 import com.senai.pousadabackend.domain.quarto.Quarto;
 import jakarta.persistence.*;
 import lombok.*;

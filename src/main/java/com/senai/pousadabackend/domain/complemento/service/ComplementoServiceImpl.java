@@ -1,10 +1,9 @@
 package com.senai.pousadabackend.domain.complemento.service;
 
 import com.senai.pousadabackend.domain.complemento.Complemento;
-import com.senai.pousadabackend.entity.Status;
 import com.senai.pousadabackend.exceptions.BusinessException;
-import com.senai.pousadabackend.repository.ComplementoRepository;
-import com.senai.pousadabackend.service.BaseService;
+import com.senai.pousadabackend.domain.complemento.ComplementoRepository;
+import com.senai.pousadabackend.core.BaseService;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -2,8 +2,8 @@ package com.senai.pousadabackend.domain.quarto.service;
 
 import com.senai.pousadabackend.domain.quarto.Quarto;
 import com.senai.pousadabackend.exceptions.RegistroDuplicadoException;
-import com.senai.pousadabackend.repository.QuartoRepository;
-import com.senai.pousadabackend.service.BaseService;
+import com.senai.pousadabackend.domain.quarto.QuartoRepository;
+import com.senai.pousadabackend.core.BaseService;
 import org.springframework.stereotype.Service;
 
 @Service

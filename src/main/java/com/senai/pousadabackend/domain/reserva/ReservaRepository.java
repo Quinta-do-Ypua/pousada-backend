@@ -1,8 +1,8 @@
-package com.senai.pousadabackend.repository;
+package com.senai.pousadabackend.domain.reserva;
 
 import com.senai.pousadabackend.domain.cliente.Cliente;
 import com.senai.pousadabackend.domain.quarto.Quarto;
-import com.senai.pousadabackend.domain.reserva.Reserva;
+import com.senai.pousadabackend.core.repository.BaseRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDateTime;

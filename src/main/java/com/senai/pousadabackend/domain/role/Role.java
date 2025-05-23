@@ -1,6 +1,6 @@
 package com.senai.pousadabackend.domain.role;
 
-import com.senai.pousadabackend.entity.EntityAudit;
+import com.senai.pousadabackend.core.entity.EntityAudit;
 import jakarta.persistence.Table;
 import jakarta.persistence.Id;
 import jakarta.persistence.Column;

@@ -1,9 +1,8 @@
 package com.senai.pousadabackend.controllers;
 
 import com.senai.pousadabackend.config.validation.GrupoValidacaoInserir;
-import com.senai.pousadabackend.mappers.BaseMapper;
-import com.senai.pousadabackend.service.BaseServiceInterface;
-import jakarta.validation.Valid;
+import com.senai.pousadabackend.core.BaseMapper;
+import com.senai.pousadabackend.core.BaseServiceInterface;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;

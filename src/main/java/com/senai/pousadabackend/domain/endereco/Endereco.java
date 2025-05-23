@@ -1,6 +1,6 @@
 package com.senai.pousadabackend.domain.endereco;
 
-import com.senai.pousadabackend.entity.EntityAudit;
+import com.senai.pousadabackend.core.entity.EntityAudit;
 import jakarta.persistence.*;
 import lombok.*;
 
