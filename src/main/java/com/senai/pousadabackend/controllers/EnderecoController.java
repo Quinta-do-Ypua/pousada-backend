@@ -1,9 +1,9 @@
 package com.senai.pousadabackend.controllers;
 
-import com.senai.pousadabackend.dto.EnderecoDTO;
-import com.senai.pousadabackend.entity.Endereco;
-import com.senai.pousadabackend.mappers.EnderecoMapper;
-import com.senai.pousadabackend.service.endereco.EnderecoService;
+import com.senai.pousadabackend.domain.endereco.EnderecoDTO;
+import com.senai.pousadabackend.domain.endereco.Endereco;
+import com.senai.pousadabackend.domain.endereco.EnderecoMapper;
+import com.senai.pousadabackend.domain.endereco.service.EnderecoService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

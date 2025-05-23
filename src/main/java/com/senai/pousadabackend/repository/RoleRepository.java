@@ -1,6 +1,6 @@
 package com.senai.pousadabackend.repository;
 
-import com.senai.pousadabackend.entity.Role;
+import com.senai.pousadabackend.domain.role.Role;
 import org.springframework.stereotype.Repository;
 
 @Repository

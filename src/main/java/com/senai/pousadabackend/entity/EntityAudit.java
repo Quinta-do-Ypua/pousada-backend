@@ -1,6 +1,5 @@
 package com.senai.pousadabackend.entity;
 
-import com.senai.pousadabackend.entity.enums.Status;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

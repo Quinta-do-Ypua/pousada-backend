@@ -1,8 +1,7 @@
 package com.senai.pousadabackend.service;
 
 import com.senai.pousadabackend.entity.EntityAudit;
-import com.senai.pousadabackend.entity.enums.Status;
-import com.senai.pousadabackend.exceptions.BusinessException;
+import com.senai.pousadabackend.entity.Status;
 import com.senai.pousadabackend.exceptions.InativoException;
 import com.senai.pousadabackend.exceptions.RegistroNaoEncontradoException;
 import com.senai.pousadabackend.repository.BaseRepository;
