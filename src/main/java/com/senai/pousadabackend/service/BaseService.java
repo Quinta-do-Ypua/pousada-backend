@@ -5,6 +5,7 @@ import com.senai.pousadabackend.entity.Status;
 import com.senai.pousadabackend.exceptions.InativoException;
 import com.senai.pousadabackend.exceptions.RegistroNaoEncontradoException;
 import com.senai.pousadabackend.repository.BaseRepository;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +25,7 @@ public class BaseService<T extends EntityAudit, ID, R extends BaseRepository<T, 
     }
 
     @Override
+    @Transactional
     public T salvar(T t) {
         if (!t.isNovo()) {
             return alterar(t);
@@ -53,9 +55,10 @@ public class BaseService<T extends EntityAudit, ID, R extends BaseRepository<T, 
     private T alterar(T t) {
         try {
             Field field = t.getClass().getDeclaredField("id");
+            field.setAccessible(true);
             ID valorId = (ID) field.get(t);
             buscarPorId(valorId);
-            return this.salvar(t);
+            return repo.saveAndFlush(t);
         } catch (IllegalAccessException | NoSuchFieldException e) {
             log.error("Erro: {} \n StackTrace: {}", e.getMessage(), e.getStackTrace());
             throw new IllegalArgumentException("O campo id é obrigatório no corpo da requisição");
