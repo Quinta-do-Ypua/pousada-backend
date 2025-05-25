@@ -2,6 +2,7 @@ package com.senai.pousadabackend.domain.quarto.service;
 
 import com.senai.pousadabackend.domain.quarto.Quarto;
 import com.senai.pousadabackend.exceptions.RegistroDuplicadoException;
+import com.senai.pousadabackend.exceptions.RegistroNaoEncontradoException;
 import com.senai.pousadabackend.repository.QuartoRepository;
 import com.senai.pousadabackend.service.BaseService;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,10 @@ public class QuartoServiceImpl extends BaseService<Quarto, Long, QuartoRepositor
     public Quarto salvar(Quarto quarto) {
         prepararQuarto(quarto);
         return super.salvar(quarto);
+    }
+
+    public Quarto buscarPorIdComImagens(Long quartoId) {
+        return quartoRepository.buscarPorIdComImagens(quartoId).orElseThrow(() -> new RegistroNaoEncontradoException("O registro com o id '" + quartoId + "' não foi encontrado"));
     }
 
     private void prepararQuarto(Quarto quarto) {

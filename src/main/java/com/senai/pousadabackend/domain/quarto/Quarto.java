@@ -40,6 +40,9 @@ public class Quarto extends EntityAudit {
     @Column
     private String observacao;
 
+    @EqualsAndHashCode.Exclude
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "quarto", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UrlImagem> urlImagens;
 
     @ManyToMany
     @JoinTable(
