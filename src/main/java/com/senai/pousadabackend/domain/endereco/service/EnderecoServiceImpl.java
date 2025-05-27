@@ -1,8 +1,8 @@
 package com.senai.pousadabackend.domain.endereco.service;
 
 import com.senai.pousadabackend.domain.endereco.Endereco;
-import com.senai.pousadabackend.repository.EnderecoRepository;
-import com.senai.pousadabackend.service.BaseService;
+import com.senai.pousadabackend.domain.endereco.EnderecoRepository;
+import com.senai.pousadabackend.core.BaseService;
 import org.springframework.stereotype.Service;
 
 @Service

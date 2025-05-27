@@ -30,5 +30,7 @@ public class QuartoDTO {
 
     private List<AmenidadeDto> amenidades;
 
+    private List<ImagemQuarto> urlImagens;
+
     private String observacao;
 }

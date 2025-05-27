@@ -2,7 +2,7 @@ package com.senai.pousadabackend.domain.cliente;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.senai.pousadabackend.domain.endereco.Endereco;
-import com.senai.pousadabackend.entity.EntityAudit;
+import com.senai.pousadabackend.core.entity.EntityAudit;
 import jakarta.persistence.*;
 import lombok.*;
 

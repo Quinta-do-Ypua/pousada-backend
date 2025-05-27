@@ -3,8 +3,7 @@ package com.senai.pousadabackend.domain.Imagem;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.senai.pousadabackend.domain.quarto.Quarto;
-import com.senai.pousadabackend.domain.quarto.UrlImagem;
+import com.senai.pousadabackend.domain.quarto.ImagemQuarto;
 import com.senai.pousadabackend.integration.UploadQuarto;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -32,7 +31,7 @@ public class ImagemServiceProxy implements ImagemService {
     public void uploadImagem(List<MultipartFile> imagens, Long idQuarto) {
         service.uploadImagem(imagens, idQuarto);
 
-        List<UrlImagem> urls = new ArrayList<>();
+        List<ImagemQuarto> urls = new ArrayList<>();
 
         for (MultipartFile imagem : imagens) {
             String nomeImagem = imagem.getOriginalFilename();
@@ -46,7 +45,7 @@ public class ImagemServiceProxy implements ImagemService {
                 throw new RuntimeException(e);
             }
 
-            urls.add(UrlImagem
+            urls.add(ImagemQuarto
                     .builder()
                     .url(jsonNode.get("url").asText())
                     .fileId(jsonNode.get("fileId").asText())
@@ -58,7 +57,7 @@ public class ImagemServiceProxy implements ImagemService {
     }
 
     @Override
-    public void salvar(List<UrlImagem> urlsFormatadas, Long idQuarto) {
+    public void salvar(List<ImagemQuarto> urlsFormatadas, Long idQuarto) {
         service.salvar(urlsFormatadas, idQuarto);
     }
 }

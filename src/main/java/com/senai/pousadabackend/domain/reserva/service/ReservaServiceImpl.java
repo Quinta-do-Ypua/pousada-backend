@@ -6,9 +6,9 @@ import com.senai.pousadabackend.exceptions.CancelamentoDeReservaConcluidaExcepti
 import com.senai.pousadabackend.exceptions.DataDaReservaInvalida;
 import com.senai.pousadabackend.exceptions.ExisteReservaAbertaParaEsseCliente;
 import com.senai.pousadabackend.exceptions.ExisteReservaParaEssaDataException;
-import com.senai.pousadabackend.repository.ReservaRepository;
+import com.senai.pousadabackend.domain.reserva.ReservaRepository;
 import com.senai.pousadabackend.domain.reserva.Reserva;
-import com.senai.pousadabackend.service.BaseService;
+import com.senai.pousadabackend.core.BaseService;
 import com.senai.pousadabackend.domain.nota_fiscal.service.NotaFiscalService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;

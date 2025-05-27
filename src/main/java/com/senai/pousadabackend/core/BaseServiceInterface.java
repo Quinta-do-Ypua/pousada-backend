@@ -1,4 +1,4 @@
-package com.senai.pousadabackend.service;
+package com.senai.pousadabackend.core;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
