@@ -1,7 +1,7 @@
 package com.senai.pousadabackend.domain.quarto;
 
 import com.senai.pousadabackend.domain.amenidade.AmenidadeMapper;
-import com.senai.pousadabackend.mappers.BaseMapper;
+import com.senai.pousadabackend.core.BaseMapper;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -28,6 +28,9 @@ public class QuartoMapper implements BaseMapper<Quarto, QuartoDTO> {
         if (quarto.getAmenidades() != null)
             quartoDto.setAmenidades(quarto.getAmenidades().stream().map(amenidadeMapper::toDTO).toList());
 
+        if (quarto.getUrlImagens() != null && !quarto.getUrlImagens().isEmpty())
+            quartoDto.setUrlImagens(quarto.getUrlImagens());
+
         return quartoDto;
     }
 
@@ -35,7 +38,8 @@ public class QuartoMapper implements BaseMapper<Quarto, QuartoDTO> {
     public Quarto toEntity(QuartoDTO quartoDTO) {
         var quarto = Quarto.builder()
                 .id(quartoDTO.getId())
-                .nome(quartoDTO.getNome())        .capacidade(quartoDTO.getCapacidade())
+                .nome(quartoDTO.getNome())
+                .capacidade(quartoDTO.getCapacidade())
                 .observacao(quartoDTO.getObservacao())
                 .qtdCamaCasal(quartoDTO.getQtdCamaCasal())
                 .qtdCamaSolteiro(quartoDTO.getQtdCamaSolteiro())
@@ -44,6 +48,9 @@ public class QuartoMapper implements BaseMapper<Quarto, QuartoDTO> {
 
         if (quartoDTO.getAmenidades() != null)
             quarto.setAmenidades(quartoDTO.getAmenidades().stream().map(amenidadeMapper::toEntity).toList());
+
+        if (quartoDTO.getUrlImagens() != null && !quartoDTO.getUrlImagens().isEmpty())
+            quarto.setUrlImagens(quartoDTO.getUrlImagens());
 
         return quarto;
     }

@@ -2,7 +2,7 @@ package com.senai.pousadabackend.domain.reserva;
 
 import com.senai.pousadabackend.domain.complemento.ComplementoMapper;
 import com.senai.pousadabackend.domain.quarto.QuartoMapper;
-import com.senai.pousadabackend.mappers.BaseMapper;
+import com.senai.pousadabackend.core.BaseMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;

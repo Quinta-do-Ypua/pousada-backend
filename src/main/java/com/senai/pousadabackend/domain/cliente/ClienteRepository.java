@@ -1,6 +1,6 @@
-package com.senai.pousadabackend.repository;
+package com.senai.pousadabackend.domain.cliente;
 
-import com.senai.pousadabackend.domain.cliente.Cliente;
+import com.senai.pousadabackend.core.repository.BaseRepository;
 
 public interface ClienteRepository extends BaseRepository<Cliente, Long> {
 

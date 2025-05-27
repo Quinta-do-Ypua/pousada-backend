@@ -1,7 +1,7 @@
 package com.senai.pousadabackend.domain.quarto;
 
 import com.senai.pousadabackend.domain.amenidade.Amenidade;
-import com.senai.pousadabackend.entity.EntityAudit;
+import com.senai.pousadabackend.core.entity.EntityAudit;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -42,7 +42,7 @@ public class Quarto extends EntityAudit {
 
     @EqualsAndHashCode.Exclude
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "quarto", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<UrlImagem> urlImagens;
+    private List<ImagemQuarto> urlImagens;
 
     @ManyToMany
     @JoinTable(

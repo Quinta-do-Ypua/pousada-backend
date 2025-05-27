@@ -4,13 +4,13 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "url_imagens")
+@Table(name = "imagens_quartos")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
-public class UrlImagem {
+public class ImagemQuarto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,6 +1,6 @@
 package com.senai.pousadabackend.domain.complemento;
 
-import com.senai.pousadabackend.entity.EntityAudit;
+import com.senai.pousadabackend.core.entity.EntityAudit;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Builder;

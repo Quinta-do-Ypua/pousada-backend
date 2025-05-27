@@ -2,7 +2,7 @@ package com.senai.pousadabackend.domain.cliente;
 
 import com.senai.pousadabackend.domain.endereco.EnderecoDTO;
 import com.senai.pousadabackend.domain.endereco.Endereco;
-import com.senai.pousadabackend.mappers.BaseMapper;
+import com.senai.pousadabackend.core.BaseMapper;
 import org.springframework.stereotype.Component;
 
 @Component

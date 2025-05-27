@@ -1,6 +1,6 @@
 package com.senai.pousadabackend.domain.complemento;
 
-import com.senai.pousadabackend.mappers.BaseMapper;
+import com.senai.pousadabackend.core.BaseMapper;
 import org.springframework.stereotype.Component;
 
 @Component

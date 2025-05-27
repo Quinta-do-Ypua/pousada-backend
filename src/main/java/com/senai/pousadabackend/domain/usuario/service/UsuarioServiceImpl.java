@@ -1,10 +1,9 @@
 package com.senai.pousadabackend.domain.usuario.service;
 
 import com.senai.pousadabackend.domain.usuario.Usuario;
-import com.senai.pousadabackend.entity.Status;
 import com.senai.pousadabackend.exceptions.BusinessException;
-import com.senai.pousadabackend.repository.UsuarioRepository;
-import com.senai.pousadabackend.service.BaseService;
+import com.senai.pousadabackend.domain.usuario.UsuarioRepository;
+import com.senai.pousadabackend.core.BaseService;
 import org.springframework.stereotype.Service;
 
 @Service

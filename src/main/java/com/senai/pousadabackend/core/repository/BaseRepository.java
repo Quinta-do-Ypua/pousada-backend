@@ -1,7 +1,7 @@
-package com.senai.pousadabackend.repository;
+package com.senai.pousadabackend.core.repository;
 
-import com.senai.pousadabackend.entity.EntityAudit;
-import com.senai.pousadabackend.entity.Status;
+import com.senai.pousadabackend.core.entity.EntityAudit;
+import com.senai.pousadabackend.core.entity.Status;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

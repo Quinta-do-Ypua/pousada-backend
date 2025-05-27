@@ -1,6 +1,6 @@
-package com.senai.pousadabackend.repository;
+package com.senai.pousadabackend.domain.complemento;
 
-import com.senai.pousadabackend.domain.complemento.Complemento;
+import com.senai.pousadabackend.core.repository.BaseRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
