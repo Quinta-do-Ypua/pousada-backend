@@ -28,9 +28,6 @@ public class QuartoMapper implements BaseMapper<Quarto, QuartoDTO> {
         if (quarto.getAmenidades() != null)
             quartoDto.setAmenidades(quarto.getAmenidades().stream().map(amenidadeMapper::toDTO).toList());
 
-        if (quarto.getUrlImagens() != null && !quarto.getUrlImagens().isEmpty())
-            quartoDto.setUrlImagens(quarto.getUrlImagens());
-
         return quartoDto;
     }
 
@@ -48,9 +45,6 @@ public class QuartoMapper implements BaseMapper<Quarto, QuartoDTO> {
 
         if (quartoDTO.getAmenidades() != null)
             quarto.setAmenidades(quartoDTO.getAmenidades().stream().map(amenidadeMapper::toEntity).toList());
-
-        if (quartoDTO.getUrlImagens() != null && !quartoDTO.getUrlImagens().isEmpty())
-            quarto.setUrlImagens(quartoDTO.getUrlImagens());
 
         return quarto;
     }

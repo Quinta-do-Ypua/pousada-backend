@@ -40,10 +40,6 @@ public class Quarto extends EntityAudit {
     @Column
     private String observacao;
 
-    @EqualsAndHashCode.Exclude
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "quarto", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ImagemQuarto> urlImagens;
-
     @ManyToMany
     @JoinTable(
             name = "quarto_amenidade",
@@ -51,6 +47,5 @@ public class Quarto extends EntityAudit {
             inverseJoinColumns = @JoinColumn(name = "amenidade_id")
     )
     private List<Amenidade> amenidades;
-
 
 }

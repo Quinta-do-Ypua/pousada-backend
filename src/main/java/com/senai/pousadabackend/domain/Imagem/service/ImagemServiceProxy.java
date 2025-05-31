@@ -1,9 +1,9 @@
-package com.senai.pousadabackend.domain.Imagem;
+package com.senai.pousadabackend.domain.Imagem.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.senai.pousadabackend.domain.quarto.ImagemQuarto;
+import com.senai.pousadabackend.domain.Imagem.ImagemQuarto;
 import com.senai.pousadabackend.integration.UploadQuarto;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -59,5 +59,15 @@ public class ImagemServiceProxy implements ImagemService {
     @Override
     public void salvar(List<ImagemQuarto> urlsFormatadas, Long idQuarto) {
         service.salvar(urlsFormatadas, idQuarto);
+    }
+
+    @Override
+    public List<ImagemQuarto> listarPor(Long idQuarto) {
+        return service.listarPor(idQuarto);
+    }
+
+    @Override
+    public void deletar(ImagemQuarto imagemQuarto) {
+        service.deletar(imagemQuarto);
     }
 }

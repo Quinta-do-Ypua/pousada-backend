@@ -21,3 +21,4 @@ sendgrid:
 imagekit:
   chavePrivada: ${CHAVE_PRIVADA_IMAGEKIT}
   urlUpload: ${UPLOAD_URL_IMAGEKIT}
+  urlDelete: ${DELETE_URL_IMAGEKIT}
