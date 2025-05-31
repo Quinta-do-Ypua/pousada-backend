@@ -1,9 +1,11 @@
-package com.senai.pousadabackend.domain.Imagem;
+package com.senai.pousadabackend.domain.Imagem.service;
 
+import com.senai.pousadabackend.domain.Imagem.ImagemRepository;
 import com.senai.pousadabackend.domain.quarto.Quarto;
-import com.senai.pousadabackend.domain.quarto.ImagemQuarto;
+import com.senai.pousadabackend.domain.Imagem.ImagemQuarto;
 import com.senai.pousadabackend.domain.quarto.service.QuartoService;
 import com.senai.pousadabackend.exceptions.BusinessException;
+import com.senai.pousadabackend.integration.DeleteQuarto;
 import com.senai.pousadabackend.integration.UploadQuarto;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -16,16 +18,19 @@ public class ImagemServiceImpl implements ImagemService {
 
     private final QuartoService quartoService;
     private final UploadQuarto uploadQuarto;
+    private final DeleteQuarto deleteQuarto;
     private final ImagemRepository repository;
 
     public ImagemServiceImpl(
             @Qualifier("quartoServiceImpl")
             QuartoService quartoService,
             UploadQuarto uploadQuarto,
+            DeleteQuarto deleteQuarto,
             ImagemRepository repository) {
         this.quartoService = quartoService;
         this.uploadQuarto = uploadQuarto;
         this.repository = repository;
+        this.deleteQuarto = deleteQuarto;
     }
 
     private static final long TAMANHO_MAXIMO_ARQUIVO = 5 * 1024 * 1024;
@@ -44,27 +49,34 @@ public class ImagemServiceImpl implements ImagemService {
     public void salvar(List<ImagemQuarto> urlsFormatadas, Long idQuarto) {
         Quarto quarto = quartoService.buscarPorId(idQuarto);
 
-        List<ImagemQuarto> imagensRemovidas = quarto.getUrlImagens().stream()
-                .filter(imagem -> urlsFormatadas.stream()
-                        .noneMatch(nova -> nova.getId() != null && nova.getId().equals(imagem.getId())))
-                .toList();
-
-        for (ImagemQuarto removida : imagensRemovidas) {
-            if (removida.getFileId() != null) {
-                uploadQuarto.deletarImagem(removida.getFileId());
-                repository.deleteById(removida.getId());
-            }
-        }
-
-        quarto.getUrlImagens().removeAll(imagensRemovidas);
-
         for (ImagemQuarto nova : urlsFormatadas) {
-            if (nova.getId() == null) {
-                nova.setQuarto(quarto);
-                quarto.getUrlImagens().add(nova);
-            }
+            this.validar(nova);
+            nova.setQuarto(quarto);
+            repository.save(nova);
+        }
+    }
+
+    @Override
+    public List<ImagemQuarto> listarPor(Long idQuarto) {
+        return repository.listarPor(idQuarto);
+    }
+
+    @Override
+    public void deletar(ImagemQuarto imagemQuarto) {
+        this.validar((imagemQuarto));
+
+        deleteQuarto.deletarImagem(imagemQuarto.getFileId());
+        repository.deleteById(imagemQuarto.getId());
+    }
+
+    private void validar(ImagemQuarto imagemQuarto) {
+
+        if (imagemQuarto.getFileId() == null) {
+            throw new BusinessException("A imagem precisa conter o id do arquivo");
         }
 
-        quartoService.salvar(quarto);
+        if (imagemQuarto.getUrl() == null) {
+            throw new BusinessException("A imagem precisa conter a url do arquivo");
+        }
     }
 }

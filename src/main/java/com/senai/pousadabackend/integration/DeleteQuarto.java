@@ -8,12 +8,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
-@FeignClient(name = "uploadQuarto", url = "${imagekit.urlUpload}", configuration = UploadQuartoConfig.class)
-public interface UploadQuarto {
+@FeignClient(name = "deleteQuarto", url = "${imagekit.urlDelete}", configuration = UploadQuartoConfig.class)
+public interface DeleteQuarto {
 
-    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    String uploadImagem(
-            @RequestPart("file") MultipartFile file,
-            @RequestPart("fileName") String fileName
-    );
+    @DeleteMapping("/{fileId}")
+    void deletarImagem(@PathVariable("fileId") String fileId);
 }

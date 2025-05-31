@@ -1,5 +1,6 @@
-package com.senai.pousadabackend.domain.quarto;
+package com.senai.pousadabackend.domain.Imagem;
 
+import com.senai.pousadabackend.domain.quarto.Quarto;
 import jakarta.persistence.*;
 import lombok.*;
 
