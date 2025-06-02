@@ -35,9 +35,8 @@ public class Quarto extends EntityAudit{
     @Column(nullable = false)
     private BigDecimal valorDiaria;
 
-    @Column
+    @Column(length = 1000)
     private String observacao;
-
 
     @ManyToMany
     @JoinTable(

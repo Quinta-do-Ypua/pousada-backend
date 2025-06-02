@@ -13,12 +13,12 @@ public class ItemDto {
 
     private Long id;
 
-    @NotBlank(message = "O tipo do item é obrigatório")
+    @NotBlank
     private String tipoItem;
 
-    @NotNull(message = "O id do item é obrigatório")
+    @NotNull
     private Long itemId;
 
-    @NotBlank(message = "O valor unitário é obrigatório")
+    @NotBlank
     private BigDecimal valorUnitario;
 }

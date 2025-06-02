@@ -20,8 +20,8 @@ public class ClienteDTO {
     @NotBlank
     private String nome;
 
-    @NotBlank(message = "O cpf é obrigatório")
-    @CPF(message = "O cpf deve ser valido")
+    @NotBlank
+    @CPF
     private String cpf;
 
     @NotBlank

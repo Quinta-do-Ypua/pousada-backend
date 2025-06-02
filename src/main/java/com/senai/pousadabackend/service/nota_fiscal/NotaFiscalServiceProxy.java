@@ -52,7 +52,13 @@ public class NotaFiscalServiceProxy implements NotaFiscalService {
     }
 
     @Override
-    public NotaFiscal criarNotaFiscalAPartirDaReserva(Reserva reserva) {
-        return delegate.criarNotaFiscalAPartirDaReserva(reserva);
+    public void criarNotaFiscalAssincronaAPartirDaReserva(Reserva reserva) {
+        delegate.criarNotaFiscalAssincronaAPartirDaReserva(reserva);
     }
+
+    @Override
+    public NotaFiscal criarERetornarNotaFiscalAPartirDaReserva(Reserva reserva) {
+        return delegate.criarERetornarNotaFiscalAPartirDaReserva(reserva);
+    }
+
 }

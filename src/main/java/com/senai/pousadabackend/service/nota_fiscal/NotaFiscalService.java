@@ -6,6 +6,8 @@ import com.senai.pousadabackend.service.BaseServiceInterface;
 
 public interface NotaFiscalService extends BaseServiceInterface<NotaFiscal, Long> {
 
-    NotaFiscal criarNotaFiscalAPartirDaReserva(Reserva reserva);
+    void criarNotaFiscalAssincronaAPartirDaReserva(Reserva reserva);
+
+    NotaFiscal criarERetornarNotaFiscalAPartirDaReserva(Reserva reserva);
 
 }

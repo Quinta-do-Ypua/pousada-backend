@@ -15,17 +15,17 @@ public class QuartoDTO {
 
     private Long id;
 
-    @NotBlank(message = "O nome é obrigatório")
+    @NotBlank
     private String nome;
 
-    @NotNull(message = "A capacidade é obrigatória")
+    @NotNull
     private Integer capacidade;
 
     private Integer qtdCamaSolteiro;
 
     private Integer qtdCamaCasal;
 
-    @NotNull(message = "O valor da diaria é obrigatório")
+    @NotNull
     private BigDecimal valorDiaria;
 
     private List<AmenidadeDto> amenidades;

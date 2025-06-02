@@ -30,7 +30,16 @@ public class NotaFiscalServiceImpl extends BaseService<NotaFiscal, Long, NotaFis
     }
 
     @Override
-    public NotaFiscal criarNotaFiscalAPartirDaReserva(Reserva reserva) {
+    public void criarNotaFiscalAssincronaAPartirDaReserva(Reserva reserva) {
+        Thread.startVirtualThread(() -> gerarNotaFiscalAPartirDaReserva(reserva));
+    }
+
+    @Override
+    public NotaFiscal criarERetornarNotaFiscalAPartirDaReserva(Reserva reserva) {
+        return gerarNotaFiscalAPartirDaReserva(reserva);
+    }
+
+    private NotaFiscal gerarNotaFiscalAPartirDaReserva(Reserva reserva) {
         NotaFiscal notaFiscal = gerarNotafiscalInicial(reserva);
 
         List<NotaFiscalItem> itens = prepararComplementos(reserva, notaFiscal);
