@@ -15,19 +15,19 @@ public class NotaFiscalDto {
 
     private Long idNotaFiscal;
 
-    @NotBlank(message = "O numero da nf é obrigatório")
+    @NotBlank
     private String numero;
 
-    @NotNull(message = "A data de cadastro é obrigatória")
+    @NotNull
     private LocalDate dataCadastro;
 
-    @NotNull(message = "O cliente é obrigatório")
+    @NotNull
     private ClienteDTO cliente;
 
-    @NotNull(message = "O valor total da nota deve ser preenchido")
+    @NotNull
     private BigDecimal valorTotal;
 
-    @NotNull(message = "A nota deve conter itens")
+    @NotNull
     private List<NotaFiscalItemReduzidoDto> itens;
 
 }

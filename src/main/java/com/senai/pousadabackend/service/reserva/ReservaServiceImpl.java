@@ -30,8 +30,6 @@ public class ReservaServiceImpl extends BaseService<Reserva, Long, ReservaReposi
     public Reserva salvar(Reserva reserva) {
         if (reserva.getId() == null) {
             inicializarReserva(reserva);
-            validarNovaReserva(reserva);
-            notaFiscalService.criarNotaFiscalAPartirDaReserva(reserva);
         }
         return super.salvar(reserva);
     }
@@ -54,6 +52,8 @@ public class ReservaServiceImpl extends BaseService<Reserva, Long, ReservaReposi
 
     private void inicializarReserva(Reserva reserva) {
         definirStatusPadrao(reserva);
+        validarNovaReserva(reserva);
+        notaFiscalService.criarNotaFiscalAssincronaAPartirDaReserva(reserva);
     }
 
     private void validarCancelamento(Reserva reserva) {

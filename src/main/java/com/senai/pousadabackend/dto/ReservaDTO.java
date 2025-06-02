@@ -6,6 +6,7 @@ import com.senai.pousadabackend.entity.enums.StatusDaReserva;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -24,6 +25,7 @@ public class ReservaDTO {
 
     private StatusDaReserva statusDaReserva;
 
+    @Length(max = 1000)
     private String observacao;
 
     @NotNull

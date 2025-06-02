@@ -12,16 +12,16 @@ public class NotaFiscalItemReduzidoDto {
 
     private Long id;
 
-    @NotNull(message = "O item é obrigatório")
+    @NotNull
     private ItemDto item;
 
-    @NotNull(message = "A quantidade dos itens é obrigatória")
+    @NotNull
     private Integer quantidade;
 
-    @NotNull(message = "O valor unitário é obrigatório")
+    @NotNull
     private BigDecimal valorUnitario;
 
-    @NotNull(message = "O valor total é obrigatório")
+    @NotNull
     private BigDecimal valorTotal;
 
 }
