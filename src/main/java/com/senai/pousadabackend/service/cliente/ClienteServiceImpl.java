@@ -27,18 +27,23 @@ public class ClienteServiceImpl extends BaseService<Cliente, Long, ClienteReposi
     }
 
     private void validarViolacaoDeUnique(Cliente cliente) {
-        if (repo.existsByCelular(cliente.getCelular()))
-            throw new RegistroDuplicadoException("Já existe um cliente com esse celular");
 
-        if (repo.existsByCpf(cliente.getCpf()))
-            throw new RegistroDuplicadoException("Já existe um cliente com esse CPF");
+        repo.findByCpf(cliente.getCpf()).ifPresent(c -> {
+            if (!c.getId().equals(cliente.getId()))
+                throw new RegistroDuplicadoException("Já existe um cliente com esse CPF");
+        });
 
-        if (repo.existsByEmail(cliente.getEmail()))
-            throw new RegistroDuplicadoException("Já existe um cliente com esse email");
+        repo.findByCelular(cliente.getCelular()).ifPresent(c -> {
+            if (!c.getId().equals(cliente.getId()))
+                throw new RegistroDuplicadoException("Já existe um cliente com esse celular");
+        });
 
-        if (repo.existsByNome(cliente.getNome()))
-            throw new RegistroDuplicadoException("Já existe um cliente com esse nome");
-
+        repo.findByEmail(cliente.getEmail()).ifPresent(c -> {
+            if (!c.getId().equals(cliente.getId()))
+                throw new RegistroDuplicadoException("Já existe um cliente com esse email");
+        });
     }
+
+
 
 }

@@ -22,12 +22,9 @@ public class EnderecoDTO {
     @NotBlank
     private String cep;
 
-    @NotBlank
     private String bairro;
 
-    @NotBlank
     private String numero;
 
-    @NotBlank
     private String complemento;
 }

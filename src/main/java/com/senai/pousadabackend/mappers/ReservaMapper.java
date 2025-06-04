@@ -4,18 +4,20 @@ import com.senai.pousadabackend.dto.ReservaDTO;
 import com.senai.pousadabackend.entity.Reserva;
 import org.springframework.stereotype.Component;
 
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Optional;
 
 @Component
 public class ReservaMapper implements BaseMapper<Reserva, ReservaDTO> {
 
-
     private final QuartoMapper quartoMapper;
     private final ComplementoMapper complementoMapper;
+    private final ClienteMapper clienteMapper;
 
-    public ReservaMapper(QuartoMapper quartoMapper, ComplementoMapper complementoMapper) {
+    public ReservaMapper(QuartoMapper quartoMapper, ComplementoMapper complementoMapper, ClienteMapper clienteMapper) {
         this.quartoMapper = quartoMapper;
         this.complementoMapper = complementoMapper;
+        this.clienteMapper = clienteMapper;
     }
 
     @Override
@@ -27,9 +29,15 @@ public class ReservaMapper implements BaseMapper<Reserva, ReservaDTO> {
                 .valorDaReserva(reserva.getValorDaReserva())
                 .checkIn(reserva.getCheckIn())
                 .checkOut(reserva.getCheckOut())
-                .cliente(reserva.getCliente())
+                .cliente(clienteMapper.toDTO(reserva.getCliente()))
                 .observacao(reserva.getObservacao())
-                .complementos(reserva.getComplementos().stream().map(complementoMapper::toDTO).collect(Collectors.toList()))
+                .complementos(
+                        Optional.ofNullable(reserva.getComplementos())
+                                .orElse(List.of())
+                                .stream()
+                                .map(complementoMapper::toDTO)
+                                .toList()
+                )
                 .build();
     }
 
@@ -42,13 +50,16 @@ public class ReservaMapper implements BaseMapper<Reserva, ReservaDTO> {
                 .valorDaReserva(reservaDTO.getValorDaReserva())
                 .checkIn(reservaDTO.getCheckIn())
                 .checkOut(reservaDTO.getCheckOut())
-                .cliente(reservaDTO.getCliente())
+                .cliente(clienteMapper.toEntity(reservaDTO.getCliente()))
                 .observacao(reservaDTO.getObservacao())
                 .checkOut(reservaDTO.getCheckOut())
-                .cliente(reservaDTO.getCliente())
                 .observacao(reservaDTO.getObservacao())
                 .valorDaReserva(reservaDTO.getValorDaReserva())
-                .complementos(reservaDTO.getComplementos().stream().map(complementoMapper::toEntity).collect(Collectors.toList()))
+                .complementos(Optional.ofNullable(reservaDTO.getComplementos())
+                        .orElse(List.of())
+                        .stream()
+                        .map(complementoMapper::toEntity)
+                        .toList())
                 .build();
     }
 }

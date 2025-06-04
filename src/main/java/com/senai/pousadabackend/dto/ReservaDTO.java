@@ -35,7 +35,7 @@ public class ReservaDTO {
     private LocalDateTime checkOut;
 
     @NotNull
-    private Cliente cliente;
+    private ClienteDTO cliente;
 
     private List<ComplementoDTO> complementos;
 

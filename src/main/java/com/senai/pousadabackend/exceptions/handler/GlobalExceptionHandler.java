@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -63,6 +62,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BusinessException.class)
     public Map<String, Map<String, Object>> handle(BusinessException be){
         return criarMapDeErro(ErroDaApi.REGRA_VIOLADA, be.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public Map<String, Map<String, Object>> handle(DataIntegrityViolationException ex) {
+        return criarMapDeErro(ErroDaApi.REGRA_VIOLADA, ex.getMessage());
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
