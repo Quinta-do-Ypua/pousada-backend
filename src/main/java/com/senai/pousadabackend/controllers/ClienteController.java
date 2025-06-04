@@ -1,11 +1,10 @@
 package com.senai.pousadabackend.controllers;
 
-import com.senai.pousadabackend.dto.ClienteDTO;
-import com.senai.pousadabackend.entity.Cliente;
-import com.senai.pousadabackend.mappers.ClienteMapper;
-import com.senai.pousadabackend.service.cliente.ClienteService;
+import com.senai.pousadabackend.domain.cliente.ClienteDTO;
+import com.senai.pousadabackend.domain.cliente.Cliente;
+import com.senai.pousadabackend.domain.cliente.ClienteMapper;
+import com.senai.pousadabackend.domain.cliente.service.ClienteService;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
