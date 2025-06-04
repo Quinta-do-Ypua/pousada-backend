@@ -46,5 +46,4 @@ public class Quarto extends EntityAudit{
     )
     private List<Amenidade> amenidades;
 
-
 }
