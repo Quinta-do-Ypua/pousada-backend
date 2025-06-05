@@ -153,6 +153,12 @@ public class GlobalExceptionHandler {
                 ie.getMessage());
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(DataDaReservaInvalida.class)
+    public Map<String, Map<String, Object>> handle(DataDaReservaInvalida dar){
+        return criarMapDeErro(ErroDaApi.FORMATO_INVALIDO, dar.getMessage());
+    }
+
     private Map<String, Map<String, Object>> criarMapDeErro(ErroDaApi erroDaApi, String msgDeErro){
 
         Map<String, Map<String, Object>> body = new HashMap<>();
