@@ -28,6 +28,6 @@ public class EnderecoDTO {
     @NotBlank
     private String numero;
 
-    @NotBlank
     private String complemento;
+
 }

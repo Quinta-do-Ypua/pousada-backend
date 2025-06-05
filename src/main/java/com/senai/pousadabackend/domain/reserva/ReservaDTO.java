@@ -1,6 +1,6 @@
 package com.senai.pousadabackend.domain.reserva;
 
-import com.senai.pousadabackend.domain.cliente.Cliente;
+import com.senai.pousadabackend.domain.cliente.ClienteDTO;
 import com.senai.pousadabackend.domain.complemento.ComplementoDTO;
 import com.senai.pousadabackend.domain.quarto.QuartoDTO;
 import jakarta.validation.constraints.NotNull;
@@ -33,7 +33,7 @@ public class ReservaDTO {
     private LocalDateTime checkOut;
 
     @NotNull
-    private Cliente cliente;
+    private ClienteDTO cliente;
 
     private List<ComplementoDTO> complementos;
 
