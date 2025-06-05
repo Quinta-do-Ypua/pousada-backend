@@ -1,6 +1,5 @@
-package com.senai.pousadabackend.domain.nota_fiscal.service;
+package com.senai.pousadabackend.domain.resumo;
 
-import com.senai.pousadabackend.domain.nota_fiscal.NotaFiscal;
 import com.senai.pousadabackend.domain.reserva.Reserva;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
@@ -8,26 +7,26 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
-public class NotaFiscalServiceProxy implements NotaFiscalService {
+public class ResumoReservaServiceProxy implements ResumoReservaService {
 
-    private final NotaFiscalService delegate;
+    private final ResumoReservaService delegate;
 
-    public NotaFiscalServiceProxy(@Qualifier("notaFiscalServiceImpl") NotaFiscalService delegate) {
+    public ResumoReservaServiceProxy(@Qualifier("resumoReservaServiceImpl") ResumoReservaService delegate) {
         this.delegate = delegate;
     }
 
     @Override
-    public NotaFiscal salvar(NotaFiscal notaFiscal) {
-        return delegate.salvar(notaFiscal);
+    public ResumoReserva salvar(ResumoReserva resumoReserva) {
+        return delegate.salvar(resumoReserva);
     }
 
     @Override
-    public NotaFiscal buscarPorId(Long aLong) {
+    public ResumoReserva buscarPorId(Long aLong) {
         return delegate.buscarPorId(aLong);
     }
 
     @Override
-    public NotaFiscal excluir(Long aLong) {
+    public ResumoReserva excluir(Long aLong) {
         return delegate.excluir(aLong);
     }
 
@@ -37,17 +36,17 @@ public class NotaFiscalServiceProxy implements NotaFiscalService {
     }
 
     @Override
-    public Page<NotaFiscal> buscarPorSpecification(String parametro, Pageable pageable) {
+    public Page<ResumoReserva> buscarPorSpecification(String parametro, Pageable pageable) {
         return delegate.buscarPorSpecification(parametro, pageable);
     }
 
     @Override
-    public Page<NotaFiscal> listarPaginado(Pageable pageable) {
+    public Page<ResumoReserva> listarPaginado(Pageable pageable) {
         return delegate.listarPaginado(pageable);
     }
 
     @Override
-    public Page<NotaFiscal> listarInativos(Pageable pageable) {
+    public Page<ResumoReserva> listarInativos(Pageable pageable) {
         return delegate.listarInativos(pageable);
     }
 
@@ -57,7 +56,7 @@ public class NotaFiscalServiceProxy implements NotaFiscalService {
     }
 
     @Override
-    public NotaFiscal criarERetornarNotaFiscalAPartirDaReserva(Reserva reserva) {
+    public ResumoReserva criarERetornarNotaFiscalAPartirDaReserva(Reserva reserva) {
         return delegate.criarERetornarNotaFiscalAPartirDaReserva(reserva);
     }
 

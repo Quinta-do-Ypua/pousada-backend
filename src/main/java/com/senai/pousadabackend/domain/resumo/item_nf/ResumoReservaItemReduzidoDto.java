@@ -1,6 +1,6 @@
-package com.senai.pousadabackend.domain.nota_fiscal.item_nf;
+package com.senai.pousadabackend.domain.resumo.item_nf;
 
-import com.senai.pousadabackend.domain.nota_fiscal.item.ItemDto;
+import com.senai.pousadabackend.domain.resumo.item.ItemDto;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 
 @Data
 @Builder
-public class NotaFiscalItemReduzidoDto {
+public class ResumoReservaItemReduzidoDto {
 
     private Long id;
 

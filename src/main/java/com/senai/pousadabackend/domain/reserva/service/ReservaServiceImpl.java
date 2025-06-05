@@ -2,10 +2,10 @@ package com.senai.pousadabackend.domain.reserva.service;
 
 import com.senai.pousadabackend.core.BaseService;
 import com.senai.pousadabackend.domain.cliente.Cliente;
-import com.senai.pousadabackend.domain.nota_fiscal.service.NotaFiscalService;
 import com.senai.pousadabackend.domain.reserva.Reserva;
 import com.senai.pousadabackend.domain.reserva.ReservaRepository;
 import com.senai.pousadabackend.domain.reserva.StatusDaReserva;
+import com.senai.pousadabackend.domain.resumo.ResumoReservaService;
 import com.senai.pousadabackend.exceptions.CancelamentoDeReservaConcluidaException;
 import com.senai.pousadabackend.exceptions.DataDaReservaInvalida;
 import com.senai.pousadabackend.exceptions.ExisteReservaAbertaParaEsseCliente;
@@ -18,13 +18,13 @@ public class ReservaServiceImpl extends BaseService<Reserva, Long, ReservaReposi
 
     private final ReservaRepository reservaRepository;
 
-    private final NotaFiscalService notaFiscalService;
+    private final ResumoReservaService resumoReservaService;
 
     public ReservaServiceImpl(ReservaRepository repo,
-                              @Qualifier("notaFiscalServiceProxy") NotaFiscalService notaFiscalService) {
+                              @Qualifier("resumoReservaServiceProxy") ResumoReservaService resumoReservaService) {
         super(repo);
         this.reservaRepository = repo;
-        this.notaFiscalService = notaFiscalService;
+        this.resumoReservaService = resumoReservaService;
     }
 
     @Override
@@ -54,7 +54,7 @@ public class ReservaServiceImpl extends BaseService<Reserva, Long, ReservaReposi
     private void inicializarReserva(Reserva reserva) {
         definirStatusPadrao(reserva);
         validarNovaReserva(reserva);
-        notaFiscalService.criarNotaFiscalAssincronaAPartirDaReserva(reserva);
+        resumoReservaService.criarNotaFiscalAssincronaAPartirDaReserva(reserva);
     }
 
     private void validarCancelamento(Reserva reserva) {
