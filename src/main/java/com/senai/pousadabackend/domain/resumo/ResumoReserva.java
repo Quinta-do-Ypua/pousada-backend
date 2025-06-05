@@ -1,8 +1,8 @@
-package com.senai.pousadabackend.domain.nota_fiscal;
+package com.senai.pousadabackend.domain.resumo;
 
 import com.senai.pousadabackend.core.entity.EntityAudit;
 import com.senai.pousadabackend.domain.cliente.Cliente;
-import com.senai.pousadabackend.domain.nota_fiscal.item_nf.NotaFiscalItem;
+import com.senai.pousadabackend.domain.resumo.item_nf.ResumoReservaItem;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,13 +11,13 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Table(name = "notas_fiscais")
+@Table(name = "resumo_reserva")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
-public class NotaFiscal extends EntityAudit {
+public class ResumoReserva extends EntityAudit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,8 +37,8 @@ public class NotaFiscal extends EntityAudit {
     @Column(nullable = false)
     private BigDecimal valorTotal;
 
-    @OneToMany(mappedBy = "notaFiscal", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<NotaFiscalItem> itens;
+    @OneToMany(mappedBy = "resumoReserva", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ResumoReservaItem> itens;
 
 
 }

@@ -1,8 +1,8 @@
 package com.senai.pousadabackend.controllers;
 
-import com.senai.pousadabackend.domain.nota_fiscal.NotaFiscalDto;
-import com.senai.pousadabackend.domain.nota_fiscal.NotaFiscalMapper;
-import com.senai.pousadabackend.domain.nota_fiscal.service.NotaFiscalService;
+import com.senai.pousadabackend.domain.resumo.ResumoReservaDto;
+import com.senai.pousadabackend.domain.resumo.ResumoReservaMapper;
+import com.senai.pousadabackend.domain.resumo.ResumoReservaService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,19 +14,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("notas-fiscais")
 public class NotaFiscalController {
 
-    private final NotaFiscalService notaFiscalService;
+    private final ResumoReservaService resumoReservaService;
 
-    private final NotaFiscalMapper notaFiscalMapper;
+    private final ResumoReservaMapper resumoReservaMapper;
 
-    public NotaFiscalController(@Qualifier("notaFiscalServiceProxy") NotaFiscalService notaFiscalService,
-                                NotaFiscalMapper notaFiscalMapper) {
-        this.notaFiscalService = notaFiscalService;
-        this.notaFiscalMapper = notaFiscalMapper;
+    public NotaFiscalController(@Qualifier("resumoReservaServiceProxy") ResumoReservaService resumoReservaService,
+                                ResumoReservaMapper resumoReservaMapper) {
+        this.resumoReservaService = resumoReservaService;
+        this.resumoReservaMapper = resumoReservaMapper;
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<NotaFiscalDto> buscarPorId(@PathVariable(name = "id") Long id) {
-        return ResponseEntity.ok(notaFiscalMapper.toDTO(notaFiscalService.buscarPorId(id)));
+    public ResponseEntity<ResumoReservaDto> buscarPorId(@PathVariable(name = "id") Long id) {
+        return ResponseEntity.ok(resumoReservaMapper.toDTO(resumoReservaService.buscarPorId(id)));
     }
 
 }

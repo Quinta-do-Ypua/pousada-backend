@@ -1,6 +1,5 @@
-package com.senai.pousadabackend.domain.nota_fiscal.service.item;
+package com.senai.pousadabackend.domain.resumo.item;
 
-import com.senai.pousadabackend.domain.nota_fiscal.item.Item;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

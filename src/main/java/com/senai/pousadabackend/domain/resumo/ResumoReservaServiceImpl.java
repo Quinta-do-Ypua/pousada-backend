@@ -1,15 +1,13 @@
-package com.senai.pousadabackend.domain.nota_fiscal.service;
+package com.senai.pousadabackend.domain.resumo;
 
 import com.senai.pousadabackend.core.BaseService;
 import com.senai.pousadabackend.domain.complemento.Complemento;
 import com.senai.pousadabackend.domain.complemento.service.ComplementoService;
-import com.senai.pousadabackend.domain.nota_fiscal.NotaFiscal;
-import com.senai.pousadabackend.domain.nota_fiscal.NotaFiscalRepository;
-import com.senai.pousadabackend.domain.nota_fiscal.item.Item;
-import com.senai.pousadabackend.domain.nota_fiscal.item_nf.NotaFiscalItem;
 import com.senai.pousadabackend.domain.quarto.Quarto;
 import com.senai.pousadabackend.domain.quarto.service.QuartoService;
 import com.senai.pousadabackend.domain.reserva.Reserva;
+import com.senai.pousadabackend.domain.resumo.item.Item;
+import com.senai.pousadabackend.domain.resumo.item_nf.ResumoReservaItem;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -20,15 +18,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class NotaFiscalServiceImpl extends BaseService<NotaFiscal, Long, NotaFiscalRepository> implements NotaFiscalService {
+public class ResumoReservaServiceImpl extends BaseService<ResumoReserva, Long, ResumoReservaRepository> implements ResumoReservaService {
 
     private final QuartoService quartoService;
 
     private final ComplementoService complementoService;
 
-    public NotaFiscalServiceImpl(NotaFiscalRepository repo,
-                                 @Qualifier("quartoServiceProxy") QuartoService quartoService,
-                                 @Qualifier("complementoServiceProxy") ComplementoService complementoService) {
+    public ResumoReservaServiceImpl(ResumoReservaRepository repo,
+                                    @Qualifier("quartoServiceProxy") QuartoService quartoService,
+                                    @Qualifier("complementoServiceProxy") ComplementoService complementoService) {
         super(repo);
         this.quartoService = quartoService;
         this.complementoService = complementoService;
@@ -40,39 +38,39 @@ public class NotaFiscalServiceImpl extends BaseService<NotaFiscal, Long, NotaFis
     }
 
     @Override
-    public NotaFiscal criarERetornarNotaFiscalAPartirDaReserva(Reserva reserva) {
+    public ResumoReserva criarERetornarNotaFiscalAPartirDaReserva(Reserva reserva) {
         return gerarNotaFiscalAPartirDaReserva(reserva);
     }
 
-    private NotaFiscal gerarNotaFiscalAPartirDaReserva(Reserva reserva) {
-        NotaFiscal notaFiscal = gerarNotafiscalInicial(reserva);
+    private ResumoReserva gerarNotaFiscalAPartirDaReserva(Reserva reserva) {
+        ResumoReserva resumoReserva = gerarNotafiscalInicial(reserva);
 
-        List<NotaFiscalItem> itens = prepararComplementos(reserva, notaFiscal);
-        itens.add(prepararQuarto(reserva, notaFiscal));
+        List<ResumoReservaItem> itens = prepararComplementos(reserva, resumoReserva);
+        itens.add(prepararQuarto(reserva, resumoReserva));
 
-        notaFiscal.setItens(itens);
-        notaFiscal.setValorTotal(itens.stream()
-                .map(NotaFiscalItem::getValorTotal)
+        resumoReserva.setItens(itens);
+        resumoReserva.setValorTotal(itens.stream()
+                .map(ResumoReservaItem::getValorTotal)
                 .reduce(BigDecimal.ZERO, BigDecimal::add));
 
-        return this.salvar(notaFiscal);
+        return this.salvar(resumoReserva);
     }
 
-    private NotaFiscal gerarNotafiscalInicial(Reserva reserva) {
-        return NotaFiscal.builder()
+    private ResumoReserva gerarNotafiscalInicial(Reserva reserva) {
+        return ResumoReserva.builder()
                 .numero("NF-" + System.currentTimeMillis())
                 .dataCadastro(LocalDate.now())
                 .cliente(reserva.getCliente())
                 .build();
     }
 
-    private NotaFiscalItem prepararQuarto(Reserva reserva, NotaFiscal notaFiscal) {
+    private ResumoReservaItem prepararQuarto(Reserva reserva, ResumoReserva resumoReserva) {
         Quarto quarto = quartoService.buscarPorId(reserva.getQuarto().getId());
 
         long dias = Math.max(1, ChronoUnit.DAYS.between(reserva.getCheckIn(), reserva.getCheckOut()));
 
-        return NotaFiscalItem.builder()
-                .notaFiscal(notaFiscal)
+        return ResumoReservaItem.builder()
+                .resumoReserva(resumoReserva)
                 .item(Item.builder()
                         .itemId(quarto.getId())
                         .tipoItem("Quarto")
@@ -84,14 +82,14 @@ public class NotaFiscalServiceImpl extends BaseService<NotaFiscal, Long, NotaFis
                 .build();
     }
 
-    private List<NotaFiscalItem> prepararComplementos(Reserva reserva, NotaFiscal notaFiscal) {
-        List<NotaFiscalItem> itens = new ArrayList<>();
+    private List<ResumoReservaItem> prepararComplementos(Reserva reserva, ResumoReserva resumoReserva) {
+        List<ResumoReservaItem> itens = new ArrayList<>();
 
         for (var complementoRef : reserva.getComplementos()) {
             Long id = complementoRef.getId();
 
-            NotaFiscalItem itemExistente = null;
-            for (NotaFiscalItem item : itens) {
+            ResumoReservaItem itemExistente = null;
+            for (ResumoReservaItem item : itens) {
                 if (item.getItem().getItemId().equals(id)
                         && item.getItem().getTipoItem().equalsIgnoreCase("Complemento")) {
                     itemExistente = item;
@@ -106,7 +104,7 @@ public class NotaFiscalServiceImpl extends BaseService<NotaFiscal, Long, NotaFis
                 );
             } else {
                 Complemento complemento = complementoService.buscarPorId(id);
-                NotaFiscalItem itemComp = prepararComplemento(complemento, notaFiscal);
+                ResumoReservaItem itemComp = prepararComplemento(complemento, resumoReserva);
                 itens.add(itemComp);
             }
         }
@@ -114,9 +112,9 @@ public class NotaFiscalServiceImpl extends BaseService<NotaFiscal, Long, NotaFis
         return itens;
     }
 
-    private NotaFiscalItem prepararComplemento(Complemento complemento, NotaFiscal notaFiscal) {
-        return NotaFiscalItem.builder()
-                .notaFiscal(notaFiscal)
+    private ResumoReservaItem prepararComplemento(Complemento complemento, ResumoReserva resumoReserva) {
+        return ResumoReservaItem.builder()
+                .resumoReserva(resumoReserva)
                 .item(Item.builder()
                         .tipoItem("Complemento")
                         .itemId(complemento.getId())

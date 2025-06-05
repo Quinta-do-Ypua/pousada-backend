@@ -1,4 +1,4 @@
-package com.senai.pousadabackend.domain.nota_fiscal.item;
+package com.senai.pousadabackend.domain.resumo.item;
 
 import com.senai.pousadabackend.core.entity.EntityAudit;
 import jakarta.persistence.*;
