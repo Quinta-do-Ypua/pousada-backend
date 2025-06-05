@@ -1,8 +1,8 @@
 package com.senai.pousadabackend.controllers;
 
-import com.senai.pousadabackend.dto.NotaFiscalDto;
-import com.senai.pousadabackend.mappers.NotaFiscalMapper;
-import com.senai.pousadabackend.service.nota_fiscal.NotaFiscalService;
+import com.senai.pousadabackend.domain.nota_fiscal.NotaFiscalDto;
+import com.senai.pousadabackend.domain.nota_fiscal.NotaFiscalMapper;
+import com.senai.pousadabackend.domain.nota_fiscal.service.NotaFiscalService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
