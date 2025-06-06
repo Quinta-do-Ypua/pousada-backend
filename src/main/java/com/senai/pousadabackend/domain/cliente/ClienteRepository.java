@@ -10,5 +10,4 @@ public interface ClienteRepository extends BaseRepository<Cliente, Long> {
     Optional<Cliente> findByEmail(String email);
     Optional<Cliente> findByCelular(String celular);
 
-
 }

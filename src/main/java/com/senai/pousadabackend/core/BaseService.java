@@ -1,9 +1,7 @@
 package com.senai.pousadabackend.core;
 
 import com.senai.pousadabackend.core.entity.EntityAudit;
-import com.senai.pousadabackend.core.entity.Status;
 import com.senai.pousadabackend.core.repository.BaseRepository;
-import com.senai.pousadabackend.exceptions.InativoException;
 import com.senai.pousadabackend.exceptions.RegistroNaoEncontradoException;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -30,8 +28,6 @@ public class BaseService<T extends EntityAudit, ID, R extends BaseRepository<T, 
         if (!t.isNovo()) {
             return alterar(t);
         }
-
-        if (t.getStatus() == null || !t.getStatus().isAtivo()) t.setStatus(Status.ATIVO);
         return repo.save(t);
     }
 
@@ -45,11 +41,8 @@ public class BaseService<T extends EntityAudit, ID, R extends BaseRepository<T, 
     @Override
     public T excluir(ID id) {
         T entidade = buscarPorId(id);
-        if (entidade.getStatus() != null && !entidade.getStatus().isAtivo()) {
-            throw new InativoException(entidade.getClass().getSimpleName() + " já está inativo.");
-        }
-        entidade.setStatus(Status.INATIVO);
-        return repo.save(entidade);
+        repo.delete(entidade);
+        return entidade;
     }
 
     private T alterar(T t) {
@@ -79,27 +72,16 @@ public class BaseService<T extends EntityAudit, ID, R extends BaseRepository<T, 
 
     @Override
     public Page<T> buscarPorSpecification(String parametro, Pageable pageable) {
-        Specification<T> statusAtivoSpec = (root, query, cb) ->
-                cb.equal(root.get("status"), Status.ATIVO);
-        Specification<T> specFinal;
-        if (parametro == null || parametro.isBlank()) {
-            specFinal = statusAtivoSpec;
-        } else {
-            Specification<T> specParametro = toSpecification(parametro);
-            specFinal = statusAtivoSpec.and(specParametro);
-        }
-        return repo.findAll(specFinal, pageable);
-    }
+        Specification<T> spec = (parametro == null || parametro.isBlank())
+                ? null
+                : toSpecification(parametro);
 
+        return repo.findAll(spec, pageable);
+    }
 
     @Override
     public Page<T> listarPaginado(Pageable pageable) {
-        return repo.findByStatus(Status.ATIVO, pageable);
-    }
-
-    @Override
-    public Page<T> listarInativos(Pageable pageable) {
-        return repo.findByStatus(Status.INATIVO, pageable);
+        return repo.findAll(pageable);
     }
 
 }

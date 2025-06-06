@@ -44,9 +44,4 @@ public class ItemServiceProxy implements ItemService {
         return delegate.listarPaginado(pageable);
     }
 
-    @Override
-    public Page<Item> listarInativos(Pageable pageable) {
-        return delegate.listarInativos(pageable);
-    }
-
 }

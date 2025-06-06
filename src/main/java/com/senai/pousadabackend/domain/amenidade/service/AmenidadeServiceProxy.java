@@ -45,8 +45,4 @@ public class AmenidadeServiceProxy implements AmenidadeService {
         return delegate.listarPaginado(pageable);
     }
 
-    @Override
-    public Page<Amenidade> listarInativos(Pageable pageable) {
-        return delegate.listarInativos(pageable);
-    }
 }

@@ -52,9 +52,4 @@ public class BaseController<T, DTO, ID, Mapper extends BaseMapper<T, DTO>> {
         return baseServiceInterface.listarPaginado(pageable).map(mapper::toDTO);
     }
 
-    @GetMapping("inativos")
-    public Page<DTO> listarInativos(@PageableDefault(size = PAGE_SIZE) Pageable pageable) {
-        return baseServiceInterface.listarInativos(pageable).map(mapper::toDTO);
-    }
-
 }

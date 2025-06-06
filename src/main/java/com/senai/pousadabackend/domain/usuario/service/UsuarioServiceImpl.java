@@ -23,7 +23,7 @@ public class UsuarioServiceImpl extends BaseService<Usuario, Long, UsuarioReposi
     }
 
     private void validarNomesIguaisDo(Usuario usuario) {
-        Usuario usuarioEncontrado = repository.buscarPor(usuario.getNome());
+        Usuario usuarioEncontrado = repository.findByNome(usuario.getNome());
         boolean isNomeExistente = false;
 
         if (usuarioEncontrado != null) {

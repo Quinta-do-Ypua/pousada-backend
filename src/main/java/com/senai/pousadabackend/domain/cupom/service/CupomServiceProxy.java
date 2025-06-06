@@ -46,9 +46,4 @@ public class CupomServiceProxy implements CupomService {
         return delegate.listarPaginado(pageable);
     }
 
-    @Override
-    public Page<Cupom> listarInativos(Pageable pageable) {
-        return delegate.listarInativos(pageable);
-    }
-
 }

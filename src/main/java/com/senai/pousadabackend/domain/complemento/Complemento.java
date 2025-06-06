@@ -21,7 +21,7 @@ public class Complemento extends EntityAudit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "nome", nullable = false)
+    @Column(name = "nome", nullable = false, unique = true)
     private String nome;
 
     @Column(name = "valor", nullable = false)

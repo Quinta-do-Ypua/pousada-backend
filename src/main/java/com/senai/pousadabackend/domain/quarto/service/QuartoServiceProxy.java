@@ -44,9 +44,4 @@ public class QuartoServiceProxy implements QuartoService {
         return delegate.listarPaginado(pageable);
     }
 
-    @Override
-    public Page<Quarto> listarInativos(Pageable pageable) {
-        return delegate.listarInativos(pageable);
-    }
-
 }

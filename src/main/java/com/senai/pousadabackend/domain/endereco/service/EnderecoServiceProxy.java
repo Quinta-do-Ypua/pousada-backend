@@ -44,8 +44,4 @@ public class EnderecoServiceProxy implements EnderecoService {
         return delegate.listarPaginado(pageable);
     }
 
-    @Override
-    public Page<Endereco> listarInativos(Pageable pageable) {
-        return delegate.listarInativos(pageable);
-    }
 }

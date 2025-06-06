@@ -44,9 +44,4 @@ public class UsuarioServiceProxy implements UsuarioService {
         return delegate.listarPaginado(pageable);
     }
 
-    @Override
-    public Page<Usuario> listarInativos(Pageable pageable) {
-        return delegate.listarInativos(pageable);
-    }
-
 }

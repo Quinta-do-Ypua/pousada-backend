@@ -52,9 +52,4 @@ public class ClienteServiceProxy implements ClienteService {
         return delegate.listarPaginado(pageable);
     }
 
-    @Override
-    public Page<Cliente> listarInativos(Pageable pageable) {
-        return delegate.listarInativos(pageable);
-    }
-
 }

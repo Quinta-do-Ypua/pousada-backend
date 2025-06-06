@@ -17,6 +17,5 @@ public interface BaseServiceInterface<T, ID> {
 
     Page<T> listarPaginado(Pageable pageable);
 
-    Page<T> listarInativos(Pageable pageable);
 
 }
