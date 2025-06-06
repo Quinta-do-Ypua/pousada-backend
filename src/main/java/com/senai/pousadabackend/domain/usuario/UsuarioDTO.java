@@ -2,7 +2,6 @@ package com.senai.pousadabackend.domain.usuario;
 
 import com.senai.pousadabackend.config.validation.GrupoValidacaoAlterar;
 import com.senai.pousadabackend.config.validation.GrupoValidacaoInserir;
-import com.senai.pousadabackend.domain.role.Role;
 import jakarta.validation.constraints.*;
 import lombok.Builder;
 import lombok.Data;
@@ -28,7 +27,4 @@ public class UsuarioDTO {
 
     @NotBlank(message = "A senha é obrigatória")
     private String senha;
-
-    @NotEmpty(message = "É necessário vincular permissões ao usuário")
-    private Set<Role> permissoes;
 }
