@@ -46,11 +46,6 @@ public class ResumoReservaServiceProxy implements ResumoReservaService {
     }
 
     @Override
-    public Page<ResumoReserva> listarInativos(Pageable pageable) {
-        return delegate.listarInativos(pageable);
-    }
-
-    @Override
     public void criarNotaFiscalAssincronaAPartirDaReserva(Reserva reserva) {
         delegate.criarNotaFiscalAssincronaAPartirDaReserva(reserva);
     }

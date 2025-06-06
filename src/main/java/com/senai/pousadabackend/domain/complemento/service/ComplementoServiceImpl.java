@@ -23,7 +23,7 @@ public class ComplementoServiceImpl extends BaseService<Complemento, Long, Compl
     }
 
     private void validarNomesIguaisDo(Complemento complemento) {
-        Complemento complementoEncontrado = repository.buscarPor(complemento.getNome());
+        Complemento complementoEncontrado = repository.findByNome(complemento.getNome());
         boolean isNomeExistente = false;
 
         if (complementoEncontrado != null) {

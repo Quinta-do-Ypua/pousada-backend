@@ -68,8 +68,4 @@ public class ReservaServiceProxy implements ReservaService {
         return delegate.listarPaginado(pageable);
     }
 
-    @Override
-    public Page<Reserva> listarInativos(Pageable pageable) {
-        return delegate.listarInativos(pageable);
     }
-}

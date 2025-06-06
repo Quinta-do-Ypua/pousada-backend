@@ -45,8 +45,4 @@ public class ComplementoServiceProxy implements ComplementoService {
         return delegate.listarPaginado(pageable);
     }
 
-    @Override
-    public Page<Complemento> listarInativos(Pageable pageable) {
-        return delegate.listarInativos(pageable);
-    }
 }

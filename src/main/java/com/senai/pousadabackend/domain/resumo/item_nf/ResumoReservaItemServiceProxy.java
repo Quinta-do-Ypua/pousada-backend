@@ -44,9 +44,4 @@ public class ResumoReservaItemServiceProxy implements ResumoReservaItemService {
         return delegate.listarPaginado(pageable);
     }
 
-    @Override
-    public Page<ResumoReservaItem> listarInativos(Pageable pageable) {
-        return delegate.listarInativos(pageable);
-    }
-
 }

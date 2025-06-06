@@ -30,7 +30,7 @@ public class CupomServiceImpl extends BaseService<Cupom, Long, CupomRepository> 
     }
 
     private void validarNomesIguaisDo(Cupom cupom) {
-        Cupom cupomEncontrado = repository.buscarPor(cupom.getCodigo());
+        Cupom cupomEncontrado = repository.findByCodigo(cupom.getCodigo());
         boolean isNomeExistente = false;
 
         if (cupomEncontrado != null) {
