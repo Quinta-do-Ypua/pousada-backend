@@ -1,11 +1,8 @@
 package com.senai.pousadabackend.domain.usuario;
 
 import com.senai.pousadabackend.core.entity.EntityAudit;
-import com.senai.pousadabackend.domain.role.Role;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.util.Set;
 
 @Data
 @Builder
@@ -30,14 +27,6 @@ public class Usuario extends EntityAudit {
 
     @Column(name = "senha", nullable = false)
     private String senha;
-
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "usuario_role",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private Set<Role> roles;
 
     @Transient
     public boolean isExistente() {
