@@ -90,8 +90,24 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DataIntegrityViolationException.class)
     public Map<String, String> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
         log.error("Violação de integridade: ", ex);
-        return criarMensagem("Não foi possível excluir este registro, pois existem registros vinculados a ele.");
+
+        String detalhe = extrairDetalheDoErro(ex.getMostSpecificCause().getMessage());
+
+        String mensagem = detalhe != null ? detalhe :
+                "Não foi possível concluir a operação. Verifique se há dados duplicados ou vínculos existentes.";
+
+        return criarMensagem(mensagem);
     }
+
+    private String extrairDetalheDoErro(String mensagem) {
+        if (mensagem == null) return null;
+        int indice = mensagem.indexOf("Detalhe:");
+        if (indice != -1) {
+            return mensagem.substring(indice + 8).trim();
+        }
+        return null;
+    }
+
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(InvalidDataAccessResourceUsageException.class)
