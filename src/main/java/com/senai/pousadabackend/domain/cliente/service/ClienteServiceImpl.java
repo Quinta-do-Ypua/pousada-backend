@@ -24,6 +24,7 @@ public class ClienteServiceImpl extends BaseService<Cliente, Long, ClienteReposi
 
     private void prepararCliente(Cliente cliente) {
         validarViolacaoDeUnique(cliente);
+
     }
 
     private void validarViolacaoDeUnique(Cliente cliente) {
