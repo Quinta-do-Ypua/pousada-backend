@@ -3,11 +3,13 @@ package com.senai.pousadabackend.domain.cliente.service;
 import com.senai.pousadabackend.domain.cliente.Cliente;
 import com.senai.pousadabackend.domain.email.EmailService;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
+@Primary
 public class ClienteServiceProxy implements ClienteService {
 
     private final ClienteService delegate;

@@ -1,11 +1,13 @@
 package com.senai.pousadabackend.domain.quarto.service;
 
 import com.senai.pousadabackend.domain.quarto.Quarto;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
+@Primary
 public class QuartoServiceProxy implements QuartoService {
 
     private final QuartoService delegate;

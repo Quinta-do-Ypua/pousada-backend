@@ -1,10 +1,7 @@
 package com.senai.pousadabackend.exceptions.handler;
 
 import com.fasterxml.jackson.databind.exc.InvalidDefinitionException;
-import com.senai.pousadabackend.exceptions.BusinessException;
-import com.senai.pousadabackend.exceptions.DataDaReservaInvalida;
-import com.senai.pousadabackend.exceptions.RegistroDuplicadoException;
-import com.senai.pousadabackend.exceptions.RegistroNaoEncontradoException;
+import com.senai.pousadabackend.exceptions.*;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -23,6 +20,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 @Slf4j
 @ControllerAdvice
@@ -39,6 +37,18 @@ public class GlobalExceptionHandler {
             erros.put(e.getField(), msg);
         });
         return erros;
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({
+            RegistroDuplicadoException.class,
+            BusinessException.class,
+            DataDaReservaInvalida.class,
+            ExisteReservaParaEssaDataException.class,
+            ExisteReservaAbertaParaEsseCliente.class
+    })
+    public Map<String, String> handleNegocio(RuntimeException ex) {
+        return criarMensagem(ex.getMessage());
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -91,22 +101,67 @@ public class GlobalExceptionHandler {
     public Map<String, String> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
         log.error("Violação de integridade: ", ex);
 
-        String detalhe = extrairDetalheDoErro(ex.getMostSpecificCause().getMessage());
+        String mensagemOriginal = ex.getMostSpecificCause().getMessage();
 
-        String mensagem = detalhe != null ? detalhe :
-                "Não foi possível concluir a operação. Verifique se há dados duplicados ou vínculos existentes.";
+        String mensagem = extrairDetalheDoErro(mensagemOriginal);
+        if (mensagem == null) {
+            mensagem = analisarViolacaoDeConstraint(mensagemOriginal);
+        }
+
+        if (mensagem == null) {
+            mensagem = "Violação de integridade. Verifique se há dados obrigatórios ausentes, duplicados ou vínculos ativos.";
+        }
 
         return criarMensagem(mensagem);
     }
 
     private String extrairDetalheDoErro(String mensagem) {
         if (mensagem == null) return null;
-        int indice = mensagem.indexOf("Detalhe:");
-        if (indice != -1) {
-            return mensagem.substring(indice + 8).trim();
+        var matcher = Pattern.compile("Detalhe:\\s*(.*)").matcher(mensagem);
+        if (matcher.find()) {
+            return matcher.group(1).trim();
         }
         return null;
     }
+
+    private String analisarViolacaoDeConstraint(String mensagem) {
+        if (mensagem == null) return null;
+
+        if (mensagem.contains("violates not-null constraint") || mensagem.contains("violação de não-nulo")) {
+            var matcher = Pattern.compile("coluna \"(\\w+)\"").matcher(mensagem);
+            if (matcher.find()) {
+                String campo = matcher.group(1);
+                return "O campo '" + campo + "' é obrigatório.";
+            }
+            return "Existe um campo obrigatório que não foi informado.";
+        }
+
+        if (mensagem.contains("violates unique constraint") || mensagem.contains("violação de unicidade")) {
+            var matcher = Pattern.compile("chave \\((.+)\\)=\\((.+)\\)").matcher(mensagem);
+            if (matcher.find()) {
+                String campo = matcher.group(1);
+                String valor = matcher.group(2);
+                return "O valor '" + valor + "' já existe para o campo '" + campo + "'.";
+            }
+            return "Já existe um registro com esse valor.";
+        }
+
+        var matcherChaveAusente = Pattern.compile(
+                "Chave \\((\\w+)_id\\)=\\((\\d+)\\) não está presente na tabela \"(\\w+)\""
+        ).matcher(mensagem);
+        if (matcherChaveAusente.find()) {
+            String campo = matcherChaveAusente.group(1); // endereco
+            String id = matcherChaveAusente.group(2);    // 4
+            return "Não existe " + campo + " com id " + id + ".";
+        }
+
+        if (mensagem.contains("violates foreign key constraint") || mensagem.contains("violação de chave estrangeira")) {
+            return "Não é possível excluir ou alterar este registro, pois existem registros vinculados.";
+        }
+
+        return null;
+    }
+
 
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -114,16 +169,6 @@ public class GlobalExceptionHandler {
     public Map<String, String> handleErroSql(InvalidDataAccessResourceUsageException ex) {
         log.error("Erro de acesso a recurso de dados: {}", ex.getMessage(), ex);
         return criarMensagem("Erro interno ao acessar recurso de dados.");
-    }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({
-            RegistroDuplicadoException.class,
-            BusinessException.class,
-            DataDaReservaInvalida.class
-    })
-    public Map<String, String> handleNegocio(RuntimeException ex) {
-        return criarMensagem(ex.getMessage());
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
