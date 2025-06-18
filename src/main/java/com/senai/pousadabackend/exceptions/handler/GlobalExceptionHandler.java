@@ -45,7 +45,8 @@ public class GlobalExceptionHandler {
             BusinessException.class,
             DataDaReservaInvalida.class,
             ExisteReservaParaEssaDataException.class,
-            ExisteReservaAbertaParaEsseCliente.class
+            ExisteReservaAbertaParaEsseCliente.class,
+            IllegalArgumentException.class
     })
     public Map<String, String> handleNegocio(RuntimeException ex) {
         return criarMensagem(ex.getMessage());
@@ -115,6 +116,26 @@ public class GlobalExceptionHandler {
         return criarMensagem(mensagem);
     }
 
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(InvalidDataAccessResourceUsageException.class)
+    public Map<String, String> handleErroSql(InvalidDataAccessResourceUsageException ex) {
+        log.error("Erro de acesso a recurso de dados: {}", ex.getMessage(), ex);
+        return criarMensagem("Erro interno ao acessar recurso de dados.");
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(RegistroNaoEncontradoException.class)
+    public Map<String, String> handleNaoEncontrado(RegistroNaoEncontradoException ex) {
+        return criarMensagem(ex.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(Exception.class)
+    public Map<String, String> handleErroGeral(Exception ex) {
+        log.error("Erro inesperado não tratado: ", ex);
+        return criarMensagem("Erro interno no servidor. Contate o suporte.");
+    }
+
     private String extrairDetalheDoErro(String mensagem) {
         if (mensagem == null) return null;
         var matcher = Pattern.compile("Detalhe:\\s*(.*)").matcher(mensagem);
@@ -160,28 +181,6 @@ public class GlobalExceptionHandler {
         }
 
         return null;
-    }
-
-
-
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler(InvalidDataAccessResourceUsageException.class)
-    public Map<String, String> handleErroSql(InvalidDataAccessResourceUsageException ex) {
-        log.error("Erro de acesso a recurso de dados: {}", ex.getMessage(), ex);
-        return criarMensagem("Erro interno ao acessar recurso de dados.");
-    }
-
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(RegistroNaoEncontradoException.class)
-    public Map<String, String> handleNaoEncontrado(RegistroNaoEncontradoException ex) {
-        return criarMensagem(ex.getMessage());
-    }
-
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler(Exception.class)
-    public Map<String, String> handleErroGeral(Exception ex) {
-        log.error("Erro inesperado não tratado: ", ex);
-        return criarMensagem("Erro interno no servidor. Contate o suporte.");
     }
 
     private Map<String, String> criarMensagem(String mensagem) {

@@ -33,13 +33,17 @@ public class AuthController {
     private TokenService tokenService;
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody LoginRequestDTO body){
-        Usuario usuario = this.repository.findByEmail(body.email()).orElseThrow(() -> new RuntimeException("User not found"));
-        if(passwordEncoder.matches(body.senha(), usuario.getSenha())) {
+    public ResponseEntity<?> login(@RequestBody LoginRequestDTO body){
+        Optional<Usuario> optionalUsuario = this.repository.findByEmail(body.email());
+        if (optionalUsuario.isEmpty()) {
+            throw new IllegalArgumentException("Usuário não encontrado");
+        }
+        Usuario usuario = optionalUsuario.get();
+        if (passwordEncoder.matches(body.senha(), usuario.getSenha())) {
             String token = this.tokenService.generateToken(usuario);
             return ResponseEntity.ok(new ResponseDTO(usuario.getNome(), token));
         }
-        return ResponseEntity.badRequest().build();
+        throw new IllegalArgumentException("Senha inválida");
     }
 
     @PostMapping("/register")
@@ -56,7 +60,7 @@ public class AuthController {
             String token = this.tokenService.generateToken(novoUsuario);
             return ResponseEntity.ok(new ResponseDTO(novoUsuario.getNome(), token));
         }
-        return ResponseEntity.badRequest().build();
+        throw new IllegalArgumentException(String.valueOf(ResponseEntity.badRequest().build()));
     }
 
 }
