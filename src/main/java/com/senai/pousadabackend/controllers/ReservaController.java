@@ -22,7 +22,6 @@ public class ReservaController {
         this.reservaMapper = reservaMapper;
     }
 
-
     @PostMapping
     public ReservaDTO cadastrar(@RequestBody ReservaResumidaDto reservaResumidaDto) {
         return reservaMapper.toDTO(reservaService.salvar(reservaResumidaMapper.toReserva(reservaResumidaDto)));
@@ -46,6 +45,11 @@ public class ReservaController {
     @GetMapping("/{id}")
     public ReservaDTO buscarPorId(@PathVariable(name = "id") Long id) {
         return reservaMapper.toDTO(reservaService.buscarPorId(id));
+    }
+
+    @PutMapping
+    public ReservaDTO alterar(@RequestBody ReservaResumidaDto dto) {
+        return reservaMapper.toDTO(reservaService.salvar(reservaResumidaMapper.toReserva(dto)));
     }
 
 }
