@@ -11,10 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -43,7 +40,7 @@ public class AuthController {
             String token = this.tokenService.generateToken(usuario);
             return ResponseEntity.ok(new ResponseDTO(usuario.getNome(), token));
         }
-        throw new IllegalArgumentException("Senha inválida");
+        throw new IllegalArgumentException("Email ou senha inválidos");
     }
 
     @PostMapping("/register")
@@ -60,7 +57,22 @@ public class AuthController {
             String token = this.tokenService.generateToken(novoUsuario);
             return ResponseEntity.ok(new ResponseDTO(novoUsuario.getNome(), token));
         }
-        throw new IllegalArgumentException(String.valueOf(ResponseEntity.badRequest().build()));
+        throw new IllegalArgumentException("Corpo inválido. Verifique os campos.");
+    }
+
+    @PutMapping("/register")
+    public ResponseEntity alterar(@RequestBody RegisterRequestDTO body) {
+        Optional<Usuario> usuarioOptional = this.repository.findByEmail(body.email());
+        if (usuarioOptional.isPresent()) {
+            Usuario usuario = usuarioOptional.get();
+            usuario.setNome(body.nome());
+            usuario.setSenha(passwordEncoder.encode(body.senha()));
+            this.repository.save(usuario);
+
+            String token = this.tokenService.generateToken(usuario);
+            return ResponseEntity.ok(new ResponseDTO(usuario.getNome(), token));
+        }
+        throw new IllegalArgumentException("Usuário com esse e-mail não encontrado.");
     }
 
 }
