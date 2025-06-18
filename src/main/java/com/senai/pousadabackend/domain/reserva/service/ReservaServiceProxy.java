@@ -1,11 +1,14 @@
 package com.senai.pousadabackend.domain.reserva.service;
 
 import com.senai.pousadabackend.domain.email.EmailService;
+import com.senai.pousadabackend.domain.quarto.Quarto;
 import com.senai.pousadabackend.domain.reserva.Reserva;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ReservaServiceProxy implements ReservaService {
@@ -27,6 +30,11 @@ public class ReservaServiceProxy implements ReservaService {
                 "Estamos passando para avisar que sua reserva do quarto: " + reserva.getQuarto() + " de número: " + reserva.getId() + " Foi cancelada.",
                 reserva.getCliente());
         return delegate.cancelarPorId(id);
+    }
+
+    @Override
+    public List<Reserva> buscarPorQuarto(Quarto quarto) {
+        return delegate.buscarPorQuarto(quarto);
     }
 
     @Override
@@ -68,4 +76,4 @@ public class ReservaServiceProxy implements ReservaService {
         return delegate.listarPaginado(pageable);
     }
 
-    }
+}

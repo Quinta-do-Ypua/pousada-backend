@@ -1,6 +1,9 @@
 package com.senai.pousadabackend.controllers;
 
-import com.senai.pousadabackend.domain.reserva.*;
+import com.senai.pousadabackend.domain.reserva.ReservaDTO;
+import com.senai.pousadabackend.domain.reserva.ReservaMapper;
+import com.senai.pousadabackend.domain.reserva.ReservaResumidaDto;
+import com.senai.pousadabackend.domain.reserva.ReservaResumidaMapper;
 import com.senai.pousadabackend.domain.reserva.service.ReservaService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
@@ -28,8 +31,8 @@ public class ReservaController {
     }
 
     @PatchMapping("/{id}/cancelar")
-    public Reserva cancelarReserva(@PathVariable Long id) {
-        return reservaService.cancelarPorId(id);
+    public ReservaDTO cancelarReserva(@PathVariable Long id) {
+        return reservaMapper.toDTO(reservaService.cancelarPorId(id));
     }
 
     @GetMapping(params = "search")
