@@ -2,32 +2,29 @@ package com.senai.pousadabackend.domain.reserva.service;
 
 import com.senai.pousadabackend.core.BaseService;
 import com.senai.pousadabackend.domain.cliente.Cliente;
-import com.senai.pousadabackend.domain.quarto.service.QuartoService;
+import com.senai.pousadabackend.domain.quarto.Quarto;
 import com.senai.pousadabackend.domain.reserva.Reserva;
 import com.senai.pousadabackend.domain.reserva.ReservaRepository;
 import com.senai.pousadabackend.domain.reserva.StatusDaReserva;
-import com.senai.pousadabackend.domain.resumo.ResumoReservaService;
 import com.senai.pousadabackend.exceptions.CancelamentoDeReservaConcluidaException;
 import com.senai.pousadabackend.exceptions.DataDaReservaInvalida;
 import com.senai.pousadabackend.exceptions.ExisteReservaAbertaParaEsseCliente;
 import com.senai.pousadabackend.exceptions.ExisteReservaParaEssaDataException;
-import org.springframework.beans.factory.annotation.Qualifier;
+import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ReservaServiceImpl extends BaseService<Reserva, Long, ReservaRepository> implements ReservaService {
 
     private final ReservaRepository reservaRepository;
 
-    private final ResumoReservaService resumoReservaService;
-    private final QuartoService quartoService;
-
-    public ReservaServiceImpl(ReservaRepository repo,
-                              @Qualifier("resumoReservaServiceProxy") ResumoReservaService resumoReservaService, QuartoService quartoService) {
+    public ReservaServiceImpl(ReservaRepository repo) {
         super(repo);
         this.reservaRepository = repo;
-        this.resumoReservaService = resumoReservaService;
-        this.quartoService = quartoService;
     }
 
     @Override
@@ -39,12 +36,18 @@ public class ReservaServiceImpl extends BaseService<Reserva, Long, ReservaReposi
     }
 
     @Override
+    @Transactional
     public Reserva cancelarPorId(Long id) {
         Reserva reserva = buscarPorId(id);
         validarCancelamento(reserva);
         reserva.setStatusDaReserva(StatusDaReserva.CANCELADA);
-        this.salvar(reserva);
+        reserva = this.salvar(reserva);
         return reserva;
+    }
+
+    @Override
+    public List<Reserva> buscarPorQuarto(Quarto quarto) {
+        return reservaRepository.findByQuarto(quarto);
     }
 
     private void validarNovaReserva(Reserva reserva) {
@@ -106,6 +109,11 @@ public class ReservaServiceImpl extends BaseService<Reserva, Long, ReservaReposi
         if (reserva.getStatusDaReserva() == null) {
             reserva.setStatusDaReserva(StatusDaReserva.ABERTA);
         }
+    }
+
+    @Override
+    public Page<Reserva> listarPaginado(Pageable pageable) {
+        return reservaRepository.buscarReservasAtivas(pageable);
     }
 
 }

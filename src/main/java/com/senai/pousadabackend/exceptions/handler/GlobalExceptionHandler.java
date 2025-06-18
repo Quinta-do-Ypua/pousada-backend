@@ -46,7 +46,7 @@ public class GlobalExceptionHandler {
             DataDaReservaInvalida.class,
             ExisteReservaParaEssaDataException.class,
             ExisteReservaAbertaParaEsseCliente.class,
-            IllegalArgumentException.class
+            RegistrosVinculadosException.class
     })
     public Map<String, String> handleNegocio(RuntimeException ex) {
         return criarMensagem(ex.getMessage());

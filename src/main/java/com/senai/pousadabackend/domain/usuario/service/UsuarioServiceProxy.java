@@ -1,11 +1,13 @@
 package com.senai.pousadabackend.domain.usuario.service;
 
 import com.senai.pousadabackend.domain.usuario.Usuario;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
+@Primary
 public class UsuarioServiceProxy implements UsuarioService {
 
     private final UsuarioService delegate;
@@ -44,4 +46,8 @@ public class UsuarioServiceProxy implements UsuarioService {
         return delegate.listarPaginado(pageable);
     }
 
+    @Override
+    public Usuario buscarPorEmail(String email) {
+        return delegate.buscarPorEmail(email);
+    }
 }
