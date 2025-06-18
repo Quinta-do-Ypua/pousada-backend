@@ -31,19 +31,7 @@ public class CupomServiceImpl extends BaseService<Cupom, Long, CupomRepository> 
 
     private void validarNomesIguaisDo(Cupom cupom) {
         Cupom cupomEncontrado = repository.findByCodigo(cupom.getCodigo());
-        boolean isNomeExistente = false;
-
-        if (cupomEncontrado != null) {
-            if (!cupom.isExistente()) {
-                isNomeExistente = true;
-            } else {
-                if (!cupomEncontrado.getId().equals(cupom.getId())) {
-                    isNomeExistente = true;
-                }
-            }
-        }
-
-        if (isNomeExistente) {
+        if (cupomEncontrado != null && !cupomEncontrado.getId().equals(cupom.getId())) {
             throw new BusinessException("Já existe um cupom salvo com o mesmo código");
         }
     }
@@ -52,9 +40,7 @@ public class CupomServiceImpl extends BaseService<Cupom, Long, CupomRepository> 
         if (cupom.getDataDeInicio().isAfter(cupom.getDataDeVencimento())) {
             throw new BusinessException("A data de início não deve ser posterior a data de vencimento");
         }
-
         LocalDate dataAtual = LocalDate.now();
-
         if (dataAtual.isAfter(cupom.getDataDeInicio())) {
             throw new BusinessException("A data inicial deve ser posterior a data atual");
         }
