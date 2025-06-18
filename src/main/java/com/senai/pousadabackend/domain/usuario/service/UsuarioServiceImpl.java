@@ -1,6 +1,7 @@
 package com.senai.pousadabackend.domain.usuario.service;
 
 import com.senai.pousadabackend.core.BaseService;
+import com.senai.pousadabackend.domain.cupom.Cupom;
 import com.senai.pousadabackend.domain.usuario.Usuario;
 import com.senai.pousadabackend.domain.usuario.UsuarioRepository;
 import com.senai.pousadabackend.exceptions.BusinessException;
@@ -24,19 +25,7 @@ public class UsuarioServiceImpl extends BaseService<Usuario, Long, UsuarioReposi
 
     private void validarNomesIguaisDo(Usuario usuario) {
         Usuario usuarioEncontrado = repository.findByNome(usuario.getNome());
-        boolean isNomeExistente = false;
-
-        if (usuarioEncontrado != null) {
-            if (!usuario.isExistente()) {
-                isNomeExistente = true;
-            } else {
-                if (!usuarioEncontrado.getId().equals(usuario.getId())) {
-                    isNomeExistente = true;
-                }
-            }
-        }
-
-        if (isNomeExistente) {
+        if (usuarioEncontrado != null && !usuarioEncontrado.getId().equals(usuario.getId())) {
             throw new BusinessException("Já existe um usuário salvo com o mesmo nome");
         }
     }
