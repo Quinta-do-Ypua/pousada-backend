@@ -7,6 +7,7 @@ import com.senai.pousadabackend.domain.security.ResponseDTO;
 import com.senai.pousadabackend.domain.usuario.Usuario;
 import com.senai.pousadabackend.domain.usuario.UsuarioRepository;
 import com.senai.pousadabackend.security.TokenService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +45,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity register(@RequestBody RegisterRequestDTO body){
+    public ResponseEntity register(@Valid @RequestBody RegisterRequestDTO body){
         Optional<Usuario> usuario = this.repository.findByEmail(body.email());
 
         if(usuario.isEmpty()) {
@@ -56,8 +57,9 @@ public class AuthController {
 
             String token = this.tokenService.generateToken(novoUsuario);
             return ResponseEntity.ok(new ResponseDTO(novoUsuario.getNome(), token));
+        } else {
+            throw new IllegalArgumentException("O e-mail informado já está sendo utilizado");
         }
-        throw new IllegalArgumentException("Corpo inválido. Verifique os campos.");
     }
 
     @PutMapping("/register")

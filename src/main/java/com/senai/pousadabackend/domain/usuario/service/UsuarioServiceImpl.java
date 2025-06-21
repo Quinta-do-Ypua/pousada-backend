@@ -3,6 +3,7 @@ package com.senai.pousadabackend.domain.usuario.service;
 import com.senai.pousadabackend.core.BaseService;
 import com.senai.pousadabackend.domain.usuario.Usuario;
 import com.senai.pousadabackend.domain.usuario.UsuarioRepository;
+import com.senai.pousadabackend.exceptions.BusinessException;
 import com.senai.pousadabackend.exceptions.RegistroDuplicadoException;
 import com.senai.pousadabackend.exceptions.RegistroNaoEncontradoException;
 import org.springframework.stereotype.Service;
@@ -21,8 +22,6 @@ public class UsuarioServiceImpl extends BaseService<Usuario, Long, UsuarioReposi
 
     @Override
     public Usuario salvar(Usuario usuario) {
-        if (usuario.getNome() == null || usuario.getNome().isBlank())
-            throw new IllegalArgumentException("O nome do usuário é obrigatório");
         validarEmailIguaisDo(usuario);
         return repository.save(usuario);
     }
@@ -35,7 +34,7 @@ public class UsuarioServiceImpl extends BaseService<Usuario, Long, UsuarioReposi
             boolean mesmoUsuario = usuario.getId() != null && usuario.getId().equals(encontrado.getId());
 
             if (!mesmoUsuario) {
-                throw new RegistroDuplicadoException("Já existe um usuário com este e-mail.");
+                throw new BusinessException("Já existe um usuário com este e-mail.");
             }
         }
     }

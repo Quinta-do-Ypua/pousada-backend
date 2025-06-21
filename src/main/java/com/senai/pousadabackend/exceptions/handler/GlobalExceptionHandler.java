@@ -8,6 +8,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.InvalidDataAccessResourceUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingPathVariableException;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -29,13 +31,14 @@ public class GlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, Map<String, String>> handleValidacao(MethodArgumentNotValidException ex) {
-        Map<String, Map<String, String>> erros = new HashMap<>();
-        ex.getBindingResult().getFieldErrors().forEach(e -> {
-            Map<String, String> msg = new HashMap<>();
-            msg.put("mensagem", e.getDefaultMessage());
-            erros.put(e.getField(), msg);
-        });
+    public Map<String, String> handleValidacao(MethodArgumentNotValidException ex) {
+        Map<String, String> erros = new HashMap<>();
+        List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
+
+        if (!fieldErrors.isEmpty()) {
+            FieldError firstError = fieldErrors.getFirst();
+            erros.put("mensagem", firstError.getDefaultMessage());
+        }
         return erros;
     }
 
@@ -46,7 +49,9 @@ public class GlobalExceptionHandler {
             DataDaReservaInvalida.class,
             ExisteReservaParaEssaDataException.class,
             ExisteReservaAbertaParaEsseCliente.class,
-            RegistrosVinculadosException.class
+            RegistrosVinculadosException.class,
+            IllegalArgumentException.class,
+            RuntimeException.class
     })
     public Map<String, String> handleNegocio(RuntimeException ex) {
         return criarMensagem(ex.getMessage());

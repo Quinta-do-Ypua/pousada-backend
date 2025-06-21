@@ -1,8 +1,10 @@
 package com.senai.pousadabackend.controllers;
 
+import com.senai.pousadabackend.config.validation.GrupoValidacaoAlterar;
 import com.senai.pousadabackend.config.validation.GrupoValidacaoInserir;
 import com.senai.pousadabackend.core.BaseMapper;
 import com.senai.pousadabackend.core.BaseServiceInterface;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -38,8 +40,8 @@ public class BaseController<T, DTO, ID, Mapper extends BaseMapper<T, DTO>> {
     }
 
     @PutMapping
-    public DTO alterarPorId(@RequestBody T t) {
-        return mapper.toDTO(baseServiceInterface.salvar(t));
+    public DTO alterarPorId(@Validated(GrupoValidacaoAlterar.class) @RequestBody DTO dto) {
+        return mapper.toDTO(baseServiceInterface.salvar(mapper.toEntity(dto)));
     }
 
     @GetMapping(params = "search")

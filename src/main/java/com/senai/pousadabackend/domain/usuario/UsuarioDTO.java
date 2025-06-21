@@ -26,5 +26,6 @@ public class UsuarioDTO {
     private String email;
 
     @NotBlank(message = "A senha é obrigatória")
+    @Size(min = 8, message = "A senha deve ter no máximo 100 caracteres")
     private String senha;
 }
