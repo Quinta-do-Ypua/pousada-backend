@@ -24,6 +24,8 @@ public interface ReservaRepository extends BaseRepository<Reserva, Long> {
 
     List<Reserva> findByQuarto(Quarto quarto);
 
+    boolean existsByComplementos_Id(Long complementoId);
+
     @Query("""
         SELECT r FROM Reserva r
         WHERE r.statusDaReserva != 'CANCELADA'

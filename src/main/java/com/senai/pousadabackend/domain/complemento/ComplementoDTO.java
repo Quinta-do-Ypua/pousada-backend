@@ -22,8 +22,7 @@ public class ComplementoDTO {
 
     @NotNull(message = "O valor é obrigatório")
     @DecimalMin(value = "0.01", message = "O valor tem um limite mínimo de 0,01 R$")
-    @DecimalMax(value = "9999.99", message = "O valor tem um limite máximo de 9.999,99 R$")
-    @Digits(integer = 4, fraction = 2, message = "O valor deve conter no máximo 4 números inteiros e 2 decimais")
+    @DecimalMax(value = "99999", message = "O valor tem um limite máximo de 9.999,00 R$")
     private BigDecimal valor;
 
     @NotBlank(message = "A descrição é obrigatória")

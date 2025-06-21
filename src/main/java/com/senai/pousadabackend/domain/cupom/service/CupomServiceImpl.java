@@ -26,10 +26,10 @@ public class CupomServiceImpl extends BaseService<Cupom, Long, CupomRepository> 
 
     private void validar(Cupom cupom) {
         validarPeriodoDo(cupom);
-        validarNomesIguaisDo(cupom);
+        validarCodigosIguaisDo(cupom);
     }
 
-    private void validarNomesIguaisDo(Cupom cupom) {
+    private void validarCodigosIguaisDo(Cupom cupom) {
         Cupom cupomEncontrado = repository.findByCodigo(cupom.getCodigo());
         if (cupomEncontrado != null && !cupomEncontrado.getId().equals(cupom.getId())) {
             throw new BusinessException("Já existe um cupom salvo com o mesmo código");
@@ -40,9 +40,17 @@ public class CupomServiceImpl extends BaseService<Cupom, Long, CupomRepository> 
         if (cupom.getDataDeInicio().isAfter(cupom.getDataDeVencimento())) {
             throw new BusinessException("A data de início não deve ser posterior a data de vencimento");
         }
-        LocalDate dataAtual = LocalDate.now();
-        if (dataAtual.isAfter(cupom.getDataDeInicio())) {
-            throw new BusinessException("A data inicial deve ser posterior a data atual");
+
+        if (cupom.isExistente()) {
+            Cupom cupomEncontrado = this.buscarPorId(cupom.getId());
+            if (cupomEncontrado.getDataDeInicio().isAfter(cupom.getDataDeInicio())) {
+                throw new BusinessException("A data de início não pode ser anterior a data inicial cadastrada");
+            }
+        } else {
+            LocalDate dataAtual = LocalDate.now();
+            if (dataAtual.isAfter(cupom.getDataDeInicio())) {
+                throw new BusinessException("A data inicial deve ser posterior a data atual");
+            }
         }
     }
 }
