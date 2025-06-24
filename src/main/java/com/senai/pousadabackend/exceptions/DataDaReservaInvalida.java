@@ -2,6 +2,6 @@ package com.senai.pousadabackend.exceptions;
 
 public class DataDaReservaInvalida extends RuntimeException {
     public DataDaReservaInvalida() {
-      super("O checkin não pode ser antes do checkout e o checkout não pode ser antes do checkin");
+      super("A reserva deve ter pelo menos uma diaria, e a data de entrada não pode ser depois da data de saida ");
     }
 }
