@@ -1,6 +1,7 @@
 package com.senai.pousadabackend.domain.quarto;
 
 import com.senai.pousadabackend.core.entity.EntityAudit;
+import com.senai.pousadabackend.domain.Imagem.ImagemQuarto;
 import com.senai.pousadabackend.domain.amenidade.Amenidade;
 import jakarta.persistence.*;
 import lombok.*;
@@ -47,5 +48,8 @@ public class Quarto extends EntityAudit {
             inverseJoinColumns = @JoinColumn(name = "amenidade_id")
     )
     private List<Amenidade> amenidades;
+
+    @OneToMany(mappedBy = "quarto", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ImagemQuarto> imagens;
 
 }
