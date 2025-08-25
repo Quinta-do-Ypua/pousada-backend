@@ -76,6 +76,11 @@
             <artifactId>rsql-jpa-spring-boot-starter</artifactId>
             <version>6.0.26</version>
         </dependency>
+        <dependency>
+            <groupId>com.stripe</groupId>
+            <artifactId>stripe-java</artifactId>
+            <version>29.4.0</version>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.cloud</groupId>

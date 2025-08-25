@@ -22,3 +22,6 @@ imagekit:
   chavePrivada: ${CHAVE_PRIVADA_IMAGEKIT}
   urlUpload: ${UPLOAD_URL_IMAGEKIT}
   urlDelete: ${DELETE_URL_IMAGEKIT}
+stripe:
+  chave_privada: ${STRIPE_PRIVATE_KEY}
+  base_url_pagamento: ${URL_PAGAMENTO_STRIPE}
