@@ -6,6 +6,7 @@ import jakarta.validation.constraints.*;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -28,4 +29,7 @@ public class UsuarioDTO {
     @NotBlank(message = "A senha é obrigatória")
     @Size(min = 8, message = "A senha deve ter no máximo 100 caracteres")
     private String senha;
+
+    @NotEmpty(message = "O usuário deve ter ao menos uma role")
+    private List<String> roles;
 }
