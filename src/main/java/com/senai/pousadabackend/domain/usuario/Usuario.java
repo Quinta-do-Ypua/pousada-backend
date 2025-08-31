@@ -4,6 +4,8 @@ import com.senai.pousadabackend.core.entity.EntityAudit;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -27,6 +29,8 @@ public class Usuario extends EntityAudit {
 
     @Column(name = "senha", nullable = false)
     private String senha;
+
+    private List<String> roles;
 
     @Transient
     public boolean isExistente() {

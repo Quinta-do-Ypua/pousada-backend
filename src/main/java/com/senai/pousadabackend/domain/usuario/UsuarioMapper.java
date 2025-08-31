@@ -23,6 +23,7 @@ public class UsuarioMapper implements BaseMapper<Usuario, UsuarioDTO> {
                 .nome(usuarioDTO.getNome())
                 .email(usuarioDTO.getEmail())
                 .senha(usuarioDTO.getSenha())
+                .roles(usuarioDTO.getRoles())
                 .build();
     }
 
