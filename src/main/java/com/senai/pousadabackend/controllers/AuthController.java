@@ -3,6 +3,7 @@ package com.senai.pousadabackend.controllers;
 import com.senai.pousadabackend.domain.auth.LoginDTO;
 import com.senai.pousadabackend.domain.auth.TokenDTO;
 import com.senai.pousadabackend.integration.KeycloakFeign;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +17,12 @@ import java.util.Map;
 @RequestMapping("/auth")
 public class AuthController {
 
+    @Value("${keycloak.client-secret}")
+    private String clientSecret;
+
+    @Value("${keycloak.client-id}")
+    private String clientId;
+
     private final KeycloakFeign keycloakFeign;
 
     public AuthController(KeycloakFeign keycloakFeign) {
@@ -25,8 +32,8 @@ public class AuthController {
     @PostMapping
     public ResponseEntity<?> auth(@RequestBody LoginDTO login) {
         Map<String, String> form = new HashMap<>();
-        form.put("client_id", "quinta-ypua");
-        form.put("client_secret", "iJGO1EX5cLk9BDEUuumL3GVgwD1VmDRB");
+        form.put("client_id", clientId);
+        form.put("client_secret", clientSecret);
         form.put("username", login.getUsername());
         form.put("password", login.getPassword());
         form.put("grant_type", "password");
