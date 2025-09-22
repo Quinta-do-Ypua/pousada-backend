@@ -4,5 +4,5 @@ public enum StatusDaReserva {
     ABERTA,
     FECHADA,
     CANCELADA,
-    CONCLUIDA
+    CONCLUIDA 
 }
