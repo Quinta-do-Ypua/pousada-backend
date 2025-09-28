@@ -30,38 +30,27 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/clientes/**").hasAuthority("ROLE_cliente-operacao")
-                        .requestMatchers(HttpMethod.PUT, "/clientes/**").hasAuthority("ROLE_cliente-operacao")
-                        .requestMatchers(HttpMethod.DELETE, "/clientes/**").hasAuthority("ROLE_cliente-operacao")
-                        .requestMatchers(HttpMethod.GET, "/clientes/**").hasAuthority("ROLE_cliente-visualizacao")
+                        .requestMatchers("/clientes/**").hasAnyAuthority("ROLE_cliente-operacao", "ROLE_admin-operacao")
+                        .requestMatchers(HttpMethod.GET, "/clientes/**").hasAnyAuthority("ROLE_cliente-visualizacao", "ROLE_admin-operacao")
 
-                        .requestMatchers(HttpMethod.POST, "/amenidades/**").hasAuthority("ROLE_amenidade-operacao")
-                        .requestMatchers(HttpMethod.PUT, "/amenidades/**").hasAuthority("ROLE_amenidade-operacao")
-                        .requestMatchers(HttpMethod.DELETE, "/amenidades/**").hasAuthority("ROLE_amenidade-operacao")
-                        .requestMatchers(HttpMethod.GET, "/amenidades/**").hasAuthority("ROLE_amenidade-visualizacao")
+                        .requestMatchers("/amenidades/**").hasAnyAuthority("ROLE_amenidade-operacao", "ROLE_admin-operacao")
+                        .requestMatchers(HttpMethod.GET, "/amenidades/**").hasAnyAuthority("ROLE_amenidade-visualizacao")
 
-                        .requestMatchers(HttpMethod.POST, "/complementos/**").hasAuthority("ROLE_complemento-operacao")
-                        .requestMatchers(HttpMethod.PUT, "/complementos/**").hasAuthority("ROLE_complemento-operacao")
-                        .requestMatchers(HttpMethod.DELETE, "/complementos/**").hasAuthority("ROLE_complemento-operacao")
-                        .requestMatchers(HttpMethod.GET, "/complementos/**").hasAuthority("ROLE_complemento-visualizacao")
+                        .requestMatchers("/complementos/**").hasAnyAuthority("ROLE_complemento-operacao", "ROLE_admin-operacao")
+                        .requestMatchers(HttpMethod.GET, "/complementos/**").hasAnyAuthority("ROLE_complemento-visualizacao", "ROLE_admin-operacao")
 
-                        .requestMatchers(HttpMethod.POST, "/cupons/**").hasAuthority("ROLE_cupom-operacao")
-                        .requestMatchers(HttpMethod.PUT, "/cupons/**").hasAuthority("ROLE_cupom-operacao")
-                        .requestMatchers(HttpMethod.DELETE, "/cupons/**").hasAuthority("ROLE_cupom-operacao")
-                        .requestMatchers(HttpMethod.GET, "/cupons/**").hasAuthority("ROLE_cupom-visualizacao")
+                        .requestMatchers("/cupons/**").hasAnyAuthority("ROLE_cupom-operacao", "ROLE_admin-operacao")
+                        .requestMatchers(HttpMethod.GET, "/cupons/**").hasAnyAuthority("ROLE_cupom-visualizacao", "ROLE_admin-operacao")
 
-                        .requestMatchers(HttpMethod.POST, "/quartos/**").hasAuthority("ROLE_quarto-operacao")
-                        .requestMatchers(HttpMethod.PUT, "/quartos/**").hasAuthority("ROLE_quarto-operacao")
-                        .requestMatchers(HttpMethod.DELETE, "/quartos/**").hasAuthority("ROLE_quarto-operacao")
-                        .requestMatchers(HttpMethod.GET, "/quartos/**").hasAuthority("ROLE_quarto-visualizacao")
+                        .requestMatchers("/quartos/**").hasAnyAuthority("ROLE_quarto-operacao", "ROLE_admin-operacao")
+                        .requestMatchers(HttpMethod.GET, "/quartos/**").hasAnyAuthority("ROLE_quarto-visualizacao", "ROLE_admin-operacao")
 
-                        .requestMatchers(HttpMethod.POST, "/reservas/**").hasAuthority("ROLE_reserva-operacao")
-                        .requestMatchers(HttpMethod.PUT, "/reservas/**").hasAuthority("ROLE_reserva-operacao")
-                        .requestMatchers(HttpMethod.DELETE, "/reservas/**").hasAuthority("ROLE_reserva-operacao")
-                        .requestMatchers(HttpMethod.GET, "/reservas/**").hasAuthority("ROLE_reserva-visualizacao")
+                        .requestMatchers("/reservas/**").hasAnyAuthority("ROLE_reserva-operacao", "ROLE_admin-operacao")
+                        .requestMatchers(HttpMethod.GET, "/reservas/**").hasAnyAuthority("ROLE_reserva-visualizacao", "ROLE_admin-operacao")
+
+                        .requestMatchers("/usuarios/**").hasAnyAuthority("ROLE_admin-operacao")
 
                         .requestMatchers(HttpMethod.POST, "/auth").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/usuarios/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth ->

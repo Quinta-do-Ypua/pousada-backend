@@ -8,6 +8,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.InvalidDataAccessResourceUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -28,6 +30,45 @@ import java.util.regex.Pattern;
 @ControllerAdvice
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    /**
+     * Captura falhas de comunicação ou configuração com o Keycloak.
+     * Retorna 500 INTERNAL SERVER ERROR, pois é um problema interno do servidor
+     * que o cliente não pode resolver.
+     */
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler({KeycloakIntegrationException.class, KeycloakConfigurationException.class})
+    public Map<String, String> handleKeycloakException(Exception ex) {
+        // Loga o erro com detalhes para a equipe de desenvolvimento
+        log.error("Erro de integração com o serviço de autenticação (Keycloak): {}", ex.getMessage(), ex);
+        // Retorna uma mensagem genérica para o usuário
+        return criarMensagem("Falha na comunicação com o serviço de autenticação. Tente novamente mais tarde.");
+    }
+
+    /**
+     * Captura tentativas de acesso a recursos sem a devida permissão (role/scope).
+     * O usuário está autenticado, mas não autorizado para aquela operação específica.
+     * Retorna 403 FORBIDDEN.
+     */
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(AccessDeniedException.class)
+    public Map<String, String> handleAccessDeniedException(AccessDeniedException ex) {
+        log.warn("Acesso negado: {}", ex.getMessage());
+        return criarMensagem("Você não tem permissão para acessar este recurso.");
+    }
+
+    /**
+     * Captura falhas de autenticação, como token inválido, expirado ou ausente.
+     * Retorna 401 UNAUTHORIZED.
+     * Nota: Frequentemente, o Spring Security trata isso antes de chegar ao ControllerAdvice,
+     * mas este handler garante uma resposta JSON consistente.
+     */
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(AuthenticationException.class)
+    public Map<String, String> handleAuthenticationException(AuthenticationException ex) {
+        log.warn("Falha na autenticação: {}", ex.getMessage());
+        return criarMensagem("Credenciais inválidas ou token ausente/expirado.");
+    }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)

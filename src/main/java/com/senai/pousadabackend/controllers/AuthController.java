@@ -35,7 +35,7 @@ public class AuthController {
         form.put("client_id", clientId);
         form.put("client_secret", clientSecret);
         form.put("username", login.getUsername());
-        form.put("password", login.getPassword());
+        form.put("password", login.getSenha());
         form.put("grant_type", "password");
 
         TokenDTO token = keycloakFeign.login(form);
