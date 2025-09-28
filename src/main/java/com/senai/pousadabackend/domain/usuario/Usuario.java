@@ -27,8 +27,11 @@ public class Usuario extends EntityAudit {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(name = "senha", nullable = false)
+    @Transient
     private String senha;
+
+    @Column(name = "keycloak_id", nullable = false)
+    private String keycloakId;
 
     private List<String> roles;
 

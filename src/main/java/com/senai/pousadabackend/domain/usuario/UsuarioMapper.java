@@ -12,7 +12,6 @@ public class UsuarioMapper implements BaseMapper<Usuario, UsuarioDTO> {
                 .id(usuario.getId())
                 .nome(usuario.getNome())
                 .email(usuario.getEmail())
-                .senha(usuario.getSenha())
                 .build();
     }
 

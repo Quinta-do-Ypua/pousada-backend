@@ -1,10 +1,14 @@
 package com.senai.pousadabackend.domain.auth;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
 public class LoginDTO {
 
+    @NotBlank(message = "O username é obrigatório")
     private String username;
-    private String password;
+
+    @NotBlank(message = "A senha é obrigatória")
+    private String senha;
 }

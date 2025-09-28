@@ -13,6 +13,18 @@ spring:
     url: ${DB_URL}
     username: ${DB_USER}
     password: ${DB_PASSWORD}
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${KEYCLOAK_AUTH_SERVER}
+
+keycloak:
+  auth-server-url: ${KEYCLOAK_AUTH_SERVER}
+  admin-server-url: ${KEYCLOAK_ADMIN_SERVER}
+  client-id: ${KEYCLOAK_CLIENT_ID}
+  client-secret: ${KEYCLOAK_CLIENT_SECRET}
+
 server:
   port: 8081
 sendgrid:
@@ -22,7 +34,6 @@ imagekit:
   chavePrivada: ${CHAVE_PRIVADA_IMAGEKIT}
   urlUpload: ${UPLOAD_URL_IMAGEKIT}
   urlDelete: ${DELETE_URL_IMAGEKIT}
-api:
-  security:
-    token:
-      secret: ${JWT_SECRET}
+stripe:
+  chave_privada: ${STRIPE_PRIVATE_KEY}
+  base_url_pagamento: ${URL_PAGAMENTO_STRIPE}
