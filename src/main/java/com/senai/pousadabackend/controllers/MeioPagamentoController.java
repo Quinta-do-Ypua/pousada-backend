@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/meio-pagamento")
+@RequestMapping("/meios-pagamento")
 public class MeioPagamentoController extends BaseController<MeioPagamento, MeioPagamentoDTO, Long, MeioPagamentoMapper> {
 
     public MeioPagamentoController(MeioPagamentoMapper mapper, BaseServiceInterface<MeioPagamento, Long> baseServiceInterface) {

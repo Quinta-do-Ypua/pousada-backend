@@ -34,7 +34,6 @@ public class MeioPagamentoDTO {
     @NotBlank(message = "Tipo é obrigatório")
     private String tipo;
 
-    @Null(message = "O meio de pagamento não deve conter valor em 'ativo'", groups = GrupoValidacaoInserir.class)
     @NotNull(message = "O ativo é obrigatório", groups = GrupoValidacaoAlterar.class)
     private Boolean ativo;
 
