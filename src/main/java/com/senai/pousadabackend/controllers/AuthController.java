@@ -29,7 +29,7 @@ public class AuthController {
         this.keycloakFeign = keycloakFeign;
     }
 
-    @PostMapping
+    @PostMapping("/login")
     public ResponseEntity<?> auth(@RequestBody LoginDTO login) {
         Map<String, String> form = new HashMap<>();
         form.put("client_id", clientId);

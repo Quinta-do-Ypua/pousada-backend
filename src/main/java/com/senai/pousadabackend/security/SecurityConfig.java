@@ -48,9 +48,10 @@ public class SecurityConfig {
                         .requestMatchers("/reservas/**").hasAnyAuthority("ROLE_reserva-operacao", "ROLE_admin-operacao")
                         .requestMatchers(HttpMethod.GET, "/reservas/**").hasAnyAuthority("ROLE_reserva-visualizacao", "ROLE_admin-operacao")
 
-                        .requestMatchers("/usuarios/**").hasAnyAuthority("ROLE_admin-operacao")
+                        .requestMatchers("/usuarios/**").hasAuthority("ROLE_admin-operacao")
+                        .requestMatchers("/roles/**").hasAuthority("ROLE_admin-operacao")
 
-                        .requestMatchers(HttpMethod.POST, "/auth").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth ->
