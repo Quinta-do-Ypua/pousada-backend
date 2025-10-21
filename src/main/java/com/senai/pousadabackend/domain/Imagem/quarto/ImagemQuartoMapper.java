@@ -1,10 +1,10 @@
-package com.senai.pousadabackend.domain.Imagem;
+package com.senai.pousadabackend.domain.Imagem.quarto;
 
 import com.senai.pousadabackend.core.BaseMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ImagemMapper implements BaseMapper<ImagemQuarto, ImagemQuartoDTO> {
+public class ImagemQuartoMapper implements BaseMapper<ImagemQuarto, ImagemQuartoDTO> {
 
     @Override
     public ImagemQuartoDTO toDTO(ImagemQuarto imagemQuarto) {

@@ -1,4 +1,4 @@
-package com.senai.pousadabackend.domain.Imagem;
+package com.senai.pousadabackend.domain.Imagem.quarto;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ImagemRepository extends JpaRepository<ImagemQuarto, Long> {
+public interface ImagemQuartoRepository extends JpaRepository<ImagemQuarto, Long> {
 
     @Query("SELECT i "
             + "FROM ImagemQuarto i "

@@ -1,17 +1,17 @@
-package com.senai.pousadabackend.domain.Imagem;
+package com.senai.pousadabackend.domain.Imagem.configuracao;
 
-import com.senai.pousadabackend.domain.quarto.Quarto;
+import com.senai.pousadabackend.domain.configuracao.Configuracao;
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "imagens_quartos")
+@Table(name = "imagens_configuracoes")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
-public class ImagemQuarto {
+public class ImagemConfiguracao {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,8 +25,9 @@ public class ImagemQuarto {
     @Column(name = "file_id", nullable = false)
     private String fileId;
 
-    @JoinColumn(name = "quarto_id")
+    @JoinColumn(name = "configuracao_id")
     @ManyToOne(fetch = FetchType.LAZY)
     @EqualsAndHashCode.Exclude
-    private Quarto quarto;
+    private Configuracao configuracao;
+
 }
