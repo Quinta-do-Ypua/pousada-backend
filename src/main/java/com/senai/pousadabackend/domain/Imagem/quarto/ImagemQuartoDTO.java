@@ -1,4 +1,4 @@
-package com.senai.pousadabackend.domain.Imagem;
+package com.senai.pousadabackend.domain.Imagem.quarto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -16,4 +16,5 @@ public class ImagemQuartoDTO {
 
     @NotNull(message = "O file id é obrigatório")
     private String fileId;
+
 }

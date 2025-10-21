@@ -1,7 +1,7 @@
 package com.senai.pousadabackend.domain.quarto;
 
 import com.senai.pousadabackend.core.entity.EntityAudit;
-import com.senai.pousadabackend.domain.Imagem.ImagemQuarto;
+import com.senai.pousadabackend.domain.Imagem.quarto.ImagemQuarto;
 import com.senai.pousadabackend.domain.amenidade.Amenidade;
 import jakarta.persistence.*;
 import lombok.*;

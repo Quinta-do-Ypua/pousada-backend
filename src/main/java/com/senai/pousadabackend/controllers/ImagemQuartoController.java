@@ -1,8 +1,8 @@
 package com.senai.pousadabackend.controllers;
 
-import com.senai.pousadabackend.domain.Imagem.ImagemMapper;
-import com.senai.pousadabackend.domain.Imagem.ImagemQuartoDTO;
-import com.senai.pousadabackend.domain.Imagem.service.ImagemService;
+import com.senai.pousadabackend.domain.Imagem.quarto.ImagemQuartoMapper;
+import com.senai.pousadabackend.domain.Imagem.quarto.ImagemQuartoDTO;
+import com.senai.pousadabackend.domain.Imagem.quarto.service.ImagemQuartoService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,15 +12,15 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/imagens")
-public class ImagemController {
+public class ImagemQuartoController {
 
-    private final ImagemService service;
-    private final ImagemMapper mapper;
+    private final ImagemQuartoService service;
+    private final ImagemQuartoMapper mapper;
 
-    public ImagemController(
-            @Qualifier("imagemServiceProxy")
-            ImagemService service,
-            ImagemMapper mapper) {
+    public ImagemQuartoController(
+            @Qualifier("imagemQuartoServiceProxy")
+            ImagemQuartoService service,
+            ImagemQuartoMapper mapper) {
         this.service = service;
         this.mapper = mapper;
     }
@@ -44,4 +44,5 @@ public class ImagemController {
         service.deletar(mapper.toEntity(dto));
         return ResponseEntity.ok().build();
     }
+
 }

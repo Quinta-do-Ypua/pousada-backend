@@ -42,4 +42,5 @@ public class Cupom extends EntityAudit {
     public boolean isExistente() {
         return getId() != null;
     }
+
 }

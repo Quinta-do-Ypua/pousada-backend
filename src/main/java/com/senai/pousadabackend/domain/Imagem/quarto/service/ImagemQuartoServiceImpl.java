@@ -1,10 +1,12 @@
-package com.senai.pousadabackend.domain.Imagem.service;
+package com.senai.pousadabackend.domain.Imagem.quarto.service;
 
-import com.senai.pousadabackend.domain.Imagem.ImagemQuarto;
-import com.senai.pousadabackend.domain.Imagem.ImagemRepository;
+import com.senai.pousadabackend.domain.Imagem.quarto.ImagemQuartoRepository;
 import com.senai.pousadabackend.domain.quarto.Quarto;
+import com.senai.pousadabackend.domain.Imagem.quarto.ImagemQuarto;
 import com.senai.pousadabackend.domain.quarto.service.QuartoService;
 import com.senai.pousadabackend.exceptions.BusinessException;
+import com.senai.pousadabackend.integration.imagem.quarto.DeleteQuarto;
+import com.senai.pousadabackend.integration.imagem.quarto.UploadQuarto;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,18 +14,23 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @Service
-public class ImagemServiceImpl implements ImagemService {
+public class ImagemQuartoServiceImpl implements ImagemQuartoService {
 
     private final QuartoService quartoService;
+    private final UploadQuarto uploadQuarto;
+    private final DeleteQuarto deleteQuarto;
+    private final ImagemQuartoRepository repository;
 
-    private final ImagemRepository repository;
-
-    public ImagemServiceImpl(
+    public ImagemQuartoServiceImpl(
             @Qualifier("quartoServiceImpl")
             QuartoService quartoService,
-            ImagemRepository repository) {
+            UploadQuarto uploadQuarto,
+            DeleteQuarto deleteQuarto,
+            ImagemQuartoRepository repository) {
         this.quartoService = quartoService;
+        this.uploadQuarto = uploadQuarto;
         this.repository = repository;
+        this.deleteQuarto = deleteQuarto;
     }
 
     private static final long TAMANHO_MAXIMO_ARQUIVO = 5 * 1024 * 1024;
@@ -57,6 +64,8 @@ public class ImagemServiceImpl implements ImagemService {
     @Override
     public void deletar(ImagemQuarto imagemQuarto) {
         this.validar((imagemQuarto));
+
+        deleteQuarto.deletarImagem(imagemQuarto.getFileId());
         repository.deleteById(imagemQuarto.getId());
     }
 
@@ -70,4 +79,5 @@ public class ImagemServiceImpl implements ImagemService {
             throw new BusinessException("A imagem precisa conter a url do arquivo");
         }
     }
+
 }
