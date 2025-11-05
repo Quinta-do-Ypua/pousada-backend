@@ -22,6 +22,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -29,27 +31,28 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .cors(withDefaults())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/clientes/**").hasAnyAuthority("ROLE_cliente-operacao", "ROLE_admin-operacao")
-                        .requestMatchers(HttpMethod.GET, "/clientes/**").hasAnyAuthority("ROLE_cliente-visualizacao", "ROLE_admin-operacao")
+                        .requestMatchers("/clientes/**").hasAnyAuthority("ROLE_cliente-operacao", "ROLE_admin")
+                        .requestMatchers(HttpMethod.GET, "/clientes/**").hasAnyAuthority("ROLE_cliente-visualizacao", "ROLE_admin")
 
-                        .requestMatchers("/amenidades/**").hasAnyAuthority("ROLE_amenidade-operacao", "ROLE_admin-operacao")
+                        .requestMatchers("/amenidades/**").hasAnyAuthority("ROLE_amenidade-operacao", "ROLE_admin")
                         .requestMatchers(HttpMethod.GET, "/amenidades/**").hasAnyAuthority("ROLE_amenidade-visualizacao")
 
-                        .requestMatchers("/complementos/**").hasAnyAuthority("ROLE_complemento-operacao", "ROLE_admin-operacao")
-                        .requestMatchers(HttpMethod.GET, "/complementos/**").hasAnyAuthority("ROLE_complemento-visualizacao", "ROLE_admin-operacao")
+                        .requestMatchers("/complementos/**").hasAnyAuthority("ROLE_complemento-operacao", "ROLE_admin")
+                        .requestMatchers(HttpMethod.GET, "/complementos/**").hasAnyAuthority("ROLE_complemento-visualizacao", "ROLE_admin")
 
-                        .requestMatchers("/cupons/**").hasAnyAuthority("ROLE_cupom-operacao", "ROLE_admin-operacao")
-                        .requestMatchers(HttpMethod.GET, "/cupons/**").hasAnyAuthority("ROLE_cupom-visualizacao", "ROLE_admin-operacao")
+                        .requestMatchers("/cupons/**").hasAnyAuthority("ROLE_cupom-operacao", "ROLE_admin")
+                        .requestMatchers(HttpMethod.GET, "/cupons/**").hasAnyAuthority("ROLE_cupom-visualizacao", "ROLE_admin")
 
-                        .requestMatchers("/quartos/**").hasAnyAuthority("ROLE_quarto-operacao", "ROLE_admin-operacao")
-                        .requestMatchers(HttpMethod.GET, "/quartos/**").hasAnyAuthority("ROLE_quarto-visualizacao", "ROLE_admin-operacao")
+                        .requestMatchers("/quartos/**").hasAnyAuthority("ROLE_quarto-operacao", "ROLE_admin")
+                        .requestMatchers(HttpMethod.GET, "/quartos/**").hasAnyAuthority("ROLE_quarto-visualizacao", "ROLE_admin")
 
-                        .requestMatchers("/reservas/**").hasAnyAuthority("ROLE_reserva-operacao", "ROLE_admin-operacao")
-                        .requestMatchers(HttpMethod.GET, "/reservas/**").hasAnyAuthority("ROLE_reserva-visualizacao", "ROLE_admin-operacao")
+                        .requestMatchers("/reservas/**").hasAnyAuthority("ROLE_reserva-operacao", "ROLE_admin")
+                        .requestMatchers(HttpMethod.GET, "/reservas/**").hasAnyAuthority("ROLE_reserva-visualizacao", "ROLE_admin")
 
-                        .requestMatchers("/usuarios/**").hasAuthority("ROLE_admin-operacao")
-                        .requestMatchers("/roles/**").hasAuthority("ROLE_admin-operacao")
+                        .requestMatchers("/usuarios/**").hasAuthority("ROLE_admin")
+                        .requestMatchers("/roles/**").hasAuthority("ROLE_admin")
 
                         .requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
                         .anyRequest().authenticated()
@@ -68,7 +71,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:4200"));
-        corsConfiguration.setAllowedMethods(List.of("GET", "POST"));
+        corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         corsConfiguration.setAllowCredentials(true);
         corsConfiguration.setAllowedHeaders(List.of("*"));
         corsConfiguration.setMaxAge(3600L);
@@ -83,8 +86,8 @@ public class SecurityConfig {
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwt ->  {
             Collection<GrantedAuthority> authorities = new ArrayList<>();
 
-            extractRolesFromClaim(jwt, "real_access", authorities);
-            extractRolesFromClaim(jwt, "resource_access", authorities, "quinta-ypua");
+            extractRolesFromClaim(jwt, "realm_access", authorities);
+            extractRolesFromClaim(jwt, "resource_access", authorities, "ypua-client-front");
 
             return authorities;
         });
