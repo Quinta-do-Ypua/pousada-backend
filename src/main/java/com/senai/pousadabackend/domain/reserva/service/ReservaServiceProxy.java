@@ -76,4 +76,9 @@ public class ReservaServiceProxy implements ReservaService {
         return delegate.listarPaginado(pageable);
     }
 
+    @Override
+    public List<Reserva> salvarEmLote(List<Reserva> reservas) {
+        return delegate.salvarEmLote(reservas);
+    }
+
 }

@@ -25,18 +25,18 @@ public class ImagemConfiguracaoController {
         this.mapper = mapper;
     }
 
-    @PostMapping("/room")
+    @PostMapping("/tema")
     public ResponseEntity<String> uploadImagem(
             @RequestParam("imagens") List<MultipartFile> imagens,
-            @RequestParam("idConfiguracao") Long idConfiguracao
+            @RequestParam("idTemaSistema") Long idTemaSistema
     ) {
-        service.uploadImagem(imagens, idConfiguracao);
+        service.uploadImagem(imagens, idTemaSistema);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<List<ImagemConfiguracaoDTO>> listarPorIdQuarto(@PathVariable("id") Long idConfiguracao) {
-        return ResponseEntity.ok(service.listarPor(idConfiguracao).stream().map(mapper::toDTO).toList());
+    public ResponseEntity<List<ImagemConfiguracaoDTO>> listarPorIdTema(@PathVariable("id") Long idTemaSistema) {
+        return ResponseEntity.ok(service.listarPor(idTemaSistema).stream().map(mapper::toDTO).toList());
     }
 
     @DeleteMapping()

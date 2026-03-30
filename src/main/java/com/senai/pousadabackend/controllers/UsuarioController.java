@@ -3,8 +3,7 @@ package com.senai.pousadabackend.controllers;
 import com.senai.pousadabackend.domain.usuario.Usuario;
 import com.senai.pousadabackend.domain.usuario.UsuarioDTO;
 import com.senai.pousadabackend.domain.usuario.UsuarioMapper;
-import com.senai.pousadabackend.domain.usuario.service.UsuarioService;
-import org.springframework.beans.factory.annotation.Qualifier;
+import com.senai.pousadabackend.domain.usuario.UsuarioService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UsuarioController extends BaseController<Usuario, UsuarioDTO, Long, UsuarioMapper> {
 
     public UsuarioController(UsuarioMapper mapper,
-                             @Qualifier("usuarioServiceProxy") UsuarioService usuarioService) {
+                             UsuarioService usuarioService) {
         super(mapper, usuarioService);
     }
 

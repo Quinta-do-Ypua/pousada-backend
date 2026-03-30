@@ -3,6 +3,8 @@ package com.senai.pousadabackend.core;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface BaseServiceInterface<T, ID> {
 
     T salvar(T t);
@@ -17,5 +19,6 @@ public interface BaseServiceInterface<T, ID> {
 
     Page<T> listarPaginado(Pageable pageable);
 
+    List<T> salvarEmLote(List<T> ts);
 
 }

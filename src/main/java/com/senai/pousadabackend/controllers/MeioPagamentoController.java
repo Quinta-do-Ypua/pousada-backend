@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/meios-pagamento")
 public class MeioPagamentoController extends BaseController<MeioPagamento, MeioPagamentoDTO, Long, MeioPagamentoMapper> {
 
-    public MeioPagamentoController(MeioPagamentoMapper mapper, BaseServiceInterface<MeioPagamento, Long> baseServiceInterface) {
+    public MeioPagamentoController(MeioPagamentoMapper mapper,
+                                   BaseServiceInterface<MeioPagamento, Long> baseServiceInterface) {
         super(mapper, baseServiceInterface);
     }
 }

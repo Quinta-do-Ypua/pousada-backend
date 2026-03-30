@@ -19,7 +19,9 @@ public class ReservaController {
     private final ReservaResumidaMapper reservaResumidaMapper;
     private final ReservaMapper reservaMapper;
 
-    public ReservaController(@Qualifier("reservaServiceImpl") ReservaService reservaService, ReservaResumidaMapper reservaResumidaMapper, ReservaMapper reservaMapper) {
+    public ReservaController(@Qualifier("reservaServiceProxy") ReservaService reservaService,
+                             ReservaResumidaMapper reservaResumidaMapper,
+                             ReservaMapper reservaMapper) {
         this.reservaService = reservaService;
         this.reservaResumidaMapper = reservaResumidaMapper;
         this.reservaMapper = reservaMapper;

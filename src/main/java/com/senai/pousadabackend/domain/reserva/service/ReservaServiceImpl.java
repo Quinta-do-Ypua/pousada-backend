@@ -2,29 +2,32 @@ package com.senai.pousadabackend.domain.reserva.service;
 
 import com.senai.pousadabackend.core.BaseService;
 import com.senai.pousadabackend.domain.cliente.Cliente;
+import com.senai.pousadabackend.domain.parametro.ParametroReservaService;
 import com.senai.pousadabackend.domain.quarto.Quarto;
 import com.senai.pousadabackend.domain.reserva.Reserva;
 import com.senai.pousadabackend.domain.reserva.ReservaRepository;
 import com.senai.pousadabackend.domain.reserva.StatusDaReserva;
-import com.senai.pousadabackend.exceptions.CancelamentoDeReservaConcluidaException;
-import com.senai.pousadabackend.exceptions.DataDaReservaInvalida;
-import com.senai.pousadabackend.exceptions.ExisteReservaAbertaParaEsseCliente;
-import com.senai.pousadabackend.exceptions.ExisteReservaParaEssaDataException;
+import com.senai.pousadabackend.exceptions.*;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
 public class ReservaServiceImpl extends BaseService<Reserva, Long, ReservaRepository> implements ReservaService {
 
     private final ReservaRepository reservaRepository;
+    private final ParametroReservaService parametroReservaService;
 
-    public ReservaServiceImpl(ReservaRepository repo) {
+    public ReservaServiceImpl(ReservaRepository repo, ParametroReservaService parametroReservaService) {
         super(repo);
         this.reservaRepository = repo;
+        this.parametroReservaService = parametroReservaService;
     }
 
     @Override
@@ -40,6 +43,7 @@ public class ReservaServiceImpl extends BaseService<Reserva, Long, ReservaReposi
     public Reserva cancelarPorId(Long id) {
         Reserva reserva = buscarPorId(id);
         validarCancelamento(reserva);
+        calcularMultaCancelamento(reserva);
         reserva.setStatusDaReserva(StatusDaReserva.CANCELADA);
         reserva = this.salvar(reserva);
         return reserva;
@@ -55,12 +59,14 @@ public class ReservaServiceImpl extends BaseService<Reserva, Long, ReservaReposi
         validarStatusInicial(reserva);
         validarDisponibilidadeDoQuarto(reserva);
         validarPendenciasDoCliente(reserva.getCliente());
+        validarPrazoMinimoReserva(reserva);
+        validarDuracaoMinimaMaxima(reserva);
+        validarTempoEntreReservas(reserva);
     }
 
     private void inicializarReserva(Reserva reserva) {
         definirStatusPadrao(reserva);
         validarNovaReserva(reserva);
-//        resumoReservaService.criarERetornarNotaFiscalAPartirDaReserva(reserva);
     }
 
     private void validarCancelamento(Reserva reserva) {
@@ -68,6 +74,31 @@ public class ReservaServiceImpl extends BaseService<Reserva, Long, ReservaReposi
                 || reserva.getStatusDaReserva() == StatusDaReserva.FECHADA) {
             throw new CancelamentoDeReservaConcluidaException();
         }
+
+        Integer prazoMaximoDias = parametroReservaService.getPrazoMaximoCancelamentoDias();
+        LocalDateTime limiteCancelamento = reserva.getCheckIn().minusDays(prazoMaximoDias);
+
+        if (LocalDateTime.now().isAfter(limiteCancelamento)) {
+            throw new PrazoCancelamentoExcedidoException(prazoMaximoDias);
+        }
+    }
+
+    private BigDecimal calcularMultaCancelamento(Reserva reserva) {
+        if (!parametroReservaService.isMultaCancelamentoAtiva()) {
+            return BigDecimal.ZERO;
+        }
+
+        Integer prazoMaximoDias = parametroReservaService.getPrazoMaximoCancelamentoDias();
+        LocalDateTime limiteCancelamento = reserva.getCheckIn().minusDays(prazoMaximoDias);
+
+        if (LocalDateTime.now().isAfter(limiteCancelamento)) {
+            BigDecimal percentual = parametroReservaService.getPercentualMultaCancelamento();
+            return reserva.getValorDaReserva()
+                    .multiply(percentual)
+                    .divide(new BigDecimal("100"), 2, BigDecimal.ROUND_HALF_UP);
+        }
+
+        return BigDecimal.ZERO;
     }
 
     private void validarDatas(Reserva reserva) {
@@ -97,11 +128,57 @@ public class ReservaServiceImpl extends BaseService<Reserva, Long, ReservaReposi
     }
 
     private void validarPendenciasDoCliente(Cliente cliente) {
-        boolean clienteTemReservaAberta = reservaRepository.findReservaByCliente(cliente).stream()
-                .anyMatch(r -> r.getStatusDaReserva() == StatusDaReserva.ABERTA);
+        if (!parametroReservaService.isBloquearReservaComPendencia()) {
+            return;
+        }
 
-        if (clienteTemReservaAberta) {
-            throw new ExisteReservaAbertaParaEsseCliente();
+        Integer maxReservas = parametroReservaService.getMaxReservasAtivasPorUsuario();
+        Long reservasAtivas = reservaRepository.countReservasAtivasPorCliente(cliente);
+
+        if (reservasAtivas >= maxReservas) {
+            throw new LimiteReservasExcedidoException(maxReservas);
+        }
+    }
+
+    private void validarPrazoMinimoReserva(Reserva reserva) {
+        Integer minDias = parametroReservaService.getTempoMinimoParaReservaDias();
+        LocalDateTime dataMinima = LocalDateTime.now().plusDays(minDias);
+
+        if (reserva.getCheckIn().isBefore(dataMinima)) {
+            throw new PrazoMinimoNaoRespeitadoException(minDias);
+        }
+    }
+
+    private void validarDuracaoMinimaMaxima(Reserva reserva) {
+        Integer minDias = parametroReservaService.getDuracaoMinimaDias();
+        Integer maxDias = parametroReservaService.getDuracaoMaximaDias();
+
+        long duracaoDias = ChronoUnit.DAYS.between(
+                reserva.getCheckIn().toLocalDate(),
+                reserva.getCheckOut().toLocalDate());
+
+        if (duracaoDias < minDias || duracaoDias > maxDias) {
+            throw new DuracaoReservaInvalidaException(minDias, maxDias);
+        }
+    }
+
+    private void validarTempoEntreReservas(Reserva reserva) {
+        Integer diasEntreReservas = parametroReservaService.getTempoEntreReservasDias();
+        if (diasEntreReservas <= 0) {
+            return;
+        }
+
+        Cliente cliente = reserva.getCliente();
+        LocalDateTime ultimoCheckOut = reservaRepository.findUltimoCheckOutPorCliente(cliente);
+
+        if (ultimoCheckOut == null) {
+            return;
+        }
+
+        LocalDateTime dataMinimaNovaReserva = ultimoCheckOut.plusDays(diasEntreReservas);
+
+        if (reserva.getCheckIn().isBefore(dataMinimaNovaReserva)) {
+            throw new TempoEntreReservasNaoRespeitadoException(diasEntreReservas);
         }
     }
 

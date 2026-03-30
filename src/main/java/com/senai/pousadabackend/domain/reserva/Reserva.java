@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "reservas")
+@Table
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -50,11 +50,9 @@ public class Reserva extends EntityAudit {
     private Cliente cliente;
 
     @ManyToMany
-    @JoinTable(
-            name = "reserva_complemento",
+    @JoinTable(name = "reserva_complemento",
             joinColumns = @JoinColumn(name = "reserva_id"),
-            inverseJoinColumns = @JoinColumn(name = "complemento_id")
-    )
+            inverseJoinColumns = @JoinColumn(name = "complemento_id"))
     private List<Complemento> complementos;
 
 
