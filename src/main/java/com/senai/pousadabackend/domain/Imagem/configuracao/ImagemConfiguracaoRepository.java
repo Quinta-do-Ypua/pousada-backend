@@ -12,7 +12,7 @@ public interface ImagemConfiguracaoRepository extends JpaRepository<ImagemConfig
 
     @Query("SELECT i "
             + "FROM ImagemConfiguracao i "
-            + "WHERE i.configuracao.id = :idConfiguracao ")
-    List<ImagemConfiguracao> listarPor(Long idConfiguracao);
+            + "WHERE i.temaSistema.id = :idTemaSistema ")
+    List<ImagemConfiguracao> listarPor(Long idTemaSistema);
 
 }

@@ -32,4 +32,18 @@ public interface ReservaRepository extends BaseRepository<Reserva, Long> {
     """)
     Page<Reserva> buscarReservasAtivas(Pageable pageable);
 
+    @Query("""
+        SELECT COUNT(r) FROM Reserva r
+        WHERE r.cliente = :cliente
+        AND r.statusDaReserva = 'ABERTA'
+    """)
+    Long countReservasAtivasPorCliente(Cliente cliente);
+
+    @Query("""
+        SELECT MAX(r.checkOut) FROM Reserva r
+        WHERE r.cliente = :cliente
+        AND r.statusDaReserva != 'CANCELADA'
+    """)
+    LocalDateTime findUltimoCheckOutPorCliente(Cliente cliente);
+
 }

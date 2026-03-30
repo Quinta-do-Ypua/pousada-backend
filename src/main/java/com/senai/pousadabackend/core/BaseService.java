@@ -10,6 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 import static io.github.perplexhub.rsql.RSQLJPASupport.toSpecification;
 
@@ -29,6 +31,16 @@ public class BaseService<T extends EntityAudit, ID, R extends BaseRepository<T, 
             return alterar(t);
         }
         return repo.save(t);
+    }
+
+    @Override
+    @Transactional
+    public List<T> salvarEmLote(List<T> ts) {
+        List<T> tsSaved = new ArrayList<>();
+        ts.forEach(t -> {
+            tsSaved.add(salvar(t));
+        });
+        return tsSaved;
     }
 
     @Override

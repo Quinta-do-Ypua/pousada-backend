@@ -1,6 +1,6 @@
 package com.senai.pousadabackend.domain.Imagem.configuracao;
 
-import com.senai.pousadabackend.domain.configuracao.Configuracao;
+import com.senai.pousadabackend.domain.configuracao.TemaSistema;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,9 +25,9 @@ public class ImagemConfiguracao {
     @Column(name = "file_id", nullable = false)
     private String fileId;
 
-    @JoinColumn(name = "configuracao_id")
+    @JoinColumn(name = "tema_sistema_id")
     @ManyToOne(fetch = FetchType.LAZY)
     @EqualsAndHashCode.Exclude
-    private Configuracao configuracao;
+    private TemaSistema temaSistema;
 
 }

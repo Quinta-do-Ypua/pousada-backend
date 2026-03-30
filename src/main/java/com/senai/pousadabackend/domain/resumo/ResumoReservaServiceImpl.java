@@ -2,9 +2,9 @@ package com.senai.pousadabackend.domain.resumo;
 
 import com.senai.pousadabackend.core.BaseService;
 import com.senai.pousadabackend.domain.complemento.Complemento;
-import com.senai.pousadabackend.domain.complemento.service.ComplementoService;
+import com.senai.pousadabackend.domain.complemento.ComplementoService;
 import com.senai.pousadabackend.domain.quarto.Quarto;
-import com.senai.pousadabackend.domain.quarto.service.QuartoService;
+import com.senai.pousadabackend.domain.quarto.QuartoService;
 import com.senai.pousadabackend.domain.reserva.Reserva;
 import com.senai.pousadabackend.domain.resumo.item.Item;
 import com.senai.pousadabackend.domain.resumo.item_nf.ResumoReservaItem;

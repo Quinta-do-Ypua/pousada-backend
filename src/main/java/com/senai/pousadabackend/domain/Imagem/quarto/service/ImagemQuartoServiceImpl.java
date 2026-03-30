@@ -3,7 +3,7 @@ package com.senai.pousadabackend.domain.Imagem.quarto.service;
 import com.senai.pousadabackend.domain.Imagem.quarto.ImagemQuartoRepository;
 import com.senai.pousadabackend.domain.quarto.Quarto;
 import com.senai.pousadabackend.domain.Imagem.quarto.ImagemQuarto;
-import com.senai.pousadabackend.domain.quarto.service.QuartoService;
+import com.senai.pousadabackend.domain.quarto.QuartoService;
 import com.senai.pousadabackend.exceptions.BusinessException;
 import com.senai.pousadabackend.integration.imagem.quarto.DeleteQuarto;
 import com.senai.pousadabackend.integration.imagem.quarto.UploadQuarto;
