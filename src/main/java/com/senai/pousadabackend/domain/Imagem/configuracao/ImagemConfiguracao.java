@@ -1,6 +1,6 @@
 package com.senai.pousadabackend.domain.Imagem.configuracao;
 
-import com.senai.pousadabackend.domain.configuracao.TemaSistema;
+import com.senai.pousadabackend.domain.temaSistema.TemaSistema;
 import jakarta.persistence.*;
 import lombok.*;
 

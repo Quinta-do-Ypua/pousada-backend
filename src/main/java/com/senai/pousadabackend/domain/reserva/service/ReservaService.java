@@ -1,6 +1,6 @@
 package com.senai.pousadabackend.domain.reserva.service;
 
-import com.senai.pousadabackend.core.BaseServiceInterface;
+import com.senai.pousadabackend.core.base.BaseServiceInterface;
 import com.senai.pousadabackend.domain.quarto.Quarto;
 import com.senai.pousadabackend.domain.reserva.Reserva;
 

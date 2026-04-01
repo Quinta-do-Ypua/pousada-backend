@@ -5,7 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.senai.pousadabackend.domain.Imagem.configuracao.ImagemConfiguracao;
-import com.senai.pousadabackend.integration.imagem.configuracao.UploadConfiguracao;
+import com.senai.pousadabackend.infraestructure.imagem.configuracao.UploadConfiguracao;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 

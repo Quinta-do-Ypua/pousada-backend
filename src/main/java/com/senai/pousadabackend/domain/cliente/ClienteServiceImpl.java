@@ -1,6 +1,6 @@
 package com.senai.pousadabackend.domain.cliente;
 
-import com.senai.pousadabackend.core.BaseService;
+import com.senai.pousadabackend.core.base.BaseService;
 import com.senai.pousadabackend.exceptions.RegistroDuplicadoException;
 import org.springframework.stereotype.Service;
 

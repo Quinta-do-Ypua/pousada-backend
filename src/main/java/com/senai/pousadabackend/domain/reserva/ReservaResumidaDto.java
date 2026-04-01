@@ -1,6 +1,7 @@
 package com.senai.pousadabackend.domain.reserva;
 
-import com.senai.pousadabackend.domain.complemento.ComplementoDTO;
+import com.senai.pousadabackend.core.enums.StatusDaReserva;
+import com.senai.pousadabackend.domain.complemento.dto.ComplementoDTO;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

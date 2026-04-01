@@ -1,6 +1,6 @@
 package com.senai.pousadabackend.domain.reserva;
 
-import com.senai.pousadabackend.core.repository.BaseRepository;
+import com.senai.pousadabackend.core.base.BaseRepository;
 import com.senai.pousadabackend.domain.cliente.Cliente;
 import com.senai.pousadabackend.domain.quarto.Quarto;
 import org.springframework.data.domain.Page;

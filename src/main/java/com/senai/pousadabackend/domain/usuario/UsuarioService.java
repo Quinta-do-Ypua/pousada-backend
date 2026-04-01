@@ -1,6 +1,6 @@
 package com.senai.pousadabackend.domain.usuario;
 
-import com.senai.pousadabackend.core.BaseServiceInterface;
+import com.senai.pousadabackend.core.base.BaseServiceInterface;
 import org.springframework.validation.annotation.Validated;
 
 @Validated

@@ -1,6 +1,6 @@
 package com.senai.pousadabackend.domain.parametro;
 
-import com.senai.pousadabackend.core.BaseService;
+import com.senai.pousadabackend.core.base.BaseService;
 import jakarta.annotation.PostConstruct;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;

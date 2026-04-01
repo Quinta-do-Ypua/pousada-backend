@@ -1,7 +1,7 @@
 package com.senai.pousadabackend.domain.meioPagamento;
 
 import com.senai.pousadabackend.core.entity.EntityAudit;
-import com.senai.pousadabackend.domain.meioPagamento.enums.TipoPagamento;
+import com.senai.pousadabackend.core.enums.TipoPagamento;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
