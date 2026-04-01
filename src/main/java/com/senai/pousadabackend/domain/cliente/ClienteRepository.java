@@ -1,6 +1,6 @@
 package com.senai.pousadabackend.domain.cliente;
 
-import com.senai.pousadabackend.core.repository.BaseRepository;
+import com.senai.pousadabackend.core.base.BaseRepository;
 
 import java.util.Optional;
 

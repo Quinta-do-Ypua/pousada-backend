@@ -1,6 +1,6 @@
 package com.senai.pousadabackend.domain.resumo;
 
-import com.senai.pousadabackend.domain.cliente.ClienteDTO;
+import com.senai.pousadabackend.domain.cliente.dto.ClienteDTO;
 import com.senai.pousadabackend.domain.resumo.item_nf.ResumoReservaItemReduzidoDto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

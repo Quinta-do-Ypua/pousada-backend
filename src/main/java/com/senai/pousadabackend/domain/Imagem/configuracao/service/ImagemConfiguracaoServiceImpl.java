@@ -2,9 +2,9 @@ package com.senai.pousadabackend.domain.Imagem.configuracao.service;
 
 import com.senai.pousadabackend.domain.Imagem.configuracao.ImagemConfiguracao;
 import com.senai.pousadabackend.domain.Imagem.quarto.ImagemQuartoRepository;
-import com.senai.pousadabackend.domain.configuracao.TemaSistemaService;
-import com.senai.pousadabackend.integration.imagem.configuracao.DeleteConfiguracao;
-import com.senai.pousadabackend.integration.imagem.configuracao.UploadConfiguracao;
+import com.senai.pousadabackend.domain.temaSistema.TemaSistemaService;
+import com.senai.pousadabackend.infraestructure.imagem.configuracao.DeleteConfiguracao;
+import com.senai.pousadabackend.infraestructure.imagem.configuracao.UploadConfiguracao;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

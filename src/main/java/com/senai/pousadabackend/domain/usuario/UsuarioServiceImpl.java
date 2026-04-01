@@ -1,16 +1,16 @@
 package com.senai.pousadabackend.domain.usuario;
 
-import com.senai.pousadabackend.core.BaseService;
-import com.senai.pousadabackend.domain.auth.KeycloakClientResponseDTO;
-import com.senai.pousadabackend.domain.auth.KeycloakRoleResponseDTO;
-import com.senai.pousadabackend.domain.auth.KeycloakTokenResponseDTO;
-import com.senai.pousadabackend.domain.auth.KeycloakUserRequestDTO;
+import com.senai.pousadabackend.core.base.BaseService;
+import com.senai.pousadabackend.domain.auth.dto.KeycloakClientResponseDTO;
+import com.senai.pousadabackend.domain.auth.dto.KeycloakRoleResponseDTO;
+import com.senai.pousadabackend.domain.auth.dto.KeycloakTokenResponseDTO;
+import com.senai.pousadabackend.domain.auth.dto.KeycloakUserRequestDTO;
 import com.senai.pousadabackend.exceptions.BusinessException;
 import com.senai.pousadabackend.exceptions.KeycloakConfigurationException;
 import com.senai.pousadabackend.exceptions.KeycloakIntegrationException;
 import com.senai.pousadabackend.exceptions.RegistroNaoEncontradoException;
-import com.senai.pousadabackend.integration.KeycloakAdminClient;
-import com.senai.pousadabackend.integration.KeycloakTokenClient;
+import com.senai.pousadabackend.infraestructure.KeycloakAdminClient;
+import com.senai.pousadabackend.infraestructure.KeycloakTokenClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;

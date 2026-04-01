@@ -1,7 +1,8 @@
 package com.senai.pousadabackend.domain.meioPagamento;
 
-import com.senai.pousadabackend.core.BaseMapper;
-import com.senai.pousadabackend.domain.meioPagamento.enums.TipoPagamento;
+import com.senai.pousadabackend.core.base.BaseMapper;
+import com.senai.pousadabackend.core.enums.TipoPagamento;
+import com.senai.pousadabackend.domain.meioPagamento.dto.MeioPagamentoDTO;
 import org.springframework.stereotype.Component;
 
 @Component

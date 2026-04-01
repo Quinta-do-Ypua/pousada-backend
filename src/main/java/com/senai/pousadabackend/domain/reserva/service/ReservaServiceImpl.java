@@ -1,12 +1,12 @@
 package com.senai.pousadabackend.domain.reserva.service;
 
-import com.senai.pousadabackend.core.BaseService;
+import com.senai.pousadabackend.core.base.BaseService;
 import com.senai.pousadabackend.domain.cliente.Cliente;
 import com.senai.pousadabackend.domain.parametro.ParametroReservaService;
 import com.senai.pousadabackend.domain.quarto.Quarto;
 import com.senai.pousadabackend.domain.reserva.Reserva;
 import com.senai.pousadabackend.domain.reserva.ReservaRepository;
-import com.senai.pousadabackend.domain.reserva.StatusDaReserva;
+import com.senai.pousadabackend.core.enums.StatusDaReserva;
 import com.senai.pousadabackend.exceptions.*;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;

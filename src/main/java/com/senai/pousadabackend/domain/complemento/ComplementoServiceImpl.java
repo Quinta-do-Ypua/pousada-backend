@@ -1,6 +1,6 @@
 package com.senai.pousadabackend.domain.complemento;
 
-import com.senai.pousadabackend.core.BaseService;
+import com.senai.pousadabackend.core.base.BaseService;
 import com.senai.pousadabackend.domain.reserva.ReservaRepository;
 import com.senai.pousadabackend.exceptions.BusinessException;
 import org.springframework.stereotype.Service;

@@ -1,6 +1,7 @@
 package com.senai.pousadabackend.domain.amenidade;
 
-import com.senai.pousadabackend.core.BaseMapper;
+import com.senai.pousadabackend.core.base.BaseMapper;
+import com.senai.pousadabackend.domain.amenidade.dto.AmenidadeDto;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -1,6 +1,6 @@
 package com.senai.pousadabackend.domain.quarto;
 
-import com.senai.pousadabackend.core.BaseService;
+import com.senai.pousadabackend.core.base.BaseService;
 import com.senai.pousadabackend.domain.reserva.service.ReservaService;
 import com.senai.pousadabackend.exceptions.RegistroDuplicadoException;
 import com.senai.pousadabackend.exceptions.RegistrosVinculadosException;

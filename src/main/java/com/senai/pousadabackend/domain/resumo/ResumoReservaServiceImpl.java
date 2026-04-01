@@ -1,6 +1,6 @@
 package com.senai.pousadabackend.domain.resumo;
 
-import com.senai.pousadabackend.core.BaseService;
+import com.senai.pousadabackend.core.base.BaseService;
 import com.senai.pousadabackend.domain.complemento.Complemento;
 import com.senai.pousadabackend.domain.complemento.ComplementoService;
 import com.senai.pousadabackend.domain.quarto.Quarto;

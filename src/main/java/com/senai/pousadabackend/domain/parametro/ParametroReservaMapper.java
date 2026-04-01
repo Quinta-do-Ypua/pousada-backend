@@ -1,6 +1,7 @@
 package com.senai.pousadabackend.domain.parametro;
 
-import com.senai.pousadabackend.core.BaseMapper;
+import com.senai.pousadabackend.core.base.BaseMapper;
+import com.senai.pousadabackend.domain.parametro.dto.ParametroReservaDTO;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
