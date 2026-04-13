@@ -15,7 +15,7 @@ public class ResumoReservaController {
 
     private final ResumoReservaMapper resumoReservaMapper;
 
-    public ResumoReservaController(@Qualifier("resumoReservaServiceProxy") ResumoReservaService resumoReservaService,
+    public ResumoReservaController(@Qualifier("resumoReservaServiceImpl") ResumoReservaService resumoReservaService,
                                    ResumoReservaMapper resumoReservaMapper) {
         this.resumoReservaService = resumoReservaService;
         this.resumoReservaMapper = resumoReservaMapper;

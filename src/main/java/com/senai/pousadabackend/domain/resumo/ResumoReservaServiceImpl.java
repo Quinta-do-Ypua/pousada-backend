@@ -25,8 +25,8 @@ public class ResumoReservaServiceImpl extends BaseService<ResumoReserva, Long, R
     private final ComplementoService complementoService;
 
     public ResumoReservaServiceImpl(ResumoReservaRepository repo,
-                                    @Qualifier("quartoServiceProxy") QuartoService quartoService,
-                                    @Qualifier("complementoServiceProxy") ComplementoService complementoService) {
+                                    @Qualifier("quartoServiceImpl") QuartoService quartoService,
+                                    @Qualifier("complementoServiceImpl") ComplementoService complementoService) {
         super(repo);
         this.quartoService = quartoService;
         this.complementoService = complementoService;
