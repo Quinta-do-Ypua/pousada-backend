@@ -1,6 +1,7 @@
 package com.senai.pousadabackend.domain.Imagem.quarto;
 
 import com.senai.pousadabackend.core.base.BaseMapper;
+import com.senai.pousadabackend.domain.Imagem.quarto.dto.ImagemQuartoDTO;
 import org.springframework.stereotype.Component;
 
 @Component

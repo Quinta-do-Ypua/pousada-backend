@@ -1,9 +1,7 @@
 package com.senai.pousadabackend.domain.Imagem.quarto.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.senai.pousadabackend.domain.Imagem.quarto.ImagemQuarto;
+import com.senai.pousadabackend.domain.Imagem.quarto.dto.ResultadoUploadDTO;
 import com.senai.pousadabackend.infraestructure.imagem.quarto.UploadQuarto;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -31,34 +29,25 @@ public class ImagemQuartoServiceProxy implements ImagemQuartoService {
     public void uploadImagem(List<MultipartFile> imagens, Long idQuarto) {
         service.uploadImagem(imagens, idQuarto);
 
-        List<ImagemQuarto> urls = new ArrayList<>();
+        List<ImagemQuarto> imagensParaSalvar = new ArrayList<>();
 
         for (MultipartFile imagem : imagens) {
-            String nomeImagem = imagem.getOriginalFilename();
-            String response = uploadQuarto.uploadImagem(imagem, nomeImagem);
+            ResultadoUploadDTO resultado = uploadQuarto.uploadImagem(imagem);
 
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode jsonNode;
-            try {
-                jsonNode = mapper.readTree(response);
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
-
-            urls.add(ImagemQuarto
-                    .builder()
-                    .url(jsonNode.get("url").asText())
-                    .fileId(jsonNode.get("fileId").asText())
-                    .build()
+            imagensParaSalvar.add(
+                    ImagemQuarto.builder()
+                            .fileId(resultado.getObjectName())
+                            .url(resultado.getUrl())
+                            .build()
             );
         }
 
-        this.salvar(urls, idQuarto);
+        this.salvar(imagensParaSalvar, idQuarto);
     }
 
     @Override
-    public void salvar(List<ImagemQuarto> urlsFormatadas, Long idQuarto) {
-        service.salvar(urlsFormatadas, idQuarto);
+    public void salvar(List<ImagemQuarto> imagensParaSalvar, Long idQuarto) {
+        service.salvar(imagensParaSalvar, idQuarto);
     }
 
     @Override

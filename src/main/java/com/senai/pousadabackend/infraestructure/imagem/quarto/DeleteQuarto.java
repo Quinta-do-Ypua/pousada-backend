@@ -1,12 +1,32 @@
 package com.senai.pousadabackend.infraestructure.imagem.quarto;
 
-import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import io.minio.MinioClient;
+import io.minio.RemoveObjectArgs;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
-@FeignClient(name = "deleteQuarto", url = "${imagekit.urlDelete}", configuration = UploadQuartoConfig.class)
-public interface DeleteQuarto {
+@Component
+public class DeleteQuarto {
 
-    @DeleteMapping("/{fileId}")
-    void deletarImagem(@PathVariable("fileId") String fileId);
+    private final MinioClient minioClient;
+
+    @Value("${minio.bucket-name}")
+    private String bucketName;
+
+    public DeleteQuarto(MinioClient minioClient) {
+        this.minioClient = minioClient;
+    }
+
+    public void deletarImagem(String objectName) {
+        try {
+            minioClient.removeObject(
+                    RemoveObjectArgs.builder()
+                            .bucket(bucketName)
+                            .object(objectName)
+                            .build()
+            );
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao deletar imagem no MinIO: " + e.getMessage(), e);
+        }
+    }
 }

@@ -1,5 +1,6 @@
 package com.senai.pousadabackend.domain.Imagem.quarto;
 
+import com.senai.pousadabackend.domain.Imagem.quarto.dto.ImagemQuartoDTO;
 import com.senai.pousadabackend.domain.Imagem.quarto.service.ImagemQuartoService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +39,7 @@ public class ImagemQuartoController {
     }
 
     @DeleteMapping()
-    public ResponseEntity<String> uploadImagem(@RequestBody ImagemQuartoDTO dto) {
+    public ResponseEntity<String> deleteImagem(@RequestBody ImagemQuartoDTO dto) {
         service.deletar(mapper.toEntity(dto));
         return ResponseEntity.ok().build();
     }

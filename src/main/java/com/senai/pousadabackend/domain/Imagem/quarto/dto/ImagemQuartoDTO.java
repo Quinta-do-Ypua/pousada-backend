@@ -1,4 +1,4 @@
-package com.senai.pousadabackend.domain.Imagem.quarto;
+package com.senai.pousadabackend.domain.Imagem.quarto.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
