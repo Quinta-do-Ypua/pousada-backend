@@ -17,7 +17,6 @@ import java.util.List;
 public class ImagemQuartoServiceImpl implements ImagemQuartoService {
 
     private final QuartoService quartoService;
-    private final UploadQuarto uploadQuarto;
     private final DeleteQuarto deleteQuarto;
     private final ImagemQuartoRepository repository;
 
@@ -28,7 +27,6 @@ public class ImagemQuartoServiceImpl implements ImagemQuartoService {
             DeleteQuarto deleteQuarto,
             ImagemQuartoRepository repository) {
         this.quartoService = quartoService;
-        this.uploadQuarto = uploadQuarto;
         this.repository = repository;
         this.deleteQuarto = deleteQuarto;
     }
