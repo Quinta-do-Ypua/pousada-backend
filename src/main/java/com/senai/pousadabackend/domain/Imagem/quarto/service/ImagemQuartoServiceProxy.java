@@ -2,7 +2,7 @@ package com.senai.pousadabackend.domain.Imagem.quarto.service;
 
 import com.senai.pousadabackend.domain.Imagem.quarto.ImagemQuarto;
 import com.senai.pousadabackend.domain.Imagem.quarto.dto.ResultadoUploadDTO;
-import com.senai.pousadabackend.infraestructure.imagem.quarto.UploadQuarto;
+import com.senai.pousadabackend.infraestructure.imagem.quarto.UploadQuartoClient;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,15 +14,15 @@ import java.util.List;
 public class ImagemQuartoServiceProxy implements ImagemQuartoService {
 
     private final ImagemQuartoService service;
-    private final UploadQuarto uploadQuarto;
+    private final UploadQuartoClient uploadQuartoClient;
 
     public ImagemQuartoServiceProxy(
             @Qualifier("imagemQuartoServiceImpl")
             ImagemQuartoService service,
-            UploadQuarto uploadQuarto
+            UploadQuartoClient uploadQuartoClient
     ) {
         this.service = service;
-        this.uploadQuarto = uploadQuarto;
+        this.uploadQuartoClient = uploadQuartoClient;
     }
 
     @Override
@@ -32,7 +32,7 @@ public class ImagemQuartoServiceProxy implements ImagemQuartoService {
         List<ImagemQuarto> imagensParaSalvar = new ArrayList<>();
 
         for (MultipartFile imagem : imagens) {
-            ResultadoUploadDTO resultado = uploadQuarto.uploadImagem(imagem);
+            ResultadoUploadDTO resultado = uploadQuartoClient.uploadImagem(imagem);
 
             imagensParaSalvar.add(
                     ImagemQuarto.builder()
