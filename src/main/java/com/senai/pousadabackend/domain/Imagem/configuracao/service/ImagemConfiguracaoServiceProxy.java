@@ -1,11 +1,9 @@
 package com.senai.pousadabackend.domain.Imagem.configuracao.service;
 
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.senai.pousadabackend.domain.Imagem.configuracao.ImagemConfiguracao;
-import com.senai.pousadabackend.infraestructure.imagem.configuracao.UploadConfiguracao;
+import com.senai.pousadabackend.domain.Imagem.quarto.dto.ResultadoUploadDTO;
+import com.senai.pousadabackend.infraestructure.imagem.quarto.UploadQuartoClient;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,32 +14,28 @@ import java.util.List;
 public class ImagemConfiguracaoServiceProxy implements ImagemConfiguracaoService {
 
     private final ImagemConfiguracaoService service;
-    private final UploadConfiguracao uploadConfiguracao;
+    private final UploadQuartoClient uploadQuartoClient;
 
-    public ImagemConfiguracaoServiceProxy(ImagemConfiguracaoService service, UploadConfiguracao uploadConfiguracao) {
+    public ImagemConfiguracaoServiceProxy(
+            @Qualifier("imagemConfiguracaoServiceImpl")
+            ImagemConfiguracaoService service, UploadQuartoClient uploadQuartoClient) {
         this.service = service;
-        this.uploadConfiguracao = uploadConfiguracao;
+        this.uploadQuartoClient = uploadQuartoClient;
     }
 
     @Override
     public void uploadImagem(List<MultipartFile> imagens, Long idConfiguracao) {
         service.uploadImagem(imagens, idConfiguracao);
-        List<ImagemConfiguracao> urls = new ArrayList<>();
-        for (MultipartFile imagem : imagens) {
-            String nomeImagem = imagem.getOriginalFilename();
-            String response = uploadConfiguracao.uploadImagem(imagem, nomeImagem);
 
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode jsonNode;
-            try {
-                jsonNode = mapper.readTree(response);
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
+        List<ImagemConfiguracao> urls = new ArrayList<>();
+
+        for (MultipartFile imagem : imagens) {
+            ResultadoUploadDTO resultado = uploadQuartoClient.uploadImagem(imagem);
+
             urls.add(ImagemConfiguracao
                     .builder()
-                    .url(jsonNode.get("url").asText())
-                    .fileId(jsonNode.get("fileId").asText())
+                    .url(resultado.getUrl())
+                    .fileId(resultado.getObjectName())
                     .build()
             );
         }

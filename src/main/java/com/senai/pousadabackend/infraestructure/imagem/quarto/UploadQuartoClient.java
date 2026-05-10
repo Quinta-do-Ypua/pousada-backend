@@ -6,17 +6,13 @@ import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 
 @Component
-public class UploadQuarto {
+public class UploadQuartoClient {
 
     private final MinioClient minioClient;
 
@@ -26,7 +22,7 @@ public class UploadQuarto {
     @Value("${minio.url}")
     private String minioUrl;
 
-    public UploadQuarto(MinioClient minioClient) {
+    public UploadQuartoClient(MinioClient minioClient) {
         this.minioClient = minioClient;
     }
 

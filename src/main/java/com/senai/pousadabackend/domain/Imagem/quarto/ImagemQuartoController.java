@@ -38,7 +38,7 @@ public class ImagemQuartoController {
         return ResponseEntity.ok(service.listarPor(idQuarto).stream().map(mapper::toDTO).toList());
     }
 
-    @DeleteMapping()
+    @DeleteMapping
     public ResponseEntity<String> deleteImagem(@RequestBody ImagemQuartoDTO dto) {
         service.deletar(mapper.toEntity(dto));
         return ResponseEntity.ok().build();

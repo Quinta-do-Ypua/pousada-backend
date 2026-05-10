@@ -5,8 +5,7 @@ import com.senai.pousadabackend.domain.quarto.Quarto;
 import com.senai.pousadabackend.domain.Imagem.quarto.ImagemQuarto;
 import com.senai.pousadabackend.domain.quarto.QuartoService;
 import com.senai.pousadabackend.exceptions.BusinessException;
-import com.senai.pousadabackend.infraestructure.imagem.quarto.DeleteQuarto;
-import com.senai.pousadabackend.infraestructure.imagem.quarto.UploadQuarto;
+import com.senai.pousadabackend.infraestructure.imagem.quarto.DeleteQuartoClient;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,18 +16,17 @@ import java.util.List;
 public class ImagemQuartoServiceImpl implements ImagemQuartoService {
 
     private final QuartoService quartoService;
-    private final DeleteQuarto deleteQuarto;
+    private final DeleteQuartoClient deleteQuartoClient;
     private final ImagemQuartoRepository repository;
 
     public ImagemQuartoServiceImpl(
             @Qualifier("quartoServiceImpl")
             QuartoService quartoService,
-            UploadQuarto uploadQuarto,
-            DeleteQuarto deleteQuarto,
+            DeleteQuartoClient deleteQuartoClient,
             ImagemQuartoRepository repository) {
         this.quartoService = quartoService;
         this.repository = repository;
-        this.deleteQuarto = deleteQuarto;
+        this.deleteQuartoClient = deleteQuartoClient;
     }
 
     private static final long TAMANHO_MAXIMO_ARQUIVO = 5 * 1024 * 1024;
@@ -63,7 +61,7 @@ public class ImagemQuartoServiceImpl implements ImagemQuartoService {
     public void deletar(ImagemQuarto imagemQuarto) {
         this.validar((imagemQuarto));
 
-        deleteQuarto.deletarImagem(imagemQuarto.getFileId());
+        deleteQuartoClient.deletarImagem(imagemQuarto.getFileId());
         repository.deleteById(imagemQuarto.getId());
     }
 

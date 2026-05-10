@@ -34,11 +34,6 @@ sendgrid:
   email: ${SENGRID_EMAIL}
   key: ${SENDGRID_KEY}
 
-imagekit:
-  chavePrivada: ${CHAVE_PRIVADA_IMAGEKIT}
-  urlUpload: ${UPLOAD_URL_IMAGEKIT}
-  urlDelete: ${DELETE_URL_IMAGEKIT}
-
 minio:
   url: ${MINIO_URL}
   access-key: ${MINIO_ACCESS_KEY}
