@@ -1,8 +1,6 @@
 package com.senai.pousadabackend.infraestructure.imagem.quarto;
 
 import com.senai.pousadabackend.domain.Imagem.quarto.dto.ResultadoUploadDTO;
-import io.minio.BucketExistsArgs;
-import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,8 +26,6 @@ public class UploadQuartoClient {
 
     public ResultadoUploadDTO uploadImagem(MultipartFile imagem) {
         try {
-            garantirBucketExiste();
-
             String objectName = UUID.randomUUID() + "-" + imagem.getOriginalFilename();
 
             minioClient.putObject(
@@ -47,22 +43,6 @@ public class UploadQuartoClient {
 
         } catch (Exception e) {
             throw new RuntimeException("Erro ao fazer upload da imagem no MinIO: " + e.getMessage(), e);
-        }
-    }
-
-    private void garantirBucketExiste() throws Exception {
-        boolean existe = minioClient.bucketExists(
-                BucketExistsArgs.builder()
-                        .bucket(bucketName)
-                        .build()
-        );
-
-        if (!existe) {
-            minioClient.makeBucket(
-                    MakeBucketArgs.builder()
-                            .bucket(bucketName)
-                            .build()
-            );
         }
     }
 }
