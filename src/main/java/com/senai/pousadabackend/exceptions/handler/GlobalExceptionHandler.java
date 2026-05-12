@@ -89,7 +89,6 @@ public class GlobalExceptionHandler {
             BusinessException.class,
             DataDaReservaInvalida.class,
             ExisteReservaParaEssaDataException.class,
-            ExisteReservaAbertaParaEsseCliente.class,
             RegistrosVinculadosException.class,
             IllegalArgumentException.class,
             RuntimeException.class
