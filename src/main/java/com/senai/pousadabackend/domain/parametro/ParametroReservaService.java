@@ -1,30 +1,80 @@
 package com.senai.pousadabackend.domain.parametro;
 
+import com.senai.pousadabackend.core.base.BaseService;
+import jakarta.annotation.PostConstruct;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+
 import java.math.BigDecimal;
 import java.time.LocalTime;
 
-public interface ParametroReservaService {
+@Service
+public class ParametroReservaService extends BaseService<ParametroReserva, Long, ParametroReservaRepository> {
 
-    Boolean isBloquearReservaComPendencia();
+    private final ParametroReservaRepository repository;
+    private ParametroReserva cache;
 
-    Boolean isMultaCancelamentoAtiva();
+    public ParametroReservaService(ParametroReservaRepository repo) {
+        super(repo);
+        this.repository = repo;
+    }
 
-    Integer getMaxReservasAtivasPorUsuario();
+    @PostConstruct
+    @Scheduled(fixedDelay = 60000)
+    public void recarregarCache() {
+        this.cache = repository.findById(1L)
+                .orElse(ParametroReserva.comDefaults());
+    }
 
-    Integer getTempoEntreReservasDias();
+    public ParametroReserva getParametros() {
+        if (cache == null) {
+            recarregarCache();
+        }
+        return cache;
+    }
 
-    Integer getPrazoMaximoCancelamentoDias();
+    public Boolean isBloquearReservaComPendencia() {
+        return getParametros().getBloquearReservaComPendencia();
+    }
 
-    Integer getTempoMinimoParaReservaDias();
+    public Boolean isMultaCancelamentoAtiva() {
+        return getParametros().getMultaCancelamentoAtiva();
+    }
 
-    Integer getDuracaoMinimaDias();
+    public Integer getMaxReservasAtivasPorUsuario() {
+        return getParametros().getMaxReservasAtivasPorUsuario();
+    }
 
-    Integer getDuracaoMaximaDias();
+    public Integer getTempoEntreReservasDias() {
+        return getParametros().getTempoEntreReservasDias();
+    }
 
-    LocalTime getHorarioCheckIn();
+    public Integer getPrazoMaximoCancelamentoDias() {
+        return getParametros().getPrazoMaximoCancelamentoDias();
+    }
 
-    LocalTime getHorarioCheckOut();
+    public Integer getTempoMinimoParaReservaDias() {
+        return getParametros().getTempoMinimoParaReservaDias();
+    }
 
-    BigDecimal getPercentualMultaCancelamento();
+    public Integer getDuracaoMinimaDias() {
+        return getParametros().getDuracaoMinimaDias();
+    }
+
+    public Integer getDuracaoMaximaDias() {
+        return getParametros().getDuracaoMaximaDias();
+    }
+
+    public LocalTime getHorarioCheckIn() {
+        return getParametros().getHorarioCheckIn();
+    }
+
+    public LocalTime getHorarioCheckOut() {
+        return getParametros().getHorarioCheckOut();
+    }
+
+    public BigDecimal getPercentualMultaCancelamento() {
+        return getParametros().getPercentualMultaCancelamento();
+    }
 
 }

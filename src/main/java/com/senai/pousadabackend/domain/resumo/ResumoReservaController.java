@@ -1,6 +1,6 @@
 package com.senai.pousadabackend.domain.resumo;
 
-import org.springframework.beans.factory.annotation.Qualifier;
+import com.senai.pousadabackend.domain.resumo.dto.ResumoReservaDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,7 +15,7 @@ public class ResumoReservaController {
 
     private final ResumoReservaMapper resumoReservaMapper;
 
-    public ResumoReservaController(@Qualifier("resumoReservaServiceImpl") ResumoReservaService resumoReservaService,
+    public ResumoReservaController(ResumoReservaService resumoReservaService,
                                    ResumoReservaMapper resumoReservaMapper) {
         this.resumoReservaService = resumoReservaService;
         this.resumoReservaMapper = resumoReservaMapper;

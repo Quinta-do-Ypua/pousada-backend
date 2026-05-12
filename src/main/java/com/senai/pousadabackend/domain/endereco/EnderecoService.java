@@ -1,6 +1,13 @@
 package com.senai.pousadabackend.domain.endereco;
 
-import com.senai.pousadabackend.core.base.BaseServiceInterface;
+import com.senai.pousadabackend.core.base.BaseService;
+import org.springframework.stereotype.Service;
 
-public interface EnderecoService extends BaseServiceInterface<Endereco, Long> {
+@Service
+public class EnderecoService extends BaseService<Endereco, Long, EnderecoRepository> {
+
+    public EnderecoService(EnderecoRepository repo) {
+        super(repo);
+    }
+
 }

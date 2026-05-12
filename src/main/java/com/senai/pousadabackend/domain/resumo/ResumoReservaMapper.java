@@ -1,7 +1,8 @@
 package com.senai.pousadabackend.domain.resumo;
 
 import com.senai.pousadabackend.domain.cliente.ClienteMapper;
-import com.senai.pousadabackend.domain.resumo.item_nf.ResumoReservaItemReduzidoMapper;
+import com.senai.pousadabackend.domain.resumo.dto.ResumoReservaDto;
+import com.senai.pousadabackend.domain.resumo.itemnf.ResumoReservaItemReduzidoMapper;
 import org.springframework.stereotype.Component;
 
 @Component

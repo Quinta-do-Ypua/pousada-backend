@@ -2,7 +2,7 @@ package com.senai.pousadabackend.domain.resumo;
 
 import com.senai.pousadabackend.core.entity.EntityAudit;
 import com.senai.pousadabackend.domain.cliente.Cliente;
-import com.senai.pousadabackend.domain.resumo.item_nf.ResumoReservaItem;
+import com.senai.pousadabackend.domain.resumo.itemnf.ResumoReservaItem;
 import jakarta.persistence.*;
 import lombok.*;
 
