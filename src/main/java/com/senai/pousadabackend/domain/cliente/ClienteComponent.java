@@ -1,6 +1,6 @@
 package com.senai.pousadabackend.domain.cliente;
 
-import com.senai.pousadabackend.domain.email.EmailService;
+import com.senai.pousadabackend.infraestructure.email.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

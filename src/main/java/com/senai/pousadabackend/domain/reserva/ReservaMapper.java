@@ -1,6 +1,7 @@
 package com.senai.pousadabackend.domain.reserva;
 
 import com.senai.pousadabackend.core.base.BaseMapper;
+import com.senai.pousadabackend.domain.reserva.dto.ReservaDTO;
 import com.senai.pousadabackend.domain.cliente.ClienteMapper;
 import com.senai.pousadabackend.domain.complemento.ComplementoMapper;
 import com.senai.pousadabackend.domain.quarto.QuartoMapper;

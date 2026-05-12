@@ -1,6 +1,13 @@
 package com.senai.pousadabackend.domain.amenidade;
 
-import com.senai.pousadabackend.core.base.BaseServiceInterface;
+import com.senai.pousadabackend.core.base.BaseService;
+import org.springframework.stereotype.Service;
 
-public interface AmenidadeService  extends BaseServiceInterface<Amenidade, Long> {
+@Service
+public class AmenidadeService extends BaseService<Amenidade, Long, AmenidadeRepository> {
+
+    public AmenidadeService(AmenidadeRepository repo) {
+        super(repo);
+    }
+
 }

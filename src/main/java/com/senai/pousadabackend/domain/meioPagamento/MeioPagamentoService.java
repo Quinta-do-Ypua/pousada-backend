@@ -1,8 +1,13 @@
 package com.senai.pousadabackend.domain.meioPagamento;
 
-import com.senai.pousadabackend.core.base.BaseServiceInterface;
-import org.springframework.validation.annotation.Validated;
+import com.senai.pousadabackend.core.base.BaseService;
+import org.springframework.stereotype.Service;
 
-@Validated
-public interface MeioPagamentoService extends BaseServiceInterface<MeioPagamento, Long> {
+@Service
+public class MeioPagamentoService extends BaseService<MeioPagamento, Long, MeioPagamentoRepository> {
+
+    public MeioPagamentoService(MeioPagamentoRepository repo) {
+        super(repo);
+    }
+
 }

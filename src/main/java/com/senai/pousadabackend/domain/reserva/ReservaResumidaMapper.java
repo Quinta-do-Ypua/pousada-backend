@@ -1,5 +1,6 @@
 package com.senai.pousadabackend.domain.reserva;
 
+import com.senai.pousadabackend.domain.reserva.dto.ReservaResumidaDto;
 import com.senai.pousadabackend.domain.cliente.ClienteService;
 import com.senai.pousadabackend.domain.complemento.ComplementoMapper;
 import com.senai.pousadabackend.domain.quarto.QuartoService;

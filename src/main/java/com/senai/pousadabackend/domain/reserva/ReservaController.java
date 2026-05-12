@@ -1,7 +1,8 @@
 package com.senai.pousadabackend.domain.reserva;
 
+import com.senai.pousadabackend.domain.reserva.dto.ReservaDTO;
+import com.senai.pousadabackend.domain.reserva.dto.ReservaResumidaDto;
 import com.senai.pousadabackend.domain.reserva.service.ReservaService;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -15,7 +16,7 @@ public class ReservaController {
     private final ReservaResumidaMapper reservaResumidaMapper;
     private final ReservaMapper reservaMapper;
 
-    public ReservaController(@Qualifier("reservaServiceProxy") ReservaService reservaService,
+    public ReservaController(ReservaService reservaService,
                              ReservaResumidaMapper reservaResumidaMapper,
                              ReservaMapper reservaMapper) {
         this.reservaService = reservaService;
