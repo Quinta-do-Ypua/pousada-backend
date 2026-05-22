@@ -16,7 +16,7 @@ services:
       - keycloak-net
 
   keycloak-db:
-    image: postgres:11.4
+    image: postgres:15
     command:
       [
         "postgres",
@@ -32,11 +32,13 @@ services:
       - "14092:5432"
     volumes:
       - keycloak-db:/var/lib/postgresql/data
+      - ./keycloak_dump.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - keycloak-net
 
   keycloak:
     image: quay.io/keycloak/keycloak:26.1.0
+
     environment:
       KC_DB: postgres
       KC_DB_URL_HOST: keycloak-db
@@ -48,15 +50,21 @@ services:
       KC_BOOTSTRAP_ADMIN_USERNAME: keycloak
       KC_BOOTSTRAP_ADMIN_PASSWORD: keycloak
 
-    command: start-dev
+    command: start-dev --import-realm
+
     ports:
       - "14082:8080"
+
     depends_on:
       - keycloak-db
+
     restart: unless-stopped
+
     networks:
       - keycloak-net
+
     volumes:
+      - ./realm-export.json:/opt/keycloak/data/import/realm-export.json
       - ./volumes/keycloak/app/themes:/opt/keycloak/themes
       - ./volumes/keycloak/app/data:/opt/keycloak/data
 
