@@ -1,0 +1,31 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=PostgreSQL
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: false
+    database: h2
+  config:
+    import: ""
+
+sendgrid:
+  email: test@test.com
+  key: fake-key
+
+minio:
+  url: http://localhost:9999
+  access-key: fake-access
+  secret-key: fake-secret
+  bucket-name: test-bucket
+  region: us-east-1
+
+keycloak:
+  auth-server-url: http://localhost:9999/realms/test
+  admin-server-url: http://localhost:9999/admin/realms/test
+  client-id: test-client
+  client-secret: test-secret
