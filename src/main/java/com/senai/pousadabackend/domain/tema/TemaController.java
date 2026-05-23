@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("configuracoes")
+@RequestMapping("tema")
 public class TemaController extends BaseController<Tema, TemaDTO, Long, TemaMapper> {
 
     public TemaController(TemaMapper mapper,

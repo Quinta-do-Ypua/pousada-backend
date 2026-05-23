@@ -56,17 +56,28 @@ public class BaseService<T extends EntityAudit, ID, R extends BaseRepository<T, 
         return entidade;
     }
 
-    private T alterar(T t) {
+    public T alterar(T t) {
         try {
             Field field = t.getClass().getDeclaredField("id");
             field.setAccessible(true);
             ID valorId = (ID) field.get(t);
-            buscarPorId(valorId);
-            return repo.saveAndFlush(t);
-        } catch (IllegalAccessException | NoSuchFieldException e) {
+            if (valorId == null) {
+                throw new IllegalArgumentException("O campo id é obrigatório no corpo da requisição");
+            }
+            return repo.save(t);
+        } catch (NoSuchFieldException e) {
             log.error("Erro: {} \n StackTrace: {}", e.getMessage(), e.getStackTrace());
             throw new IllegalArgumentException("O campo id é obrigatório no corpo da requisição");
+        } catch (IllegalAccessException e) {
+            log.error("Erro: {} \n StackTrace: {}", e.getMessage(), e.getStackTrace());
+            throw new IllegalArgumentException("Erro ao acessar o campo id");
         }
+    }
+
+    @Override
+    @Transactional
+    public T atualizar(T t) {
+        return alterar(t);
     }
 
 
