@@ -38,7 +38,7 @@ public class BaseController<T, DTO, ID, Mapper extends BaseMapper<T, DTO>> {
 
     @PutMapping
     public DTO alterarPorId(@Validated(GrupoValidacaoAlterar.class) @RequestBody DTO dto) {
-        return mapper.toDTO(baseServiceInterface.salvar(mapper.toEntity(dto)));
+        return mapper.toDTO(baseServiceInterface.atualizar(mapper.toEntity(dto)));
     }
 
     @GetMapping(params = "search")
