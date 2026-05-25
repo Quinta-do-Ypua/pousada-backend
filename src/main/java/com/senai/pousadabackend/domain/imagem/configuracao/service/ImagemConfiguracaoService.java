@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -37,7 +38,7 @@ public class ImagemConfiguracaoService {
         this.repository = repository;
     }
 
-    public void uploadImagem(
+    public List<ResultadoUploadDTO> uploadImagem(
             @NotEmpty(message = "Deve haver no mínimo uma imagem vinculada") List<MultipartFile> imagens,
             @NotNull(message = "O id da configuração é obrigatório") Long idConfiguracao) {
 
@@ -48,6 +49,7 @@ public class ImagemConfiguracaoService {
         });
 
         TemaSistema tema = temaSistemaService.buscarPorId(idConfiguracao);
+        List<ResultadoUploadDTO> resultados = new ArrayList<>();
 
         for (MultipartFile imagem : imagens) {
             ResultadoUploadDTO resultado = minioUploadClient.uploadImagem(imagem);
@@ -56,7 +58,10 @@ public class ImagemConfiguracaoService {
                     .url(resultado.getUrl())
                     .temaSistema(tema)
                     .build());
+            resultados.add(resultado);
         }
+
+        return resultados;
     }
 
     public List<ImagemConfiguracao> listarPor(

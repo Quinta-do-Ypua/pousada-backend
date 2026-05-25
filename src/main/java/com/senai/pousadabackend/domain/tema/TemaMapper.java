@@ -11,13 +11,10 @@ public class TemaMapper implements BaseMapper<Tema, TemaDTO> {
     public TemaDTO toDTO(Tema tema) {
         return TemaDTO.builder()
                 .id(tema.getId())
-                .primaryColor(tema.getPrimaryColor())
-                .secondaryColor(tema.getSecondaryColor())
+                .buttonColor(tema.getButtonColor())
+                .titleColor(tema.getTitleColor())
                 .textColor(tema.getTextColor())
-                .grayBg(tema.getGrayBg())
-                .graySecondaryBg(tema.getGraySecondaryBg())
                 .logo(tema.getLogo())
-                .loginImage(tema.getLoginImage())
                 .build();
     }
 
@@ -25,13 +22,10 @@ public class TemaMapper implements BaseMapper<Tema, TemaDTO> {
     public Tema toEntity(TemaDTO temaDTO) {
         return Tema.builder()
                 .id(temaDTO.getId())
-                .primaryColor(temaDTO.getPrimaryColor())
-                .secondaryColor(temaDTO.getSecondaryColor())
+                .buttonColor(temaDTO.getButtonColor())
+                .titleColor(temaDTO.getTitleColor())
                 .textColor(temaDTO.getTextColor())
-                .grayBg(temaDTO.getGrayBg())
-                .graySecondaryBg(temaDTO.getGraySecondaryBg())
                 .logo(temaDTO.getLogo())
-                .loginImage(temaDTO.getLoginImage())
                 .build();
     }
 
