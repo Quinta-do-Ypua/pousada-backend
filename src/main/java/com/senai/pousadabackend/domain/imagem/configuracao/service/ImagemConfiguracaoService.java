@@ -3,8 +3,8 @@ package com.senai.pousadabackend.domain.imagem.configuracao.service;
 import com.senai.pousadabackend.domain.imagem.configuracao.ImagemConfiguracao;
 import com.senai.pousadabackend.domain.imagem.configuracao.ImagemConfiguracaoRepository;
 import com.senai.pousadabackend.domain.imagem.quarto.dto.ResultadoUploadDTO;
-import com.senai.pousadabackend.domain.tema.Tema;
-import com.senai.pousadabackend.domain.tema.TemaService;
+import com.senai.pousadabackend.domain.temaSistema.TemaSistema;
+import com.senai.pousadabackend.domain.temaSistema.TemaSistemaService;
 import com.senai.pousadabackend.exceptions.BusinessException;
 import com.senai.pousadabackend.infraestructure.imagem.MinioDeleteClient;
 import com.senai.pousadabackend.infraestructure.imagem.MinioUploadClient;
@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,24 +23,24 @@ public class ImagemConfiguracaoService {
 
     private static final long TAMANHO_MAXIMO_ARQUIVO = 5 * 1024 * 1024;
 
-    private final TemaService temaService;
+    private final TemaSistemaService temaSistemaService;
     private final MinioUploadClient minioUploadClient;
     private final MinioDeleteClient minioDeleteClient;
     private final ImagemConfiguracaoRepository repository;
 
-    public ImagemConfiguracaoService(TemaService temaService,
+    public ImagemConfiguracaoService(TemaSistemaService temaSistemaService,
                                       MinioUploadClient minioUploadClient,
                                       MinioDeleteClient minioDeleteClient,
                                       ImagemConfiguracaoRepository repository) {
-        this.temaService = temaService;
+        this.temaSistemaService = temaSistemaService;
         this.minioUploadClient = minioUploadClient;
         this.minioDeleteClient = minioDeleteClient;
         this.repository = repository;
     }
 
-    public String uploadImagem(
+    public List<ResultadoUploadDTO> uploadImagem(
             @NotEmpty(message = "Deve haver no mínimo uma imagem vinculada") List<MultipartFile> imagens,
-            @NotNull(message = "O id do tema é obrigatório") Long idTema) {
+            @NotNull(message = "O id da configuração é obrigatório") Long idConfiguracao) {
 
         imagens.forEach(imagem -> {
             if (imagem.getSize() > TAMANHO_MAXIMO_ARQUIVO) {
@@ -47,24 +48,25 @@ public class ImagemConfiguracaoService {
             }
         });
 
-        Tema tema = temaService.buscarPorId(idTema);
+        TemaSistema tema = temaSistemaService.buscarPorId(idConfiguracao);
+        List<ResultadoUploadDTO> resultados = new ArrayList<>();
 
-        String url = null;
         for (MultipartFile imagem : imagens) {
             ResultadoUploadDTO resultado = minioUploadClient.uploadImagem(imagem);
             repository.save(ImagemConfiguracao.builder()
                     .fileId(resultado.getObjectName())
                     .url(resultado.getUrl())
-                    .tema(tema)
+                    .temaSistema(tema)
                     .build());
-            url = resultado.getUrl();
+            resultados.add(resultado);
         }
-        return url;
+
+        return resultados;
     }
 
     public List<ImagemConfiguracao> listarPor(
-            @NotNull(message = "O id do tema é obrigatório") Long idTema) {
-        return repository.listarPor(idTema);
+            @NotNull(message = "O id da configuração é obrigatório") Long idConfiguracao) {
+        return repository.listarPor(idConfiguracao);
     }
 
     public void deletar(

@@ -32,6 +32,7 @@ services:
       - "14092:5432"
     volumes:
       - keycloak-db:/var/lib/postgresql/data
+      - ./keycloak_dump.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - keycloak-net
 
@@ -59,6 +60,7 @@ services:
     volumes:
       - ./volumes/keycloak/app/themes:/opt/keycloak/themes
       - ./volumes/keycloak/app/data:/opt/keycloak/data
+      - ./realm-keycloak.json:/opt/keycloak/data/import/realm.json
 
 volumes:
   postgres-data:

@@ -12,12 +12,9 @@ import lombok.NoArgsConstructor;
 public class TemaDTO {
 
     private Long id;
-    private String primaryColor;
-    private String secondaryColor;
+    private String buttonColor;
+    private String titleColor;
     private String textColor;
-    private String grayBg;
-    private String graySecondaryBg;
     private String logo;
-    private String loginImage;
 
 }

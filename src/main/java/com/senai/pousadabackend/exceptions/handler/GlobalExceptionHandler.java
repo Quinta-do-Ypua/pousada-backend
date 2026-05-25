@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.HashMap;
 import java.util.List;
@@ -172,6 +173,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(RegistroNaoEncontradoException.class)
     public Map<String, String> handleNaoEncontrado(RegistroNaoEncontradoException ex) {
         return criarMensagem(ex.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NoResourceFoundException.class)
+    public Map<String, String> handleNoResourceFound(NoResourceFoundException ex) {
+        log.debug("Recurso estático não encontrado: {}", ex.getMessage());
+        return criarMensagem("Recurso não encontrado.");
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
