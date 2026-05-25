@@ -10,7 +10,7 @@
         
         <!-- Logo -->
         <div class="logo-container">
-          <img src="${url.resourcesPath}/img/logo.avif" alt="Logo" onerror="this.style.display='none'" />
+          <img src="${url.resourcesPath}/img/hospy.png" alt="Hospy" onerror="this.style.display='none'" />
         </div>
 
         <!-- Título -->
@@ -88,8 +88,14 @@
 
       <!-- Seção Lateral Azul (Direita) -->
       <div class="main-section-angular">
+        <div class="deco-circle deco-circle--top"></div>
+        <div class="deco-circle deco-circle--bottom"></div>
         <div class="illustration">
           <img src="${url.resourcesPath}/img/main-ilustration.avif" alt="Ilustração" onerror="this.style.display='none'" />
+        </div>
+        <div class="side-tagline">
+          <span class="side-tagline__title">Bem-vindo ao Hospy</span>
+          <span class="side-tagline__sub">Gestão inteligente para sua pousada</span>
         </div>
       </div>
 
