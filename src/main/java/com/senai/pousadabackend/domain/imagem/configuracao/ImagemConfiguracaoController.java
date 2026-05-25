@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/imagens-configuracao")
@@ -21,12 +22,12 @@ public class ImagemConfiguracaoController {
     }
 
     @PostMapping("/tema")
-    public ResponseEntity<String> uploadImagem(
+    public ResponseEntity<Map<String, String>> uploadImagem(
             @RequestParam("imagens") List<MultipartFile> imagens,
             @RequestParam("idTemaSistema") Long idTemaSistema
     ) {
-        service.uploadImagem(imagens, idTemaSistema);
-        return ResponseEntity.ok().build();
+        String url = service.uploadImagem(imagens, idTemaSistema);
+        return ResponseEntity.ok(Map.of("url", url));
     }
 
     @GetMapping("{id}")

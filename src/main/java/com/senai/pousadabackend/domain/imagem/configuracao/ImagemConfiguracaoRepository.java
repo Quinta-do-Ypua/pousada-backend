@@ -10,9 +10,7 @@ import java.util.List;
 public interface ImagemConfiguracaoRepository extends JpaRepository<ImagemConfiguracao, Long>  {
 
 
-    @Query("SELECT i "
-            + "FROM ImagemConfiguracao i "
-            + "WHERE i.temaSistema.id = :idTemaSistema ")
-    List<ImagemConfiguracao> listarPor(Long idTemaSistema);
+    @Query("SELECT i FROM ImagemConfiguracao i WHERE i.tema.id = :idTema")
+    List<ImagemConfiguracao> listarPor(Long idTema);
 
 }
