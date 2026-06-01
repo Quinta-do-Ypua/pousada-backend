@@ -1,5 +1,6 @@
 package com.senai.pousadabackend.domain.temaSistema.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.senai.pousadabackend.config.validation.GrupoValidacaoAlterar;
 import com.senai.pousadabackend.config.validation.GrupoValidacaoInserir;
 import jakarta.validation.constraints.NotNull;
@@ -16,10 +17,19 @@ public class TemaSistemaDTO {
     private Long id;
 
     private String nomeEstabelecimento;
+
+    @JsonProperty("buttonColor")
     private String corPrimaria;
+
+    @JsonProperty("titleColor")
     private String corSecundaria;
+
+    @JsonProperty("textColor")
     private String corDoTexto;
+
+    @JsonProperty("logo")
     private String urlLogo;
+
     private String urlDaImagemPrincipal;
 
 }
