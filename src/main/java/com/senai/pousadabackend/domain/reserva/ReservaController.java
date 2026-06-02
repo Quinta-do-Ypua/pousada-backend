@@ -2,7 +2,6 @@ package com.senai.pousadabackend.domain.reserva;
 
 import com.senai.pousadabackend.domain.reserva.dto.ReservaDTO;
 import com.senai.pousadabackend.domain.reserva.dto.ReservaResumidaDto;
-import com.senai.pousadabackend.domain.reserva.service.ReservaService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;

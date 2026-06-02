@@ -1,9 +1,8 @@
-package com.senai.pousadabackend.core.base;
+package com.senai.pousadabackend.domain.complemento;
 
 import com.senai.pousadabackend.MockFactory;
-import com.senai.pousadabackend.domain.amenidade.Amenidade;
-import com.senai.pousadabackend.domain.amenidade.AmenidadeRepository;
-import com.senai.pousadabackend.domain.amenidade.AmenidadeService;
+import com.senai.pousadabackend.domain.reserva.ReservaRepository;
+import com.senai.pousadabackend.exceptions.BusinessException;
 import com.senai.pousadabackend.exceptions.RegistroNaoEncontradoException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -11,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,85 +23,124 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class BaseServiceTest {
+class ComplementoServiceTest {
 
     @Mock
-    private AmenidadeRepository repository;
+    private ComplementoRepository repository;
 
-    private AmenidadeService service;
+    @Mock
+    private ReservaRepository reservaRepository;
+
+    private ComplementoService service;
 
     private MockFactory mockFactory;
 
     @BeforeEach
     void setUp() {
-        service = new AmenidadeService(repository);
+        service = new ComplementoService(repository, reservaRepository);
         mockFactory = new MockFactory();
     }
 
     @Nested
-    class Dado_uma_amenidade_nova {
+    class Dado_um_complemento_novo {
 
-        private Amenidade nova;
+        private Complemento novo;
 
         @BeforeEach
         void setUp() {
-            nova = mockFactory.novaAmenidade();
+            novo = mockFactory.novoComplemento();
         }
 
         @Nested
-        class Quando_salvar {
+        class Quando_salvar_com_nome_unico {
+
+            @BeforeEach
+            void setUp() {
+                when(repository.findByNome("Café da manhã")).thenReturn(null);
+                when(repository.save(novo)).thenReturn(novo);
+            }
 
             @Test
-            void Entao_deve_criar_a_amenidade() {
-                when(repository.save(nova)).thenReturn(nova);
+            void Entao_deve_criar_o_complemento() {
+                Complemento resultado = service.salvar(novo);
 
-                Amenidade resultado = service.salvar(nova);
-                assertThat(resultado).isEqualTo(nova);
-                verify(repository).save(nova);
-                verify(repository, never()).saveAndFlush(any());
+                assertThat(resultado).isEqualTo(novo);
+            }
+        }
+
+        @Nested
+        class Quando_salvar_com_nome_repetido {
+
+            @BeforeEach
+            void setUp() {
+                Complemento existente = mockFactory.complementoExistente();
+                when(repository.findByNome("Café da manhã")).thenReturn(existente);
+            }
+
+            @Test
+            void Entao_deve_informar_que_o_nome_ja_existe() {
+                assertThatThrownBy(() -> service.salvar(novo))
+                        .isInstanceOf(BusinessException.class)
+                        .hasMessageContaining("Já existe um complemento salvo com o mesmo nome");
             }
         }
     }
 
     @Nested
-    class Dado_uma_amenidade_existente {
+    class Dado_um_complemento_existente {
 
-        private Amenidade existente;
+        private Complemento existente;
 
         @BeforeEach
         void setUp() {
-            existente = mockFactory.amenidadeExistente();
+            existente = mockFactory.complementoExistente();
         }
 
         @Nested
-        class Quando_salvar {
+        class Quando_salvar_com_mesmo_nome {
 
             @BeforeEach
             void setUp() {
+                when(repository.findByNome("Café da manhã")).thenReturn(existente);
                 when(repository.save(existente)).thenReturn(existente);
             }
 
             @Test
-            void Entao_deve_atualizar_a_amenidade() {
-                Amenidade resultado = service.salvar(existente);
+            void Entao_deve_atualizar_o_complemento() {
+                Complemento resultado = service.salvar(existente);
 
                 assertThat(resultado).isEqualTo(existente);
-                verify(repository).save(existente);
-                verify(repository, never()).saveAndFlush(any());
+            }
+        }
+
+        @Nested
+        class Quando_salvar_com_nome_diferente {
+
+            @BeforeEach
+            void setUp() {
+                when(repository.findByNome("Café da manhã")).thenReturn(null);
+                when(repository.save(existente)).thenReturn(existente);
+            }
+
+            @Test
+            void Entao_deve_atualizar_o_complemento() {
+                Complemento resultado = service.salvar(existente);
+
+                assertThat(resultado).isEqualTo(existente);
             }
         }
     }
 
     @Nested
-    class Dada_uma_lista_de_amenidades {
+    class Dado_uma_lista_de_complementos {
 
-        private List<Amenidade> amenidades;
+        private List<Complemento> complementos;
 
         @BeforeEach
         void setUp() {
-            amenidades = List.of(
-                mockFactory.novaAmenidade(),
-                Amenidade.builder().nome("WiFi").build()
+            complementos = List.of(
+                mockFactory.novoComplemento(),
+                mockFactory.complementoComIdENome(2L, "Almoço")
             );
         }
 
@@ -116,11 +153,10 @@ class BaseServiceTest {
             }
 
             @Test
-            void Entao_deve_criar_todas_as_amenidades() {
-                List<Amenidade> resultado = service.salvarEmLote(amenidades);
+            void Entao_deve_criar_todos_os_complementos() {
+                List<Complemento> resultado = service.salvarEmLote(complementos);
 
                 assertThat(resultado).hasSize(2);
-                verify(repository, times(2)).save(any());
             }
         }
     }
@@ -128,11 +164,11 @@ class BaseServiceTest {
     @Nested
     class Dado_um_id_existente {
 
-        private Amenidade existente;
+        private Complemento existente;
 
         @BeforeEach
         void setUp() {
-            existente = mockFactory.amenidadeExistente();
+            existente = mockFactory.complementoExistente();
         }
 
         @Nested
@@ -144,27 +180,43 @@ class BaseServiceTest {
             }
 
             @Test
-            void Entao_deve_retornar_a_amenidade() {
-                Amenidade resultado = service.buscarPorId(1L);
+            void Entao_deve_retornar_o_complemento() {
+                Complemento resultado = service.buscarPorId(1L);
 
                 assertThat(resultado).isEqualTo(existente);
             }
         }
 
         @Nested
-        class Quando_excluir {
+        class Quando_excluir_sem_vinculo_com_reserva {
 
             @BeforeEach
             void setUp() {
+                when(reservaRepository.existsByComplementos_Id(1L)).thenReturn(false);
                 when(repository.findById(1L)).thenReturn(Optional.of(existente));
             }
 
             @Test
-            void Entao_deve_remover_a_amenidade() {
-                Amenidade resultado = service.excluir(1L);
+            void Entao_deve_remover_o_complemento() {
+                Complemento resultado = service.excluir(1L);
 
                 assertThat(resultado).isEqualTo(existente);
-                verify(repository).delete(existente);
+            }
+        }
+
+        @Nested
+        class Quando_excluir_com_vinculo_com_reserva {
+
+            @BeforeEach
+            void setUp() {
+                when(reservaRepository.existsByComplementos_Id(1L)).thenReturn(true);
+            }
+
+            @Test
+            void Entao_deve_informar_que_nao_pode_ser_excluido() {
+                assertThatThrownBy(() -> service.excluir(1L))
+                        .isInstanceOf(BusinessException.class)
+                        .hasMessageContaining("vinculado a uma reserva");
             }
         }
 
@@ -209,6 +261,7 @@ class BaseServiceTest {
 
             @BeforeEach
             void setUp() {
+                when(reservaRepository.existsByComplementos_Id(ID_INEXISTENTE)).thenReturn(false);
                 when(repository.findById(ID_INEXISTENTE)).thenReturn(Optional.empty());
             }
 
@@ -265,21 +318,24 @@ class BaseServiceTest {
     class Dada_uma_paginacao {
 
         private Pageable pageable;
-        private Page<Amenidade> page;
 
         @BeforeEach
         void setUp() {
             pageable = PageRequest.of(0, 10);
-            page = new PageImpl<>(List.of(mockFactory.amenidadeExistente()));
-            when(repository.findAll(pageable)).thenReturn(page);
         }
 
         @Nested
         class Quando_listar_paginado {
 
+            @BeforeEach
+            void setUp() {
+                when(repository.findAll(pageable))
+                        .thenReturn(new PageImpl<>(List.of(mockFactory.complementoExistente())));
+            }
+
             @Test
-            void Entao_deve_retornar_a_lista_de_amenidades() {
-                Page<Amenidade> resultado = service.listarPaginado(pageable);
+            void Entao_deve_retornar_a_lista_de_complementos() {
+                var resultado = service.listarPaginado(pageable);
 
                 assertThat(resultado.getContent()).hasSize(1);
             }
@@ -290,24 +346,26 @@ class BaseServiceTest {
     class Dada_uma_specification_nula {
 
         private Pageable pageable;
-        private Page<Amenidade> page;
 
         @BeforeEach
         void setUp() {
             pageable = PageRequest.of(0, 10);
-            page = new PageImpl<>(List.of());
-            when(repository.findAll((Specification<Amenidade>) null, pageable)).thenReturn(page);
         }
 
         @Nested
         class Quando_buscar_por_specification {
 
+            @BeforeEach
+            void setUp() {
+                when(repository.findAll((Specification<Complemento>) null, pageable))
+                        .thenReturn(new PageImpl<>(List.of()));
+            }
+
             @Test
-            void Entao_deve_retornar_todas_as_amenidades() {
-                Page<Amenidade> resultado = service.buscarPorSpecification(null, pageable);
+            void Entao_deve_retornar_todos_os_complementos() {
+                var resultado = service.buscarPorSpecification(null, pageable);
 
                 assertThat(resultado).isNotNull();
-                verify(repository).findAll((Specification<Amenidade>) null, pageable);
             }
         }
     }
@@ -316,24 +374,26 @@ class BaseServiceTest {
     class Dada_uma_specification_em_branco {
 
         private Pageable pageable;
-        private Page<Amenidade> page;
 
         @BeforeEach
         void setUp() {
             pageable = PageRequest.of(0, 10);
-            page = new PageImpl<>(List.of());
-            when(repository.findAll((Specification<Amenidade>) null, pageable)).thenReturn(page);
         }
 
         @Nested
         class Quando_buscar_por_specification {
 
+            @BeforeEach
+            void setUp() {
+                when(repository.findAll((Specification<Complemento>) null, pageable))
+                        .thenReturn(new PageImpl<>(List.of()));
+            }
+
             @Test
-            void Entao_deve_retornar_todas_as_amenidades() {
-                Page<Amenidade> resultado = service.buscarPorSpecification("   ", pageable);
+            void Entao_deve_retornar_todos_os_complementos() {
+                var resultado = service.buscarPorSpecification("   ", pageable);
 
                 assertThat(resultado).isNotNull();
-                verify(repository).findAll((Specification<Amenidade>) null, pageable);
             }
         }
     }

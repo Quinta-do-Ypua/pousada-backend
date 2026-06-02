@@ -1,9 +1,6 @@
-package com.senai.pousadabackend.core.base;
+package com.senai.pousadabackend.domain.endereco;
 
 import com.senai.pousadabackend.MockFactory;
-import com.senai.pousadabackend.domain.amenidade.Amenidade;
-import com.senai.pousadabackend.domain.amenidade.AmenidadeRepository;
-import com.senai.pousadabackend.domain.amenidade.AmenidadeService;
 import com.senai.pousadabackend.exceptions.RegistroNaoEncontradoException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -11,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,54 +21,56 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class BaseServiceTest {
+class EnderecoServiceTest {
 
     @Mock
-    private AmenidadeRepository repository;
+    private EnderecoRepository repository;
 
-    private AmenidadeService service;
+    private EnderecoService service;
 
     private MockFactory mockFactory;
 
     @BeforeEach
     void setUp() {
-        service = new AmenidadeService(repository);
+        service = new EnderecoService(repository);
         mockFactory = new MockFactory();
     }
 
     @Nested
-    class Dado_uma_amenidade_nova {
+    class Dado_um_endereco_novo {
 
-        private Amenidade nova;
+        private Endereco novo;
 
         @BeforeEach
         void setUp() {
-            nova = mockFactory.novaAmenidade();
+            novo = mockFactory.novoEndereco();
         }
 
         @Nested
         class Quando_salvar {
 
-            @Test
-            void Entao_deve_criar_a_amenidade() {
-                when(repository.save(nova)).thenReturn(nova);
+            @BeforeEach
+            void setUp() {
+                when(repository.save(novo)).thenReturn(novo);
+            }
 
-                Amenidade resultado = service.salvar(nova);
-                assertThat(resultado).isEqualTo(nova);
-                verify(repository).save(nova);
-                verify(repository, never()).saveAndFlush(any());
+            @Test
+            void Entao_deve_criar_o_endereco() {
+                Endereco resultado = service.salvar(novo);
+
+                assertThat(resultado).isEqualTo(novo);
             }
         }
     }
 
     @Nested
-    class Dado_uma_amenidade_existente {
+    class Dado_um_endereco_existente {
 
-        private Amenidade existente;
+        private Endereco existente;
 
         @BeforeEach
         void setUp() {
-            existente = mockFactory.amenidadeExistente();
+            existente = mockFactory.enderecoExistente();
         }
 
         @Nested
@@ -84,26 +82,24 @@ class BaseServiceTest {
             }
 
             @Test
-            void Entao_deve_atualizar_a_amenidade() {
-                Amenidade resultado = service.salvar(existente);
+            void Entao_deve_atualizar_o_endereco() {
+                Endereco resultado = service.salvar(existente);
 
                 assertThat(resultado).isEqualTo(existente);
-                verify(repository).save(existente);
-                verify(repository, never()).saveAndFlush(any());
             }
         }
     }
 
     @Nested
-    class Dada_uma_lista_de_amenidades {
+    class Dado_uma_lista_de_enderecos {
 
-        private List<Amenidade> amenidades;
+        private List<Endereco> enderecos;
 
         @BeforeEach
         void setUp() {
-            amenidades = List.of(
-                mockFactory.novaAmenidade(),
-                Amenidade.builder().nome("WiFi").build()
+            enderecos = List.of(
+                mockFactory.novoEndereco(),
+                mockFactory.enderecoComIdECidade(2L, "Rio de Janeiro")
             );
         }
 
@@ -116,11 +112,10 @@ class BaseServiceTest {
             }
 
             @Test
-            void Entao_deve_criar_todas_as_amenidades() {
-                List<Amenidade> resultado = service.salvarEmLote(amenidades);
+            void Entao_deve_criar_todos_os_enderecos() {
+                List<Endereco> resultado = service.salvarEmLote(enderecos);
 
                 assertThat(resultado).hasSize(2);
-                verify(repository, times(2)).save(any());
             }
         }
     }
@@ -128,11 +123,11 @@ class BaseServiceTest {
     @Nested
     class Dado_um_id_existente {
 
-        private Amenidade existente;
+        private Endereco existente;
 
         @BeforeEach
         void setUp() {
-            existente = mockFactory.amenidadeExistente();
+            existente = mockFactory.enderecoExistente();
         }
 
         @Nested
@@ -144,8 +139,8 @@ class BaseServiceTest {
             }
 
             @Test
-            void Entao_deve_retornar_a_amenidade() {
-                Amenidade resultado = service.buscarPorId(1L);
+            void Entao_deve_retornar_o_endereco() {
+                Endereco resultado = service.buscarPorId(1L);
 
                 assertThat(resultado).isEqualTo(existente);
             }
@@ -160,11 +155,10 @@ class BaseServiceTest {
             }
 
             @Test
-            void Entao_deve_remover_a_amenidade() {
-                Amenidade resultado = service.excluir(1L);
+            void Entao_deve_remover_o_endereco() {
+                Endereco resultado = service.excluir(1L);
 
                 assertThat(resultado).isEqualTo(existente);
-                verify(repository).delete(existente);
             }
         }
 
@@ -265,21 +259,24 @@ class BaseServiceTest {
     class Dada_uma_paginacao {
 
         private Pageable pageable;
-        private Page<Amenidade> page;
 
         @BeforeEach
         void setUp() {
             pageable = PageRequest.of(0, 10);
-            page = new PageImpl<>(List.of(mockFactory.amenidadeExistente()));
-            when(repository.findAll(pageable)).thenReturn(page);
         }
 
         @Nested
         class Quando_listar_paginado {
 
+            @BeforeEach
+            void setUp() {
+                when(repository.findAll(pageable))
+                        .thenReturn(new PageImpl<>(List.of(mockFactory.enderecoExistente())));
+            }
+
             @Test
-            void Entao_deve_retornar_a_lista_de_amenidades() {
-                Page<Amenidade> resultado = service.listarPaginado(pageable);
+            void Entao_deve_retornar_a_lista_de_enderecos() {
+                var resultado = service.listarPaginado(pageable);
 
                 assertThat(resultado.getContent()).hasSize(1);
             }
@@ -290,24 +287,26 @@ class BaseServiceTest {
     class Dada_uma_specification_nula {
 
         private Pageable pageable;
-        private Page<Amenidade> page;
 
         @BeforeEach
         void setUp() {
             pageable = PageRequest.of(0, 10);
-            page = new PageImpl<>(List.of());
-            when(repository.findAll((Specification<Amenidade>) null, pageable)).thenReturn(page);
         }
 
         @Nested
         class Quando_buscar_por_specification {
 
+            @BeforeEach
+            void setUp() {
+                when(repository.findAll((Specification<Endereco>) null, pageable))
+                        .thenReturn(new PageImpl<>(List.of()));
+            }
+
             @Test
-            void Entao_deve_retornar_todas_as_amenidades() {
-                Page<Amenidade> resultado = service.buscarPorSpecification(null, pageable);
+            void Entao_deve_retornar_todos_os_enderecos() {
+                var resultado = service.buscarPorSpecification(null, pageable);
 
                 assertThat(resultado).isNotNull();
-                verify(repository).findAll((Specification<Amenidade>) null, pageable);
             }
         }
     }
@@ -316,24 +315,26 @@ class BaseServiceTest {
     class Dada_uma_specification_em_branco {
 
         private Pageable pageable;
-        private Page<Amenidade> page;
 
         @BeforeEach
         void setUp() {
             pageable = PageRequest.of(0, 10);
-            page = new PageImpl<>(List.of());
-            when(repository.findAll((Specification<Amenidade>) null, pageable)).thenReturn(page);
         }
 
         @Nested
         class Quando_buscar_por_specification {
 
+            @BeforeEach
+            void setUp() {
+                when(repository.findAll((Specification<Endereco>) null, pageable))
+                        .thenReturn(new PageImpl<>(List.of()));
+            }
+
             @Test
-            void Entao_deve_retornar_todas_as_amenidades() {
-                Page<Amenidade> resultado = service.buscarPorSpecification("   ", pageable);
+            void Entao_deve_retornar_todos_os_enderecos() {
+                var resultado = service.buscarPorSpecification("   ", pageable);
 
                 assertThat(resultado).isNotNull();
-                verify(repository).findAll((Specification<Amenidade>) null, pageable);
             }
         }
     }

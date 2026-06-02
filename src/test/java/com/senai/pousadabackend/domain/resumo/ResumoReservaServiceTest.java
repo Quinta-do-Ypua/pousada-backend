@@ -1,12 +1,13 @@
 package com.senai.pousadabackend.domain.resumo;
 
-import com.senai.pousadabackend.domain.cliente.Cliente;
+import com.senai.pousadabackend.MockFactory;
 import com.senai.pousadabackend.domain.complemento.Complemento;
 import com.senai.pousadabackend.domain.complemento.ComplementoService;
 import com.senai.pousadabackend.domain.quarto.Quarto;
 import com.senai.pousadabackend.domain.quarto.QuartoService;
 import com.senai.pousadabackend.domain.reserva.Reserva;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -19,8 +20,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -38,138 +39,241 @@ class ResumoReservaServiceTest {
 
     private ResumoReservaService service;
 
+    private MockFactory mockFactory;
+
     @BeforeEach
     void setUp() {
         service = new ResumoReservaService(repository, quartoService, complementoService);
+        mockFactory = new MockFactory();
     }
 
-    private Quarto quartoPadrao() {
-        Quarto q = new Quarto();
-        q.setId(1L);
-        q.setNome("Suite 01");
-        q.setValorDiaria(BigDecimal.valueOf(200));
-        return q;
+    @Nested
+    class Dado_uma_reserva_valida_sem_complementos {
+
+        private Reserva reserva;
+
+        @BeforeEach
+        void setUp() {
+            Quarto quarto = mockFactory.quartoPadrao();
+            quarto.setValorDiaria(BigDecimal.valueOf(200));
+            reserva = Reserva.builder()
+                    .id(1L)
+                    .quarto(quarto)
+                    .cliente(mockFactory.clientePadrao())
+                    .checkIn(LocalDateTime.now().plusDays(5))
+                    .checkOut(LocalDateTime.now().plusDays(8))
+                    .complementos(new ArrayList<>())
+                    .build();
+        }
+
+        @Nested
+        class Quando_criar_nota_fiscal {
+
+            @BeforeEach
+            void setUp() {
+                Quarto quarto = mockFactory.quartoPadrao();
+                quarto.setValorDiaria(BigDecimal.valueOf(200));
+                when(quartoService.buscarPorId(1L)).thenReturn(quarto);
+                when(repository.save(any())).thenAnswer(inv -> {
+                    ResumoReserva r = inv.getArgument(0);
+                    r.setDataCriacao(LocalDateTime.now());
+                    return r;
+                });
+            }
+
+            @Test
+            void Entao_deve_criar_com_sucesso() {
+                ResumoReserva resultado = service.criarERetornarNotaFiscalAPartirDaReserva(reserva);
+
+                assertThat(resultado).isNotNull();
+                assertThat(resultado.getCliente().getId()).isEqualTo(1L);
+                assertThat(resultado.getValorTotal()).isGreaterThan(BigDecimal.ZERO);
+            }
+        }
     }
 
-    private Cliente clientePadrao() {
-        Cliente c = new Cliente();
-        c.setId(1L);
-        c.setNome("João");
-        return c;
+    @Nested
+    class Dado_uma_reserva_com_complementos_iguais {
+
+        private Reserva reserva;
+
+        @BeforeEach
+        void setUp() {
+            Quarto quarto = mockFactory.quartoPadrao();
+            quarto.setValorDiaria(BigDecimal.valueOf(200));
+            reserva = Reserva.builder()
+                    .id(1L)
+                    .quarto(quarto)
+                    .cliente(mockFactory.clientePadrao())
+                    .checkIn(LocalDateTime.now().plusDays(5))
+                    .checkOut(LocalDateTime.now().plusDays(8))
+                    .complementos(new ArrayList<>())
+                    .build();
+
+            Complemento comp1 = Complemento.builder().id(10L).nome("Café").valor(BigDecimal.valueOf(35)).descricao("Café").build();
+            Complemento comp2 = Complemento.builder().id(10L).nome("Café").valor(BigDecimal.valueOf(35)).descricao("Café").build();
+            reserva.setComplementos(List.of(comp1, comp2));
+        }
+
+        @Nested
+        class Quando_criar_nota_fiscal {
+
+            @BeforeEach
+            void setUp() {
+                Quarto quarto = mockFactory.quartoPadrao();
+                quarto.setValorDiaria(BigDecimal.valueOf(200));
+                when(quartoService.buscarPorId(1L)).thenReturn(quarto);
+                when(complementoService.buscarPorId(10L)).thenReturn(Complemento.builder().id(10L).nome("Café").valor(BigDecimal.valueOf(35)).descricao("Café").build());
+                when(repository.save(any())).thenAnswer(inv -> {
+                    ResumoReserva r = inv.getArgument(0);
+                    r.setDataCriacao(LocalDateTime.now());
+                    return r;
+                });
+            }
+
+            @Test
+            void Entao_deve_agrupar_complementos_iguais() {
+                ResumoReserva resultado = service.criarERetornarNotaFiscalAPartirDaReserva(reserva);
+
+                assertThat(resultado).isNotNull();
+                assertThat(resultado.getItens()).isNotEmpty();
+            }
+        }
     }
 
-    private Reserva reservaValida() {
-        Quarto quarto = quartoPadrao();
-        return Reserva.builder()
-                .id(1L)
-                .quarto(quarto)
-                .cliente(clientePadrao())
-                .checkIn(LocalDateTime.now().plusDays(5))
-                .checkOut(LocalDateTime.now().plusDays(8))
-                .complementos(new ArrayList<>())
-                .build();
+    @Nested
+    class Dado_uma_reserva_com_complementos_diferentes {
+
+        private Reserva reserva;
+
+        @BeforeEach
+        void setUp() {
+            Quarto quarto = mockFactory.quartoPadrao();
+            quarto.setValorDiaria(BigDecimal.valueOf(200));
+            reserva = Reserva.builder()
+                    .id(1L)
+                    .quarto(quarto)
+                    .cliente(mockFactory.clientePadrao())
+                    .checkIn(LocalDateTime.now().plusDays(5))
+                    .checkOut(LocalDateTime.now().plusDays(8))
+                    .complementos(new ArrayList<>())
+                    .build();
+
+            Complemento comp1 = Complemento.builder().id(10L).nome("Café").valor(BigDecimal.valueOf(35)).descricao("Café").build();
+            Complemento comp2 = Complemento.builder().id(20L).nome("Transfer").valor(BigDecimal.valueOf(80)).descricao("Transfer").build();
+            reserva.setComplementos(List.of(comp1, comp2));
+        }
+
+        @Nested
+        class Quando_criar_nota_fiscal {
+
+            @BeforeEach
+            void setUp() {
+                Quarto quarto = mockFactory.quartoPadrao();
+                quarto.setValorDiaria(BigDecimal.valueOf(200));
+                when(quartoService.buscarPorId(1L)).thenReturn(quarto);
+                when(complementoService.buscarPorId(10L)).thenReturn(Complemento.builder().id(10L).nome("Café").valor(BigDecimal.valueOf(35)).descricao("Café").build());
+                when(complementoService.buscarPorId(20L)).thenReturn(Complemento.builder().id(20L).nome("Transfer").valor(BigDecimal.valueOf(80)).descricao("Transfer").build());
+                when(repository.save(any())).thenAnswer(inv -> {
+                    ResumoReserva r = inv.getArgument(0);
+                    r.setDataCriacao(LocalDateTime.now());
+                    return r;
+                });
+            }
+
+            @Test
+            void Entao_deve_criar_tres_itens() {
+                ResumoReserva resultado = service.criarERetornarNotaFiscalAPartirDaReserva(reserva);
+
+                assertThat(resultado.getItens()).hasSize(3);
+            }
+        }
     }
 
-    @Test
-    void criarERetornarNotaFiscal_semComplementos_criaSucesso() {
-        Reserva reserva = reservaValida();
-        Quarto quarto = quartoPadrao();
+    @Nested
+    class Dado_uma_reserva_para_criacao_assincrona {
 
-        when(quartoService.buscarPorId(1L)).thenReturn(quarto);
-        when(repository.save(any())).thenAnswer(inv -> {
-            ResumoReserva r = inv.getArgument(0);
-            r.setDataCriacao(java.time.LocalDateTime.now());
-            return r;
-        });
+        private Reserva reserva;
 
-        ResumoReserva resultado = service.criarERetornarNotaFiscalAPartirDaReserva(reserva);
+        @BeforeEach
+        void setUp() {
+            Quarto quarto = mockFactory.quartoPadrao();
+            quarto.setValorDiaria(BigDecimal.valueOf(200));
+            reserva = Reserva.builder()
+                    .id(1L)
+                    .quarto(quarto)
+                    .cliente(mockFactory.clientePadrao())
+                    .checkIn(LocalDateTime.now().plusDays(5))
+                    .checkOut(LocalDateTime.now().plusDays(8))
+                    .complementos(new ArrayList<>())
+                    .build();
+        }
 
-        assertThat(resultado).isNotNull();
-        assertThat(resultado.getCliente().getId()).isEqualTo(1L);
-        assertThat(resultado.getValorTotal()).isGreaterThan(BigDecimal.ZERO);
-        verify(repository).save(any(ResumoReserva.class));
+        @Nested
+        class Quando_criar_nota_fiscal_assincrona {
+
+            @BeforeEach
+            void setUp() {
+                Quarto quarto = mockFactory.quartoPadrao();
+                quarto.setValorDiaria(BigDecimal.valueOf(200));
+                when(quartoService.buscarPorId(1L)).thenReturn(quarto);
+                when(repository.save(any())).thenAnswer(inv -> {
+                    ResumoReserva r = inv.getArgument(0);
+                    r.setDataCriacao(LocalDateTime.now());
+                    return r;
+                });
+            }
+
+            @Test
+            void Entao_nao_deve_lancar_excecao() throws InterruptedException {
+                service.criarNotaFiscalAssincronaAPartirDaReserva(reserva);
+
+                Thread.sleep(200);
+                assertThatCode(() -> verify(repository, atLeastOnce()).save(any())).doesNotThrowAnyException();
+            }
+        }
     }
 
-    @Test
-    void criarERetornarNotaFiscal_comComplementos_incluiItens() {
-        Reserva reserva = reservaValida();
+    @Nested
+    class Dado_uma_reserva_com_dias_definidos {
 
-        Complemento comp1 = Complemento.builder().id(10L).nome("Café").valor(BigDecimal.valueOf(35)).descricao("Café").build();
-        Complemento comp2 = Complemento.builder().id(10L).nome("Café").valor(BigDecimal.valueOf(35)).descricao("Café").build();
-        reserva.setComplementos(List.of(comp1, comp2));
+        private Reserva reserva;
 
-        when(quartoService.buscarPorId(1L)).thenReturn(quartoPadrao());
-        when(complementoService.buscarPorId(10L)).thenReturn(comp1);
-        when(repository.save(any())).thenAnswer(inv -> {
-            ResumoReserva r = inv.getArgument(0);
-            r.setDataCriacao(java.time.LocalDateTime.now());
-            return r;
-        });
+        @BeforeEach
+        void setUp() {
+            Quarto quarto = mockFactory.quartoPadrao();
+            quarto.setValorDiaria(BigDecimal.valueOf(200));
+            reserva = Reserva.builder()
+                    .id(1L)
+                    .quarto(quarto)
+                    .cliente(mockFactory.clientePadrao())
+                    .checkIn(LocalDateTime.now().plusDays(5))
+                    .checkOut(LocalDateTime.now().plusDays(8))
+                    .complementos(new ArrayList<>())
+                    .build();
+        }
 
-        ResumoReserva resultado = service.criarERetornarNotaFiscalAPartirDaReserva(reserva);
+        @Nested
+        class Quando_criar_nota_fiscal {
 
-        assertThat(resultado).isNotNull();
-        // 1 item de complemento + 1 item de quarto = 2 items total, but café is counted twice
-        assertThat(resultado.getItens()).isNotEmpty();
-    }
+            @BeforeEach
+            void setUp() {
+                Quarto quarto = mockFactory.quartoPadrao();
+                quarto.setValorDiaria(BigDecimal.valueOf(200));
+                when(quartoService.buscarPorId(1L)).thenReturn(quarto);
+                when(repository.save(any())).thenAnswer(inv -> {
+                    ResumoReserva r = inv.getArgument(0);
+                    r.setDataCriacao(LocalDateTime.now());
+                    return r;
+                });
+            }
 
-    @Test
-    void criarERetornarNotaFiscal_comComplementosDiferentes_criaDoisItens() {
-        Reserva reserva = reservaValida();
+            @Test
+            void Entao_deve_calcular_valor_total_correto() {
+                ResumoReserva resultado = service.criarERetornarNotaFiscalAPartirDaReserva(reserva);
 
-        Complemento comp1 = Complemento.builder().id(10L).nome("Café").valor(BigDecimal.valueOf(35)).descricao("Café").build();
-        Complemento comp2 = Complemento.builder().id(20L).nome("Transfer").valor(BigDecimal.valueOf(80)).descricao("Transfer").build();
-        reserva.setComplementos(List.of(comp1, comp2));
-
-        when(quartoService.buscarPorId(1L)).thenReturn(quartoPadrao());
-        when(complementoService.buscarPorId(10L)).thenReturn(comp1);
-        when(complementoService.buscarPorId(20L)).thenReturn(comp2);
-        when(repository.save(any())).thenAnswer(inv -> {
-            ResumoReserva r = inv.getArgument(0);
-            r.setDataCriacao(java.time.LocalDateTime.now());
-            return r;
-        });
-
-        ResumoReserva resultado = service.criarERetornarNotaFiscalAPartirDaReserva(reserva);
-
-        // 2 complementos + 1 quarto = 3 itens
-        assertThat(resultado.getItens()).hasSize(3);
-    }
-
-    @Test
-    void criarNotaFiscalAssincrona_naoLancaExcecao() throws InterruptedException {
-        Reserva reserva = reservaValida();
-
-        when(quartoService.buscarPorId(1L)).thenReturn(quartoPadrao());
-        when(repository.save(any())).thenAnswer(inv -> {
-            ResumoReserva r = inv.getArgument(0);
-            r.setDataCriacao(java.time.LocalDateTime.now());
-            return r;
-        });
-
-        service.criarNotaFiscalAssincronaAPartirDaReserva(reserva);
-
-        // Give virtual thread time to complete
-        Thread.sleep(200);
-        verify(repository, atLeastOnce()).save(any());
-    }
-
-    @Test
-    void criarERetornarNotaFiscal_calculaValorTotalCorreto() {
-        Reserva reserva = reservaValida();
-        // 3 days at 200/day = 600
-        reserva.setCheckIn(LocalDateTime.now().plusDays(5));
-        reserva.setCheckOut(LocalDateTime.now().plusDays(8)); // 3 days
-
-        when(quartoService.buscarPorId(1L)).thenReturn(quartoPadrao());
-        when(repository.save(any())).thenAnswer(inv -> {
-            ResumoReserva r = inv.getArgument(0);
-            r.setDataCriacao(java.time.LocalDateTime.now());
-            return r;
-        });
-
-        ResumoReserva resultado = service.criarERetornarNotaFiscalAPartirDaReserva(reserva);
-
-        assertThat(resultado.getValorTotal()).isEqualByComparingTo(BigDecimal.valueOf(600));
+                assertThat(resultado.getValorTotal()).isEqualByComparingTo(BigDecimal.valueOf(600));
+            }
+        }
     }
 }

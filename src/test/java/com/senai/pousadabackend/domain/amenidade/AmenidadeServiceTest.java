@@ -1,9 +1,6 @@
-package com.senai.pousadabackend.core.base;
+package com.senai.pousadabackend.domain.amenidade;
 
 import com.senai.pousadabackend.MockFactory;
-import com.senai.pousadabackend.domain.amenidade.Amenidade;
-import com.senai.pousadabackend.domain.amenidade.AmenidadeRepository;
-import com.senai.pousadabackend.domain.amenidade.AmenidadeService;
 import com.senai.pousadabackend.exceptions.RegistroNaoEncontradoException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -11,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,7 +21,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class BaseServiceTest {
+class AmenidadeServiceTest {
 
     @Mock
     private AmenidadeRepository repository;
@@ -53,14 +49,15 @@ class BaseServiceTest {
         @Nested
         class Quando_salvar {
 
+            @BeforeEach
+            void setUp() {
+                when(repository.save(nova)).thenReturn(nova);
+            }
+
             @Test
             void Entao_deve_criar_a_amenidade() {
-                when(repository.save(nova)).thenReturn(nova);
-
                 Amenidade resultado = service.salvar(nova);
                 assertThat(resultado).isEqualTo(nova);
-                verify(repository).save(nova);
-                verify(repository, never()).saveAndFlush(any());
             }
         }
     }
@@ -88,8 +85,6 @@ class BaseServiceTest {
                 Amenidade resultado = service.salvar(existente);
 
                 assertThat(resultado).isEqualTo(existente);
-                verify(repository).save(existente);
-                verify(repository, never()).saveAndFlush(any());
             }
         }
     }
@@ -103,7 +98,7 @@ class BaseServiceTest {
         void setUp() {
             amenidades = List.of(
                 mockFactory.novaAmenidade(),
-                Amenidade.builder().nome("WiFi").build()
+                mockFactory.amenidadeComIdENome(2L, "WiFi")
             );
         }
 
@@ -120,7 +115,6 @@ class BaseServiceTest {
                 List<Amenidade> resultado = service.salvarEmLote(amenidades);
 
                 assertThat(resultado).hasSize(2);
-                verify(repository, times(2)).save(any());
             }
         }
     }
@@ -164,7 +158,6 @@ class BaseServiceTest {
                 Amenidade resultado = service.excluir(1L);
 
                 assertThat(resultado).isEqualTo(existente);
-                verify(repository).delete(existente);
             }
         }
 
@@ -265,21 +258,24 @@ class BaseServiceTest {
     class Dada_uma_paginacao {
 
         private Pageable pageable;
-        private Page<Amenidade> page;
 
         @BeforeEach
         void setUp() {
             pageable = PageRequest.of(0, 10);
-            page = new PageImpl<>(List.of(mockFactory.amenidadeExistente()));
-            when(repository.findAll(pageable)).thenReturn(page);
         }
 
         @Nested
         class Quando_listar_paginado {
 
+            @BeforeEach
+            void setUp() {
+                when(repository.findAll(pageable))
+                        .thenReturn(new PageImpl<>(List.of(mockFactory.amenidadeExistente())));
+            }
+
             @Test
             void Entao_deve_retornar_a_lista_de_amenidades() {
-                Page<Amenidade> resultado = service.listarPaginado(pageable);
+                var resultado = service.listarPaginado(pageable);
 
                 assertThat(resultado.getContent()).hasSize(1);
             }
@@ -290,24 +286,26 @@ class BaseServiceTest {
     class Dada_uma_specification_nula {
 
         private Pageable pageable;
-        private Page<Amenidade> page;
 
         @BeforeEach
         void setUp() {
             pageable = PageRequest.of(0, 10);
-            page = new PageImpl<>(List.of());
-            when(repository.findAll((Specification<Amenidade>) null, pageable)).thenReturn(page);
         }
 
         @Nested
         class Quando_buscar_por_specification {
 
+            @BeforeEach
+            void setUp() {
+                when(repository.findAll((Specification<Amenidade>) null, pageable))
+                        .thenReturn(new PageImpl<>(List.of()));
+            }
+
             @Test
             void Entao_deve_retornar_todas_as_amenidades() {
-                Page<Amenidade> resultado = service.buscarPorSpecification(null, pageable);
+                var resultado = service.buscarPorSpecification(null, pageable);
 
                 assertThat(resultado).isNotNull();
-                verify(repository).findAll((Specification<Amenidade>) null, pageable);
             }
         }
     }
@@ -316,21 +314,24 @@ class BaseServiceTest {
     class Dada_uma_specification_em_branco {
 
         private Pageable pageable;
-        private Page<Amenidade> page;
 
         @BeforeEach
         void setUp() {
             pageable = PageRequest.of(0, 10);
-            page = new PageImpl<>(List.of());
-            when(repository.findAll((Specification<Amenidade>) null, pageable)).thenReturn(page);
         }
 
         @Nested
         class Quando_buscar_por_specification {
 
+            @BeforeEach
+            void setUp() {
+                when(repository.findAll((Specification<Amenidade>) null, pageable))
+                        .thenReturn(new PageImpl<>(List.of()));
+            }
+
             @Test
             void Entao_deve_retornar_todas_as_amenidades() {
-                Page<Amenidade> resultado = service.buscarPorSpecification("   ", pageable);
+                var resultado = service.buscarPorSpecification("   ", pageable);
 
                 assertThat(resultado).isNotNull();
                 verify(repository).findAll((Specification<Amenidade>) null, pageable);

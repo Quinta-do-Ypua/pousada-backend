@@ -1,13 +1,14 @@
 package com.senai.pousadabackend.domain.reserva;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.senai.pousadabackend.MockFactory;
 import com.senai.pousadabackend.core.enums.StatusDaReserva;
 import com.senai.pousadabackend.domain.reserva.dto.ReservaDTO;
 import com.senai.pousadabackend.domain.reserva.dto.ReservaResumidaDto;
-import com.senai.pousadabackend.domain.reserva.service.ReservaService;
 import com.senai.pousadabackend.exceptions.CancelamentoDeReservaConcluidaException;
 import com.senai.pousadabackend.exceptions.RegistroNaoEncontradoException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -19,8 +20,6 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.*;
@@ -50,149 +49,269 @@ class ReservaControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private Reserva reserva;
-    private ReservaDTO reservaDTO;
-    private ReservaResumidaDto resumidaDto;
+    private MockFactory mockFactory;
 
     @BeforeEach
     void setUp() {
-        reserva = new Reserva();
-        reserva.setId(1L);
-        reserva.setStatusDaReserva(StatusDaReserva.ABERTA);
-        reserva.setCheckIn(LocalDateTime.now().plusDays(5));
-        reserva.setCheckOut(LocalDateTime.now().plusDays(8));
-        reserva.setValorDaReserva(BigDecimal.valueOf(300));
-        reserva.setDataCriacao(LocalDateTime.now());
-
-        reservaDTO = ReservaDTO.builder()
-                .id(1L)
-                .statusDaReserva(StatusDaReserva.ABERTA)
-                .checkIn(LocalDateTime.now().plusDays(5))
-                .checkOut(LocalDateTime.now().plusDays(8))
-                .valorDaReserva(BigDecimal.valueOf(300))
-                .build();
-
-        resumidaDto = ReservaResumidaDto.builder()
-                .quartoId(1L)
-                .clienteId(1L)
-                .checkIn(LocalDateTime.now().plusDays(5))
-                .checkOut(LocalDateTime.now().plusDays(8))
-                .build();
+        mockFactory = new MockFactory();
     }
 
-    @Test
-    void listar_semAutenticacao_retorna401() throws Exception {
-        mockMvc.perform(get("/reservas"))
-                .andExpect(status().isUnauthorized());
+    @Nested
+    class Dado_uma_requisicao_sem_autenticacao {
+
+        @Nested
+        class Quando_listar_reservas {
+
+            @Test
+            void Entao_deve_exigir_autenticacao() throws Exception {
+                mockMvc.perform(get("/reservas"))
+                        .andExpect(status().isUnauthorized());
+            }
+        }
     }
 
-    @Test
-    void listar_comRoleVisualizacao_retorna200() throws Exception {
-        when(reservaService.listarPaginado(any(Pageable.class)))
-                .thenReturn(new PageImpl<>(List.of(reserva)));
-        when(reservaMapper.toDTO(any(Reserva.class))).thenReturn(reservaDTO);
+    @Nested
+    class Dado_uma_requisicao_com_role_visualizacao {
 
-        mockMvc.perform(get("/reservas")
-                        .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_reserva-visualizacao"))))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content[0].id").value(1));
+        @Nested
+        class Quando_listar_reservas {
+
+            @BeforeEach
+            void setUp() {
+                when(reservaService.listarPaginado(any(Pageable.class)))
+                        .thenReturn(new PageImpl<>(List.of(mockFactory.reservaExistente())));
+                when(reservaMapper.toDTO(any(Reserva.class))).thenReturn(mockFactory.reservaDTO());
+            }
+
+            @Test
+            void Entao_deve_retornar_a_lista_de_reservas() throws Exception {
+                mockMvc.perform(get("/reservas")
+                                .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_reserva-visualizacao"))))
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.content[0].id").value(1));
+            }
+        }
     }
 
-    @Test
-    void buscarPorId_encontrado_retorna200() throws Exception {
-        when(reservaService.buscarPorId(1L)).thenReturn(reserva);
-        when(reservaMapper.toDTO(reserva)).thenReturn(reservaDTO);
+    @Nested
+    class Dado_uma_requisicao_com_role_admin {
 
-        mockMvc.perform(get("/reservas/1")
-                        .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_admin"))))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1));
+        @Nested
+        class Quando_listar_reservas {
+
+            @BeforeEach
+            void setUp() {
+                when(reservaService.listarPaginado(any(Pageable.class)))
+                        .thenReturn(new PageImpl<>(List.of(mockFactory.reservaExistente())));
+                when(reservaMapper.toDTO(any(Reserva.class))).thenReturn(mockFactory.reservaDTO());
+            }
+
+            @Test
+            void Entao_deve_retornar_a_lista_de_reservas() throws Exception {
+                mockMvc.perform(get("/reservas")
+                                .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_admin"))))
+                        .andExpect(status().isOk());
+            }
+        }
     }
 
-    @Test
-    void buscarPorId_naoEncontrado_retorna404() throws Exception {
-        when(reservaService.buscarPorId(99L))
-                .thenThrow(new RegistroNaoEncontradoException("Reserva não encontrada"));
+    @Nested
+    class Dado_um_id_existente {
 
-        mockMvc.perform(get("/reservas/99")
-                        .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_admin"))))
-                .andExpect(status().isNotFound());
+        private Long idExistente = 1L;
+
+        @Nested
+        class Quando_buscar_por_id {
+
+            @BeforeEach
+            void setUp() {
+                when(reservaService.buscarPorId(idExistente)).thenReturn(mockFactory.reservaExistente());
+                when(reservaMapper.toDTO(any(Reserva.class))).thenReturn(mockFactory.reservaDTO());
+            }
+
+            @Test
+            void Entao_deve_retornar_a_reserva() throws Exception {
+                mockMvc.perform(get("/reservas/" + idExistente)
+                                .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_admin"))))
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.id").value(1));
+            }
+        }
     }
 
-    @Test
-    void cadastrar_comRoleOperacao_retorna200() throws Exception {
-        when(reservaResumidaMapper.toReserva(any())).thenReturn(reserva);
-        when(reservaService.salvar(any(Reserva.class))).thenReturn(reserva);
-        when(reservaMapper.toDTO(reserva)).thenReturn(reservaDTO);
+    @Nested
+    class Dado_um_id_inexistente {
 
-        mockMvc.perform(post("/reservas")
-                        .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_reserva-operacao")))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(resumidaDto)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1));
+        private static final Long ID_INEXISTENTE = 99L;
+
+        @Nested
+        class Quando_buscar_por_id {
+
+            @BeforeEach
+            void setUp() {
+                when(reservaService.buscarPorId(ID_INEXISTENTE))
+                        .thenThrow(new RegistroNaoEncontradoException("Reserva não encontrada"));
+            }
+
+            @Test
+            void Entao_deve_informar_que_o_registro_nao_foi_encontrado() throws Exception {
+                mockMvc.perform(get("/reservas/" + ID_INEXISTENTE)
+                                .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_admin"))))
+                        .andExpect(status().isNotFound());
+            }
+        }
+
+        @Nested
+        class Quando_cancelar {
+
+            @BeforeEach
+            void setUp() {
+                when(reservaService.cancelarPorId(ID_INEXISTENTE))
+                        .thenThrow(new RegistroNaoEncontradoException("Reserva não encontrada"));
+            }
+
+            @Test
+            void Entao_deve_informar_que_o_registro_nao_foi_encontrado() throws Exception {
+                mockMvc.perform(patch("/reservas/" + ID_INEXISTENTE + "/cancelar")
+                                .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_admin"))))
+                        .andExpect(status().isNotFound());
+            }
+        }
     }
 
-    @Test
-    void cancelarReserva_sucesso_retorna200() throws Exception {
-        ReservaDTO canceladaDTO = ReservaDTO.builder()
-                .id(1L)
-                .statusDaReserva(StatusDaReserva.CANCELADA)
-                .build();
-        reserva.setStatusDaReserva(StatusDaReserva.CANCELADA);
+    @Nested
+    class Dado_uma_reserva_valida {
 
-        when(reservaService.cancelarPorId(1L)).thenReturn(reserva);
-        when(reservaMapper.toDTO(reserva)).thenReturn(canceladaDTO);
+        private ReservaResumidaDto resumidaDto;
 
-        mockMvc.perform(patch("/reservas/1/cancelar")
-                        .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_reserva-operacao"))))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.statusDaReserva").value("CANCELADA"));
+        @BeforeEach
+        void setUp() {
+            resumidaDto = mockFactory.reservaResumidaDto();
+        }
+
+        @Nested
+        class Quando_cadastrar_com_role_operacao {
+
+            @BeforeEach
+            void setUp() {
+                when(reservaResumidaMapper.toReserva(any())).thenReturn(mockFactory.novaReserva());
+                when(reservaService.salvar(any(Reserva.class))).thenReturn(mockFactory.reservaExistente());
+                when(reservaMapper.toDTO(any(Reserva.class))).thenReturn(mockFactory.reservaDTO());
+            }
+
+            @Test
+            void Entao_deve_criar_a_reserva() throws Exception {
+                mockMvc.perform(post("/reservas")
+                                .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_reserva-operacao")))
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(resumidaDto)))
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.id").value(1));
+            }
+        }
     }
 
-    @Test
-    void cancelarReserva_reservaConcluida_retorna400() throws Exception {
-        when(reservaService.cancelarPorId(1L))
-                .thenThrow(new CancelamentoDeReservaConcluidaException());
+    @Nested
+    class Dado_uma_reserva_existente {
 
-        mockMvc.perform(patch("/reservas/1/cancelar")
-                        .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_admin"))))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.mensagem").exists());
+        private ReservaResumidaDto resumidaDto;
+
+        @BeforeEach
+        void setUp() {
+            resumidaDto = mockFactory.reservaResumidaDto();
+        }
+
+        @Nested
+        class Quando_alterar_com_role_operacao {
+
+            @BeforeEach
+            void setUp() {
+                when(reservaResumidaMapper.toReserva(any())).thenReturn(mockFactory.reservaExistente());
+                when(reservaService.salvar(any(Reserva.class))).thenReturn(mockFactory.reservaExistente());
+                when(reservaMapper.toDTO(any(Reserva.class))).thenReturn(mockFactory.reservaDTO());
+            }
+
+            @Test
+            void Entao_deve_atualizar_a_reserva() throws Exception {
+                mockMvc.perform(put("/reservas")
+                                .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_reserva-operacao")))
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(resumidaDto)))
+                        .andExpect(status().isOk());
+            }
+        }
     }
 
-    @Test
-    void cancelarReserva_naoEncontrada_retorna404() throws Exception {
-        when(reservaService.cancelarPorId(99L))
-                .thenThrow(new RegistroNaoEncontradoException("Reserva não encontrada"));
+    @Nested
+    class Dado_uma_reserva_aberta {
 
-        mockMvc.perform(patch("/reservas/99/cancelar")
-                        .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_admin"))))
-                .andExpect(status().isNotFound());
+        private Long idExistente = 1L;
+
+        @Nested
+        class Quando_cancelar {
+
+            @BeforeEach
+            void setUp() {
+                Reserva cancelada = mockFactory.reservaExistente();
+                cancelada.setStatusDaReserva(StatusDaReserva.CANCELADA);
+                
+                when(reservaService.cancelarPorId(idExistente)).thenReturn(cancelada);
+                when(reservaMapper.toDTO(any(Reserva.class))).thenReturn(mockFactory.reservaDTO());
+            }
+
+            @Test
+            void Entao_deve_cancelar_a_reserva() throws Exception {
+                mockMvc.perform(patch("/reservas/" + idExistente + "/cancelar")
+                                .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_reserva-operacao"))))
+                        .andExpect(status().isOk());
+            }
+        }
     }
 
-    @Test
-    void alterar_comRoleOperacao_retorna200() throws Exception {
-        when(reservaResumidaMapper.toReserva(any())).thenReturn(reserva);
-        when(reservaService.salvar(any(Reserva.class))).thenReturn(reserva);
-        when(reservaMapper.toDTO(reserva)).thenReturn(reservaDTO);
+    @Nested
+    class Dado_uma_reserva_concluida {
 
-        mockMvc.perform(put("/reservas")
-                        .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_reserva-operacao")))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(resumidaDto)))
-                .andExpect(status().isOk());
+        private Long idExistente = 1L;
+
+        @Nested
+        class Quando_cancelar {
+
+            @BeforeEach
+            void setUp() {
+                when(reservaService.cancelarPorId(idExistente))
+                        .thenThrow(new CancelamentoDeReservaConcluidaException());
+            }
+
+            @Test
+            void Entao_deve_informar_que_nao_e_possivel_cancelar() throws Exception {
+                mockMvc.perform(patch("/reservas/" + idExistente + "/cancelar")
+                                .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_admin"))))
+                        .andExpect(status().isBadRequest())
+                        .andExpect(jsonPath("$.mensagem").exists());
+            }
+        }
     }
 
-    @Test
-    void buscarPorSearch_retornaResultadoFiltrado() throws Exception {
-        when(reservaService.buscarPorSpecification(anyString(), any(Pageable.class)))
-                .thenReturn(new PageImpl<>(List.of(reserva)));
-        when(reservaMapper.toDTO(any(Reserva.class))).thenReturn(reservaDTO);
+    @Nested
+    class Dado_uma_busca_com_filtro {
 
-        mockMvc.perform(get("/reservas")
-                        .param("search", "statusDaReserva==ABERTA")
-                        .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_admin"))))
-                .andExpect(status().isOk());
+        @Nested
+        class Quando_buscar_por_specification {
+
+            @BeforeEach
+            void setUp() {
+                when(reservaService.buscarPorSpecification(anyString(), any(Pageable.class)))
+                        .thenReturn(new PageImpl<>(List.of(mockFactory.reservaExistente())));
+                when(reservaMapper.toDTO(any(Reserva.class))).thenReturn(mockFactory.reservaDTO());
+            }
+
+            @Test
+            void Entao_deve_retornar_reservas_filtradas() throws Exception {
+                mockMvc.perform(get("/reservas")
+                                .param("search", "statusDaReserva==ABERTA")
+                                .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_admin"))))
+                        .andExpect(status().isOk());
+            }
+        }
     }
 }
