@@ -48,7 +48,7 @@ public class ImagemConfiguracaoService {
             }
         });
 
-        TemaSistema tema = temaSistemaService.buscarPorId(idConfiguracao);
+        TemaSistema tema = temaSistemaService.buscarOuCriarPadrao(idConfiguracao);
         List<ResultadoUploadDTO> resultados = new ArrayList<>();
 
         for (MultipartFile imagem : imagens) {
@@ -56,7 +56,7 @@ public class ImagemConfiguracaoService {
             repository.save(ImagemConfiguracao.builder()
                     .fileId(resultado.getObjectName())
                     .url(resultado.getUrl())
-                    .temaSistema(tema)
+                    .tema(tema)
                     .build());
             resultados.add(resultado);
         }

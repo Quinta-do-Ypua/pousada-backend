@@ -16,4 +16,4 @@ COPY --from=build /app/target/pousada-backend-0.0.1-SNAPSHOT.jar /app/pousada-ba
 
 WORKDIR /app
 
-CMD java $JAVA_OPTS -jar ifin.jar
+CMD java $JAVA_OPTS -jar pousada-backend.jar

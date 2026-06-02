@@ -28,6 +28,6 @@ public class ImagemConfiguracao {
     @JoinColumn(name = "tema_sistema_id")
     @ManyToOne(fetch = FetchType.LAZY)
     @EqualsAndHashCode.Exclude
-    private TemaSistema temaSistema;
+    private TemaSistema tema;
 
 }
