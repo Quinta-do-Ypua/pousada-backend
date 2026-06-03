@@ -7,6 +7,7 @@ import com.senai.pousadabackend.exceptions.BusinessException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class CupomService extends BaseService<Cupom, Long, CupomRepository> {
@@ -18,6 +19,10 @@ public class CupomService extends BaseService<Cupom, Long, CupomRepository> {
         super(repo);
         this.repository = repo;
         this.reservaRepository = reservaRepository;
+    }
+
+    public List<Cupom> listarDisponiveis() {
+        return repository.findDisponiveis(LocalDate.now());
     }
 
     public Cupom buscarCupomValido(String codigo) {

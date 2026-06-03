@@ -22,8 +22,6 @@ public interface ReservaRepository extends BaseRepository<Reserva, Long> {
     """)
     List<Reserva> findQuartosEntreCheckInECheckOut(LocalDateTime checkIn, LocalDateTime checkOut, Quarto quarto);
 
-    List<Reserva> findReservaByCliente(Cliente cliente);
-
     List<Reserva> findByQuarto(Quarto quarto);
 
     boolean existsByComplementos_Id(Long complementoId);

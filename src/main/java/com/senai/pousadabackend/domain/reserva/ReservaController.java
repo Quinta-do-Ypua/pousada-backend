@@ -53,4 +53,9 @@ public class ReservaController {
         return reservaMapper.toDTO(reservaService.salvar(reservaResumidaMapper.toReserva(dto)));
     }
 
+    @DeleteMapping("/{id}")
+    public ReservaDTO excluir(@PathVariable Long id) {
+        return reservaMapper.toDTO(reservaService.excluir(id));
+    }
+
 }
