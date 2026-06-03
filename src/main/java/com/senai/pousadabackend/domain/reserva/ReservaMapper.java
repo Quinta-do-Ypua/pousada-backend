@@ -4,6 +4,7 @@ import com.senai.pousadabackend.core.base.BaseMapper;
 import com.senai.pousadabackend.domain.reserva.dto.ReservaDTO;
 import com.senai.pousadabackend.domain.cliente.ClienteMapper;
 import com.senai.pousadabackend.domain.complemento.ComplementoMapper;
+import com.senai.pousadabackend.domain.cupom.CupomMapper;
 import com.senai.pousadabackend.domain.quarto.QuartoMapper;
 import org.springframework.stereotype.Component;
 
@@ -16,11 +17,14 @@ public class ReservaMapper implements BaseMapper<Reserva, ReservaDTO> {
     private final QuartoMapper quartoMapper;
     private final ComplementoMapper complementoMapper;
     private final ClienteMapper clienteMapper;
+    private final CupomMapper cupomMapper;
 
-    public ReservaMapper(QuartoMapper quartoMapper, ComplementoMapper complementoMapper, ClienteMapper clienteMapper) {
+    public ReservaMapper(QuartoMapper quartoMapper, ComplementoMapper complementoMapper,
+                         ClienteMapper clienteMapper, CupomMapper cupomMapper) {
         this.quartoMapper = quartoMapper;
         this.complementoMapper = complementoMapper;
         this.clienteMapper = clienteMapper;
+        this.cupomMapper = cupomMapper;
     }
 
     @Override
@@ -41,6 +45,8 @@ public class ReservaMapper implements BaseMapper<Reserva, ReservaDTO> {
                                 .map(complementoMapper::toDTO)
                                 .toList()
                 )
+                .cupom(reserva.getCupom() != null ? cupomMapper.toDTO(reserva.getCupom()) : null)
+                .descontoCupom(reserva.getDescontoCupom())
                 .build();
     }
 

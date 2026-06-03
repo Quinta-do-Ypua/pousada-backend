@@ -3,6 +3,7 @@ package com.senai.pousadabackend.domain.reserva.dto;
 import com.senai.pousadabackend.core.enums.StatusDaReserva;
 import com.senai.pousadabackend.domain.cliente.dto.ClienteDTO;
 import com.senai.pousadabackend.domain.complemento.dto.ComplementoDTO;
+import com.senai.pousadabackend.domain.cupom.dto.CupomDTO;
 import com.senai.pousadabackend.domain.quarto.dto.QuartoDTO;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
@@ -39,5 +40,9 @@ public class ReservaDTO {
     private ClienteDTO cliente;
 
     private List<ComplementoDTO> complementos;
+
+    private CupomDTO cupom;
+
+    private BigDecimal descontoCupom;
 
 }

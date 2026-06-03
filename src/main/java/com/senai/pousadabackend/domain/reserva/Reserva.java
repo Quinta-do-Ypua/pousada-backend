@@ -4,6 +4,7 @@ import com.senai.pousadabackend.core.entity.EntityAudit;
 import com.senai.pousadabackend.core.enums.StatusDaReserva;
 import com.senai.pousadabackend.domain.cliente.Cliente;
 import com.senai.pousadabackend.domain.complemento.Complemento;
+import com.senai.pousadabackend.domain.cupom.Cupom;
 import com.senai.pousadabackend.domain.quarto.Quarto;
 import jakarta.persistence.*;
 import lombok.*;
@@ -49,6 +50,13 @@ public class Reserva extends EntityAudit {
     @JoinColumn(name = "cliente_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Cliente cliente;
+
+    @JoinColumn(name = "cupom_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Cupom cupom;
+
+    @Column(name = "desconto_cupom")
+    private BigDecimal descontoCupom;
 
     @ManyToMany
     @JoinTable(name = "reserva_complemento",

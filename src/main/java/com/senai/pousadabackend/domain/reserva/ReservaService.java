@@ -3,6 +3,8 @@ package com.senai.pousadabackend.domain.reserva;
 import com.senai.pousadabackend.core.base.BaseService;
 import com.senai.pousadabackend.core.enums.StatusDaReserva;
 import com.senai.pousadabackend.domain.cliente.Cliente;
+import com.senai.pousadabackend.domain.cupom.Cupom;
+import com.senai.pousadabackend.domain.cupom.CupomService;
 import com.senai.pousadabackend.infraestructure.email.EmailService;
 import com.senai.pousadabackend.domain.parametro.ParametroReservaService;
 import com.senai.pousadabackend.domain.quarto.Quarto;
@@ -13,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -23,14 +26,17 @@ public class ReservaService extends BaseService<Reserva, Long, ReservaRepository
     private final ReservaRepository reservaRepository;
     private final ParametroReservaService parametroReservaService;
     private final EmailService emailService;
+    private final CupomService cupomService;
 
     public ReservaService(ReservaRepository repo,
                           ParametroReservaService parametroReservaService,
-                          EmailService emailService) {
+                          EmailService emailService,
+                          CupomService cupomService) {
         super(repo);
         this.reservaRepository = repo;
         this.parametroReservaService = parametroReservaService;
         this.emailService = emailService;
+        this.cupomService = cupomService;
     }
 
     @Override
@@ -38,6 +44,8 @@ public class ReservaService extends BaseService<Reserva, Long, ReservaRepository
         boolean isNova = reserva.isNovo();
         if (isNova) {
             inicializarReserva(reserva);
+        } else {
+            preservarCupomExistente(reserva);
         }
         Reserva salva = super.salvar(reserva);
         if (isNova) {
@@ -87,6 +95,25 @@ public class ReservaService extends BaseService<Reserva, Long, ReservaRepository
         validarPrazoMinimoReserva(reserva);
         validarDuracaoMinimaMaxima(reserva);
         validarTempoEntreReservas(reserva);
+        aplicarCupomSePresente(reserva);
+    }
+
+    private void preservarCupomExistente(Reserva reserva) {
+        Reserva existente = buscarPorId(reserva.getId());
+        reserva.setCupom(existente.getCupom());
+        reserva.setDescontoCupom(existente.getDescontoCupom());
+    }
+
+    private void aplicarCupomSePresente(Reserva reserva) {
+        if (reserva.getCupom() == null) return;
+        Cupom cupomValido = cupomService.buscarCupomValido(reserva.getCupom().getCodigo());
+        reserva.setCupom(cupomValido);
+        BigDecimal porcentagem = BigDecimal.valueOf(cupomValido.getPorcentagemDeDesconto());
+        BigDecimal desconto = reserva.getValorDaReserva()
+                .multiply(porcentagem)
+                .divide(new BigDecimal("100"), 2, RoundingMode.HALF_UP);
+        reserva.setDescontoCupom(desconto);
+        reserva.setValorDaReserva(reserva.getValorDaReserva().subtract(desconto));
     }
 
     private void validarCancelamento(Reserva reserva) {

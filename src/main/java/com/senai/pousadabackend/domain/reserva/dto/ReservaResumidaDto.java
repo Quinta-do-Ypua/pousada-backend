@@ -42,4 +42,6 @@ public class ReservaResumidaDto {
 
     private List<ComplementoDTO> complementos;
 
+    private String cupomCodigo;
+
 }

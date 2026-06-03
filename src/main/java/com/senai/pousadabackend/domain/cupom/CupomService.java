@@ -1,6 +1,8 @@
 package com.senai.pousadabackend.domain.cupom;
 
 import com.senai.pousadabackend.core.base.BaseService;
+import com.senai.pousadabackend.core.enums.StatusDaReserva;
+import com.senai.pousadabackend.domain.reserva.ReservaRepository;
 import com.senai.pousadabackend.exceptions.BusinessException;
 import org.springframework.stereotype.Service;
 
@@ -10,10 +12,28 @@ import java.time.LocalDate;
 public class CupomService extends BaseService<Cupom, Long, CupomRepository> {
 
     private final CupomRepository repository;
+    private final ReservaRepository reservaRepository;
 
-    public CupomService(CupomRepository repo) {
+    public CupomService(CupomRepository repo, ReservaRepository reservaRepository) {
         super(repo);
         this.repository = repo;
+        this.reservaRepository = reservaRepository;
+    }
+
+    public Cupom buscarCupomValido(String codigo) {
+        Cupom cupom = repository.findByCodigo(codigo);
+        if (cupom == null) {
+            throw new BusinessException("Cupom não encontrado.");
+        }
+        LocalDate hoje = LocalDate.now();
+        if (hoje.isBefore(cupom.getDataDeInicio()) || hoje.isAfter(cupom.getDataDeVencimento())) {
+            throw new BusinessException("Cupom fora do período de validade.");
+        }
+        long usos = reservaRepository.countByCupomAndStatusDaReservaNot(cupom, StatusDaReserva.CANCELADA);
+        if (usos >= cupom.getQuantidadeMaximaDeUso()) {
+            throw new BusinessException("Cupom esgotado.");
+        }
+        return cupom;
     }
 
     @Override

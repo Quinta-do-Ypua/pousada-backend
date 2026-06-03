@@ -1,7 +1,9 @@
 package com.senai.pousadabackend.domain.reserva;
 
 import com.senai.pousadabackend.core.base.BaseRepository;
+import com.senai.pousadabackend.core.enums.StatusDaReserva;
 import com.senai.pousadabackend.domain.cliente.Cliente;
+import com.senai.pousadabackend.domain.cupom.Cupom;
 import com.senai.pousadabackend.domain.quarto.Quarto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -45,5 +47,7 @@ public interface ReservaRepository extends BaseRepository<Reserva, Long> {
         AND r.statusDaReserva != 'CANCELADA'
     """)
     LocalDateTime findUltimoCheckOutPorCliente(Cliente cliente);
+
+    long countByCupomAndStatusDaReservaNot(Cupom cupom, StatusDaReserva status);
 
 }
