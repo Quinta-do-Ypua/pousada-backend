@@ -8,6 +8,7 @@ import com.senai.pousadabackend.domain.cupom.CupomRepository;
 import com.senai.pousadabackend.domain.quarto.QuartoService;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Component
@@ -39,7 +40,7 @@ public class ReservaResumidaMapper {
                 .quarto(quartoService.buscarPorId(reservaResumidaDto.getQuartoId()))
                 .complementos(
                         Optional.ofNullable(reservaResumidaDto.getComplementos())
-                                .map(lista -> lista.stream().map(complementoMapper::toEntity).toList())
+                                .map(lista -> new ArrayList<>(lista.stream().map(complementoMapper::toEntity).toList()))
                                 .orElse(null))
                 .statusDaReserva(reservaResumidaDto.getStatusDaReserva())
                 .cupom(resolverCupom(reservaResumidaDto.getCupomCodigo()))

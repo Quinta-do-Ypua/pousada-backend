@@ -36,9 +36,7 @@ public class BaseService<T extends EntityAudit, ID, R extends BaseRepository<T, 
     @Transactional
     public List<T> salvarEmLote(List<T> ts) {
         List<T> tsSaved = new ArrayList<>();
-        ts.forEach(t -> {
-            tsSaved.add(salvar(t));
-        });
+        ts.forEach(t -> tsSaved.add(salvar(t)));
         return tsSaved;
     }
 
@@ -50,6 +48,7 @@ public class BaseService<T extends EntityAudit, ID, R extends BaseRepository<T, 
     }
 
     @Override
+    @Transactional
     public T excluir(ID id) {
         T entidade = buscarPorId(id);
         repo.delete(entidade);

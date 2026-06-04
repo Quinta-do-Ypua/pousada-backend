@@ -4,6 +4,7 @@ import com.senai.pousadabackend.core.base.BaseService;
 import com.senai.pousadabackend.core.enums.StatusDaReserva;
 import com.senai.pousadabackend.domain.reserva.ReservaRepository;
 import com.senai.pousadabackend.exceptions.BusinessException;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -42,6 +43,7 @@ public class CupomService extends BaseService<Cupom, Long, CupomRepository> {
     }
 
     @Override
+    @Transactional
     public Cupom salvar(Cupom cupom) {
         this.validar(cupom);
         return super.salvar(cupom);

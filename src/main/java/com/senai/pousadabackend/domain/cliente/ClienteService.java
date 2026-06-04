@@ -2,6 +2,7 @@ package com.senai.pousadabackend.domain.cliente;
 
 import com.senai.pousadabackend.core.base.BaseService;
 import com.senai.pousadabackend.exceptions.RegistroDuplicadoException;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,6 +16,7 @@ public class ClienteService extends BaseService<Cliente, Long, ClienteRepository
     }
 
     @Override
+    @Transactional
     public Cliente salvar(Cliente cliente) {
         validarViolacaoDeUnique(cliente);
         return super.salvar(cliente);

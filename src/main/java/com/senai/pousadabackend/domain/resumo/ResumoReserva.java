@@ -38,6 +38,7 @@ public class ResumoReserva extends EntityAudit {
     private BigDecimal valorTotal;
 
     @OneToMany(mappedBy = "resumoReserva", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
     private List<ResumoReservaItem> itens;
 
 

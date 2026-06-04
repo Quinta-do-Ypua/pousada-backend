@@ -40,6 +40,7 @@ public class ReservaService extends BaseService<Reserva, Long, ReservaRepository
     }
 
     @Override
+    @Transactional
     public Reserva salvar(Reserva reserva) {
         boolean isNova = reserva.isNovo();
         if (isNova) {

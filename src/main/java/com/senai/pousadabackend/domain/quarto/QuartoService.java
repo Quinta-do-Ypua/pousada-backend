@@ -4,6 +4,7 @@ import com.senai.pousadabackend.core.base.BaseService;
 import com.senai.pousadabackend.domain.reserva.ReservaService;
 import com.senai.pousadabackend.exceptions.RegistroDuplicadoException;
 import com.senai.pousadabackend.exceptions.RegistrosVinculadosException;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,6 +21,7 @@ public class QuartoService extends BaseService<Quarto, Long, QuartoRepository> {
     }
 
     @Override
+    @Transactional
     public Quarto salvar(Quarto quarto) {
         if (quarto.isNovo()) {
             Quarto quartoEncontrado = quartoRepository.findByNome(quarto.getNome());
@@ -31,6 +33,7 @@ public class QuartoService extends BaseService<Quarto, Long, QuartoRepository> {
     }
 
     @Override
+    @Transactional
     public Quarto excluir(Long id) {
         Quarto quarto = buscarPorId(id);
         if (!reservaService.buscarPorQuarto(quarto).isEmpty())

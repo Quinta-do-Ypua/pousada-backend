@@ -24,6 +24,7 @@ public class ResumoReservaItem extends EntityAudit {
 
     @JoinColumn(name = "resumo_reserva_id")
     @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
     private ResumoReserva resumoReserva;
 
     @JoinColumn(name = "item_id")

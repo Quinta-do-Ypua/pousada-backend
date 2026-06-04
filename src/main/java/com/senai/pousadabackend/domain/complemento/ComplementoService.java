@@ -3,6 +3,7 @@ package com.senai.pousadabackend.domain.complemento;
 import com.senai.pousadabackend.core.base.BaseService;
 import com.senai.pousadabackend.domain.reserva.ReservaRepository;
 import com.senai.pousadabackend.exceptions.BusinessException;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,12 +19,14 @@ public class ComplementoService extends BaseService<Complemento, Long, Complemen
     }
 
     @Override
+    @Transactional
     public Complemento salvar(Complemento complemento) {
         this.validarNomesIguaisDo(complemento);
         return super.salvar(complemento);
     }
 
     @Override
+    @Transactional
     public Complemento excluir(Long id) {
         if (reservaRepository.existsByComplementos_Id(id)) {
             throw new BusinessException("Este complemento está vinculado a uma reserva e não pode ser excluído.");

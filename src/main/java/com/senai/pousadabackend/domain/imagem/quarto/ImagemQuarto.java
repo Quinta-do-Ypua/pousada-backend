@@ -28,5 +28,6 @@ public class ImagemQuarto {
     @JoinColumn(name = "quarto_id")
     @ManyToOne(fetch = FetchType.LAZY)
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Quarto quarto;
 }
