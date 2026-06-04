@@ -150,9 +150,15 @@ public class GlobalExceptionHandler {
 
         String mensagemOriginal = ex.getMostSpecificCause().getMessage();
 
-        String mensagem = extrairDetalheDoErro(mensagemOriginal);
+        // Tenta analisar a mensagem completa primeiro
+        String mensagem = analisarViolacaoDeConstraint(mensagemOriginal);
+
         if (mensagem == null) {
-            mensagem = analisarViolacaoDeConstraint(mensagemOriginal);
+            // Extrai o detalhe (PT ou EN) e tenta analisar
+            String detalhe = extrairDetalheDoErro(mensagemOriginal);
+            if (detalhe != null) {
+                mensagem = analisarViolacaoDeConstraint(detalhe);
+            }
         }
 
         if (mensagem == null) {
@@ -191,7 +197,8 @@ public class GlobalExceptionHandler {
 
     private String extrairDetalheDoErro(String mensagem) {
         if (mensagem == null) return null;
-        var matcher = Pattern.compile("Detalhe:\\s*(.*)").matcher(mensagem);
+        // Aceita tanto "Detalhe:" (PT) quanto "Detail:" (EN)
+        var matcher = Pattern.compile("(?:Detalhe|Detail):\\s*(.*)").matcher(mensagem);
         if (matcher.find()) {
             return matcher.group(1).trim();
         }
@@ -201,34 +208,46 @@ public class GlobalExceptionHandler {
     private String analisarViolacaoDeConstraint(String mensagem) {
         if (mensagem == null) return null;
 
+        // Not-null (PT e EN)
         if (mensagem.contains("violates not-null constraint") || mensagem.contains("violação de não-nulo")) {
             var matcher = Pattern.compile("coluna \"(\\w+)\"").matcher(mensagem);
             if (matcher.find()) {
-                String campo = matcher.group(1);
-                return "O campo '" + campo + "' é obrigatório.";
+                return "O campo '" + matcher.group(1) + "' é obrigatório.";
             }
             return "Existe um campo obrigatório que não foi informado.";
         }
 
-        if (mensagem.contains("violates unique constraint") || mensagem.contains("violação de unicidade")) {
-            var matcher = Pattern.compile("chave \\((.+)\\)=\\((.+)\\)").matcher(mensagem);
-            if (matcher.find()) {
-                String campo = matcher.group(1);
-                String valor = matcher.group(2);
-                return "O valor '" + valor + "' já existe para o campo '" + campo + "'.";
+        // Unicidade (PT e EN) — inclui padrão inglês "Key (campo)=(valor) already exists"
+        if (mensagem.contains("violates unique constraint") || mensagem.contains("violação de unicidade")
+                || mensagem.contains("already exists") || mensagem.contains("já existe")) {
+            // Padrão português: "chave (campo)=(valor)"
+            var matcherPt = Pattern.compile("chave \\((.+?)\\)=\\((.+?)\\)").matcher(mensagem);
+            if (matcherPt.find()) {
+                return "O valor '" + matcherPt.group(2) + "' já existe para o campo '" + matcherPt.group(1) + "'.";
+            }
+            // Padrão inglês: "Key (campo)=(valor) already exists"
+            var matcherEn = Pattern.compile("Key \\((.+?)\\)=\\((.+?)\\) already exists").matcher(mensagem);
+            if (matcherEn.find()) {
+                return "O valor '" + matcherEn.group(2) + "' já existe para o campo '" + matcherEn.group(1) + "'.";
             }
             return "Já existe um registro com esse valor.";
         }
 
+        // Chave estrangeira ausente (PT)
         var matcherChaveAusente = Pattern.compile(
                 "Chave \\((\\w+)_id\\)=\\((\\d+)\\) não está presente na tabela \"(\\w+)\""
         ).matcher(mensagem);
         if (matcherChaveAusente.find()) {
-            String campo = matcherChaveAusente.group(1); // endereco
-            String id = matcherChaveAusente.group(2);    // 4
-            return "Não existe " + campo + " com id " + id + ".";
+            return "Não existe " + matcherChaveAusente.group(1) + " com id " + matcherChaveAusente.group(2) + ".";
         }
 
+        // Chave estrangeira ausente (EN): "Key (campo_id)=(valor) is not present in table"
+        var matcherFkEn = Pattern.compile("Key \\((\\w+)_id\\)=\\((\\d+)\\) is not present in table").matcher(mensagem);
+        if (matcherFkEn.find()) {
+            return "Não existe " + matcherFkEn.group(1) + " com id " + matcherFkEn.group(2) + ".";
+        }
+
+        // Violação de chave estrangeira ao excluir (PT e EN)
         if (mensagem.contains("violates foreign key constraint") || mensagem.contains("violação de chave estrangeira")) {
             return "Não é possível excluir ou alterar este registro, pois existem registros vinculados.";
         }
