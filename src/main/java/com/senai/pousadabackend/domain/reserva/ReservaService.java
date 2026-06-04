@@ -125,8 +125,10 @@ public class ReservaService extends BaseService<Reserva, Long, ReservaRepository
 
         Integer prazoMaximoDias = parametroReservaService.getPrazoMaximoCancelamentoDias();
         LocalDateTime limiteCancelamento = reserva.getCheckIn().minusDays(prazoMaximoDias);
+        boolean prazoExcedido = LocalDateTime.now().isAfter(limiteCancelamento);
 
-        if (LocalDateTime.now().isAfter(limiteCancelamento)) {
+        // Só bloqueia se prazo excedido E multa inativa (sem multa = sem cancelamento tardio)
+        if (prazoExcedido && !parametroReservaService.isMultaCancelamentoAtiva()) {
             throw new PrazoCancelamentoExcedidoException(prazoMaximoDias);
         }
     }
@@ -174,13 +176,19 @@ public class ReservaService extends BaseService<Reserva, Long, ReservaRepository
     }
 
     private void validarPendenciasDoCliente(Cliente cliente) {
-        if (!parametroReservaService.isBloquearReservaComPendencia()) {
-            return;
-        }
-        Integer maxReservas = parametroReservaService.getMaxReservasAtivasPorUsuario();
         Long reservasAtivas = reservaRepository.countReservasAtivasPorCliente(cliente);
-        if (reservasAtivas >= maxReservas) {
-            throw new LimiteReservasExcedidoException(maxReservas);
+        Integer maxReservas = parametroReservaService.getMaxReservasAtivasPorUsuario();
+
+        if (parametroReservaService.isBloquearReservaComPendencia()) {
+            if (reservasAtivas >= 1) {
+                throw new BusinessException(
+                    "Não é possível criar uma nova reserva para este cliente, pois ele já possui uma reserva ativa."
+                );
+            }
+        } else {
+            if (reservasAtivas >= maxReservas) {
+                throw new LimiteReservasExcedidoException(maxReservas);
+            }
         }
     }
 

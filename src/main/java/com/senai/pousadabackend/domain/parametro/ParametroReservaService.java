@@ -2,6 +2,7 @@ package com.senai.pousadabackend.domain.parametro;
 
 import com.senai.pousadabackend.core.base.BaseService;
 import jakarta.annotation.PostConstruct;
+import jakarta.transaction.Transactional;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,14 @@ public class ParametroReservaService extends BaseService<ParametroReserva, Long,
     public ParametroReservaService(ParametroReservaRepository repo) {
         super(repo);
         this.repository = repo;
+    }
+
+    @Override
+    @Transactional
+    public ParametroReserva atualizar(ParametroReserva parametroReserva) {
+        ParametroReserva salvo = super.atualizar(parametroReserva);
+        recarregarCache();
+        return salvo;
     }
 
     @PostConstruct
