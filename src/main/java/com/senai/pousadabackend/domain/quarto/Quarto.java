@@ -49,7 +49,7 @@ public class Quarto extends EntityAudit {
     )
     private List<Amenidade> amenidades;
 
-    @OneToMany(mappedBy = "quarto", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "quarto", cascade = CascadeType.REMOVE)
     @ToString.Exclude
     private List<ImagemQuarto> imagens;
 
