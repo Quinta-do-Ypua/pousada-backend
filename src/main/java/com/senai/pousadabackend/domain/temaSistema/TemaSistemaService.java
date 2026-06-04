@@ -17,7 +17,7 @@ public class TemaSistemaService extends BaseService<TemaSistema, Long, TemaSiste
     @Transactional
     public TemaSistema buscarOuCriarPadrao(Long id) {
         return repo.findById(id)
-                .orElseGet(() -> repo.save(TemaSistema.builder().build()));
+                .orElseGet(() -> repo.save(TemaSistema.builder().id(id).build()));
     }
 
 }

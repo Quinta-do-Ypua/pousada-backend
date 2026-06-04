@@ -49,6 +49,12 @@ public class ImagemConfiguracaoService {
         });
 
         TemaSistema tema = temaSistemaService.buscarOuCriarPadrao(idConfiguracao);
+
+        repository.listarPor(idConfiguracao).forEach(existente -> {
+            minioDeleteClient.deletarImagem(existente.getFileId());
+            repository.deleteById(existente.getId());
+        });
+
         List<ResultadoUploadDTO> resultados = new ArrayList<>();
 
         for (MultipartFile imagem : imagens) {

@@ -49,6 +49,13 @@ public class CupomService extends BaseService<Cupom, Long, CupomRepository> {
         return super.salvar(cupom);
     }
 
+    @Override
+    @Transactional
+    public Cupom alterar(Cupom cupom) {
+        this.validar(cupom);
+        return super.alterar(cupom);
+    }
+
     private void validar(Cupom cupom) {
         validarPeriodoDo(cupom);
         validarCodigosIguaisDo(cupom);
@@ -74,7 +81,7 @@ public class CupomService extends BaseService<Cupom, Long, CupomRepository> {
         } else {
             LocalDate dataAtual = LocalDate.now();
             if (dataAtual.isAfter(cupom.getDataDeInicio())) {
-                throw new BusinessException("A data inicial deve ser posterior a data atual");
+                throw new BusinessException("A data inicial deve ser posterior ou igual a data atual");
             }
         }
     }

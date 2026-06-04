@@ -1,7 +1,10 @@
 package com.senai.pousadabackend.domain.temaSistema;
 
 import com.senai.pousadabackend.core.entity.EntityAudit;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.*;
 
 @Entity
@@ -14,7 +17,8 @@ import lombok.*;
 public class TemaSistema extends EntityAudit {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    @EqualsAndHashCode.Include
     private Long id;
 
     private String nomeEstabelecimento;

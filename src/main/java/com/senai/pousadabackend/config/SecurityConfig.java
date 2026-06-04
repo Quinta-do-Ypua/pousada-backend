@@ -58,8 +58,8 @@ public class SecurityConfig {
 
                         .requestMatchers("/configuracoes/**").hasAnyAuthority("ROLE_configuracao-operacao", "ROLE_admin")
 
-                        .requestMatchers("/tema/**").hasAnyAuthority("ROLE_configuracao-operacao", "ROLE_admin")
-                        .requestMatchers(HttpMethod.GET, "/tema/**").permitAll()
+                        .requestMatchers("/api/tema/**").hasAnyAuthority("ROLE_configuracao-operacao", "ROLE_admin")
+                        .requestMatchers(HttpMethod.GET, "/api/tema/**").permitAll()
 
                         .requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
                         .anyRequest().authenticated()
