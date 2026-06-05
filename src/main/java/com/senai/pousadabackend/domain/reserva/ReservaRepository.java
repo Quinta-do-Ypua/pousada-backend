@@ -17,10 +17,12 @@ public interface ReservaRepository extends BaseRepository<Reserva, Long> {
     @Query("""
         SELECT r FROM Reserva r
         WHERE r.quarto = :quarto
-        AND r.checkIn >= :checkIn
-        AND r.checkOut <= :checkOut
+        AND r.statusDaReserva != 'CANCELADA'
+        AND r.checkIn < :checkOut
+        AND r.checkOut > :checkIn
+        AND (:reservaId IS NULL OR r.id != :reservaId)
     """)
-    List<Reserva> findQuartosEntreCheckInECheckOut(LocalDateTime checkIn, LocalDateTime checkOut, Quarto quarto);
+    List<Reserva> findConflitosDeQuarto(LocalDateTime checkIn, LocalDateTime checkOut, Quarto quarto, Long reservaId);
 
     List<Reserva> findByQuarto(Quarto quarto);
 

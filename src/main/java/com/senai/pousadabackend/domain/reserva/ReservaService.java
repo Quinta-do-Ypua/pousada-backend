@@ -3,6 +3,7 @@ package com.senai.pousadabackend.domain.reserva;
 import com.senai.pousadabackend.core.base.BaseService;
 import com.senai.pousadabackend.core.enums.StatusDaReserva;
 import com.senai.pousadabackend.domain.cliente.Cliente;
+import java.time.format.DateTimeFormatter;
 import com.senai.pousadabackend.domain.cupom.Cupom;
 import com.senai.pousadabackend.domain.cupom.CupomService;
 import com.senai.pousadabackend.infraestructure.email.EmailService;
@@ -10,6 +11,7 @@ import com.senai.pousadabackend.domain.parametro.ParametroReservaService;
 import com.senai.pousadabackend.domain.quarto.Quarto;
 import com.senai.pousadabackend.exceptions.*;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+@Slf4j
 @Service
 public class ReservaService extends BaseService<Reserva, Long, ReservaRepository> {
 
@@ -49,14 +52,18 @@ public class ReservaService extends BaseService<Reserva, Long, ReservaRepository
             preservarCupomExistente(reserva);
         }
         Reserva salva = super.salvar(reserva);
-        if (isNova) {
-            emailService.enviar("Nova reserva!",
-                    "Sua reserva do quarto " + salva.getQuarto() + " de número " + salva.getId() + " foi efetuada com sucesso!",
-                    salva.getCliente());
-        } else {
-            emailService.enviar("Alteração na sua reserva do quarto: " + salva.getQuarto(),
-                    "Sua reserva foi alterada: " + salva,
-                    salva.getCliente());
+        try {
+            if (isNova) {
+                emailService.enviar("Nova reserva!",
+                        "Sua reserva do quarto " + salva.getQuarto().getNome() + " (nº " + salva.getId() + ") foi efetuada com sucesso!",
+                        salva.getCliente());
+            } else {
+                emailService.enviar("Alteração na sua reserva",
+                        "Sua reserva nº " + salva.getId() + " do quarto " + salva.getQuarto().getNome() + " foi alterada com sucesso.",
+                        salva.getCliente());
+            }
+        } catch (Exception e) {
+            log.warn("Falha ao enviar e-mail de notificação para reserva {}: {}", salva.getId(), e.getMessage());
         }
         return salva;
     }
@@ -65,12 +72,23 @@ public class ReservaService extends BaseService<Reserva, Long, ReservaRepository
     public Reserva cancelarPorId(Long id) {
         Reserva reserva = buscarPorId(id);
         validarCancelamento(reserva);
-        calcularMultaCancelamento(reserva);
+        BigDecimal multa = calcularMultaCancelamento(reserva);
+        if (multa.compareTo(BigDecimal.ZERO) > 0) {
+            reserva.setValorDaReserva(reserva.getValorDaReserva().add(multa));
+        }
         reserva.setStatusDaReserva(StatusDaReserva.CANCELADA);
         Reserva cancelada = super.salvar(reserva);
-        emailService.enviar("Cancelamento de reserva",
-                "Sua reserva do quarto " + cancelada.getQuarto() + " de número " + cancelada.getId() + " foi cancelada.",
-                cancelada.getCliente());
+        try {
+            String mensagemEmail = "Sua reserva nº " + cancelada.getId() +
+                    " do quarto " + cancelada.getQuarto().getNome() + " foi cancelada.";
+            if (multa.compareTo(BigDecimal.ZERO) > 0) {
+                mensagemEmail += " Multa por cancelamento tardio: R$ " +
+                        multa.setScale(2, java.math.RoundingMode.HALF_UP).toPlainString() + ".";
+            }
+            emailService.enviar("Cancelamento de reserva", mensagemEmail, cancelada.getCliente());
+        } catch (Exception e) {
+            log.warn("Falha ao enviar e-mail de cancelamento para reserva {}: {}", cancelada.getId(), e.getMessage());
+        }
         return cancelada;
     }
 
@@ -100,6 +118,8 @@ public class ReservaService extends BaseService<Reserva, Long, ReservaRepository
     }
 
     private void preservarCupomExistente(Reserva reserva) {
+        validarDisponibilidadeDoQuarto(reserva);
+        validarDatas(reserva);
         Reserva existente = buscarPorId(reserva.getId());
         reserva.setCupom(existente.getCupom());
         reserva.setDescontoCupom(existente.getDescontoCupom());
@@ -168,10 +188,22 @@ public class ReservaService extends BaseService<Reserva, Long, ReservaRepository
     }
 
     private void validarDisponibilidadeDoQuarto(Reserva reserva) {
-        boolean quartoOcupado = !reservaRepository.findQuartosEntreCheckInECheckOut(
-                reserva.getCheckIn(), reserva.getCheckOut(), reserva.getQuarto()).isEmpty();
-        if (quartoOcupado) {
-            throw new ExisteReservaParaEssaDataException();
+        List<Reserva> conflitos = reservaRepository.findConflitosDeQuarto(
+                reserva.getCheckIn(),
+                reserva.getCheckOut(),
+                reserva.getQuarto(),
+                reserva.getId()
+        );
+
+        if (!conflitos.isEmpty()) {
+            Reserva conflito = conflitos.get(0);
+            DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            String de = conflito.getCheckIn().toLocalDate().format(fmt);
+            String ate = conflito.getCheckOut().toLocalDate().format(fmt);
+            throw new ExisteReservaParaEssaDataException(
+                "O quarto '" + reserva.getQuarto().getNome() + "' já está reservado de " + de + " até " + ate +
+                ". Escolha um período sem conflito."
+            );
         }
     }
 
