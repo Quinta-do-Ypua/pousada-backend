@@ -11,6 +11,7 @@ import org.springframework.data.jpa.domain.Specification;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static io.github.perplexhub.rsql.RSQLJPASupport.toSpecification;
 
@@ -98,6 +99,27 @@ public class BaseService<T extends EntityAudit, ID, R extends BaseRepository<T, 
                 : toSpecification(parametro);
 
         return repo.findAll(spec, pageable);
+    }
+
+    @Override
+    public Page<T> buscarComFiltros(Map<String, String> textFiltros, String rsqlSearch, Pageable pageable) {
+        Specification<T> spec = null;
+
+        for (Map.Entry<String, String> entry : textFiltros.entrySet()) {
+            final String campo = entry.getKey();
+            final String valor = "%" + entry.getValue().toLowerCase()
+                    .replace("%", "\\%").replace("_", "\\_") + "%";
+            Specification<T> parte = (root, query, cb) ->
+                    cb.like(cb.lower(root.get(campo)), valor, '\\');
+            spec = (spec == null) ? parte : spec.and(parte);
+        }
+
+        if (rsqlSearch != null && !rsqlSearch.isBlank()) {
+            Specification<T> rsqlSpec = toSpecification(rsqlSearch);
+            spec = (spec == null) ? rsqlSpec : spec.and(rsqlSpec);
+        }
+
+        return (spec != null) ? repo.findAll(spec, pageable) : repo.findAll(pageable);
     }
 
     @Override

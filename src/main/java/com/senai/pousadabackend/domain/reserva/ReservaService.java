@@ -4,6 +4,7 @@ import com.senai.pousadabackend.core.base.BaseService;
 import com.senai.pousadabackend.core.enums.StatusDaReserva;
 import com.senai.pousadabackend.domain.cliente.Cliente;
 import java.time.format.DateTimeFormatter;
+import com.senai.pousadabackend.domain.complemento.ComplementoService;
 import com.senai.pousadabackend.domain.cupom.Cupom;
 import com.senai.pousadabackend.domain.cupom.CupomService;
 import com.senai.pousadabackend.infraestructure.email.EmailService;
@@ -21,6 +22,7 @@ import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -30,16 +32,19 @@ public class ReservaService extends BaseService<Reserva, Long, ReservaRepository
     private final ParametroReservaService parametroReservaService;
     private final EmailService emailService;
     private final CupomService cupomService;
+    private final ComplementoService complementoService;
 
     public ReservaService(ReservaRepository repo,
                           ParametroReservaService parametroReservaService,
                           EmailService emailService,
-                          CupomService cupomService) {
+                          CupomService cupomService,
+                          ComplementoService complementoService) {
         super(repo);
         this.reservaRepository = repo;
         this.parametroReservaService = parametroReservaService;
         this.emailService = emailService;
         this.cupomService = cupomService;
+        this.complementoService = complementoService;
     }
 
     @Override
@@ -103,7 +108,22 @@ public class ReservaService extends BaseService<Reserva, Long, ReservaRepository
 
     private void inicializarReserva(Reserva reserva) {
         definirStatusPadrao(reserva);
+        reserva.setValorDaReserva(calcularValorBase(reserva));
         validarNovaReserva(reserva);
+    }
+
+    private BigDecimal calcularValorBase(Reserva reserva) {
+        long dias = ChronoUnit.DAYS.between(
+                reserva.getCheckIn().toLocalDate(),
+                reserva.getCheckOut().toLocalDate());
+        BigDecimal valorDiarias = reserva.getQuarto().getValorDiaria()
+                .multiply(BigDecimal.valueOf(dias));
+        BigDecimal valorComplementos = Optional.ofNullable(reserva.getComplementos())
+                .orElse(List.of())
+                .stream()
+                .map(c -> complementoService.buscarPorId(c.getId()).getValor())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        return valorDiarias.add(valorComplementos);
     }
 
     private void validarNovaReserva(Reserva reserva) {
@@ -121,8 +141,20 @@ public class ReservaService extends BaseService<Reserva, Long, ReservaRepository
         validarDisponibilidadeDoQuarto(reserva);
         validarDatas(reserva);
         Reserva existente = buscarPorId(reserva.getId());
-        reserva.setCupom(existente.getCupom());
-        reserva.setDescontoCupom(existente.getDescontoCupom());
+        BigDecimal valorBase = calcularValorBase(reserva);
+        Cupom cupom = existente.getCupom();
+        reserva.setCupom(cupom);
+        if (cupom != null) {
+            BigDecimal porcentagem = BigDecimal.valueOf(cupom.getPorcentagemDeDesconto());
+            BigDecimal desconto = valorBase
+                    .multiply(porcentagem)
+                    .divide(new BigDecimal("100"), 2, RoundingMode.HALF_UP);
+            reserva.setDescontoCupom(desconto);
+            reserva.setValorDaReserva(valorBase.subtract(desconto));
+        } else {
+            reserva.setDescontoCupom(BigDecimal.ZERO);
+            reserva.setValorDaReserva(valorBase);
+        }
     }
 
     private void aplicarCupomSePresente(Reserva reserva) {

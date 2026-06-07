@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Map;
 
 public interface BaseServiceInterface<T, ID> {
 
@@ -18,6 +19,8 @@ public interface BaseServiceInterface<T, ID> {
     void throwIfNotExists(ID id);
 
     Page<T> buscarPorSpecification(String parametro, Pageable pageable);
+
+    Page<T> buscarComFiltros(Map<String, String> textFiltros, String rsqlSearch, Pageable pageable);
 
     Page<T> listarPaginado(Pageable pageable);
 

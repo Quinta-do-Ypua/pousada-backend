@@ -9,6 +9,10 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 public class BaseController<T, DTO, ID, Mapper extends BaseMapper<T, DTO>> {
 
     private final Mapper mapper;
@@ -49,10 +53,26 @@ public class BaseController<T, DTO, ID, Mapper extends BaseMapper<T, DTO>> {
         return mapper.toDTO(baseServiceInterface.atualizar(mapper.toEntity(dto)));
     }
 
-    @GetMapping(params = "search")
+    @GetMapping(params = {"search", "!q"})
     @Transactional
     public Page<DTO> buscarPorSpecification(@RequestParam(name = "search") String search, Pageable pageable) {
         return baseServiceInterface.buscarPorSpecification(search, pageable).map(mapper::toDTO);
+    }
+
+    @GetMapping(params = "q")
+    @Transactional
+    public Page<DTO> buscarPorTexto(
+            @RequestParam List<String> q,
+            @RequestParam(name = "search", required = false) String search,
+            Pageable pageable) {
+        Map<String, String> textFiltros = new LinkedHashMap<>();
+        for (String item : q) {
+            int idx = item.indexOf(':');
+            if (idx > 0) {
+                textFiltros.put(item.substring(0, idx), item.substring(idx + 1));
+            }
+        }
+        return baseServiceInterface.buscarComFiltros(textFiltros, search, pageable).map(mapper::toDTO);
     }
 
     @GetMapping
