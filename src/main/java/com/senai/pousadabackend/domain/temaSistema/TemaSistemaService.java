@@ -20,4 +20,9 @@ public class TemaSistemaService extends BaseService<TemaSistema, Long, TemaSiste
                 .orElseGet(() -> repo.save(TemaSistema.builder().id(id).build()));
     }
 
+    @Transactional
+    public void excluirSeExistir(Long id) {
+        repo.findById(id).ifPresent(repo::delete);
+    }
+
 }
