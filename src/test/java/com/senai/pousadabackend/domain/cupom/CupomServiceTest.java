@@ -3,6 +3,7 @@ package com.senai.pousadabackend.domain.cupom;
 import com.senai.pousadabackend.MockFactory;
 import com.senai.pousadabackend.exceptions.BusinessException;
 import com.senai.pousadabackend.exceptions.RegistroNaoEncontradoException;
+import com.senai.pousadabackend.domain.reserva.ReservaRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -28,13 +29,16 @@ class CupomServiceTest {
     @Mock
     private CupomRepository repository;
 
+    @Mock
+    private ReservaRepository reservaRepository;
+
     private CupomService service;
 
     private MockFactory mockFactory;
 
     @BeforeEach
     void setUp() {
-        service = new CupomService(repository);
+        service = new CupomService(repository, reservaRepository);
         mockFactory = new MockFactory();
     }
 
@@ -111,7 +115,7 @@ class CupomServiceTest {
             void Entao_deve_informar_que_a_data_inicial_deve_ser_posterior_a_data_atual() {
                 assertThatThrownBy(() -> service.salvar(novo))
                         .isInstanceOf(BusinessException.class)
-                        .hasMessageContaining("data inicial deve ser posterior a data atual");
+                        .hasMessageContaining("A data inicial deve ser posterior ou igual a data atual");
             }
         }
     }

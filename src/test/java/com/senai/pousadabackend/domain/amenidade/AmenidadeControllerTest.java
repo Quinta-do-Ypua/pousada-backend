@@ -141,6 +141,7 @@ class AmenidadeControllerTest {
 
             @BeforeEach
             void setUp() {
+                when(amenidadeService.buscarPorId(idExistente)).thenReturn(mockFactory.amenidadeExistente());
                 when(amenidadeService.excluir(idExistente)).thenReturn(mockFactory.amenidadeExistente());
                 when(mapper.toDTO(any(Amenidade.class))).thenReturn(mockFactory.amenidadeDto());
             }

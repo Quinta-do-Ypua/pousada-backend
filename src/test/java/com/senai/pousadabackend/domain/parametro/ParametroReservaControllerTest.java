@@ -142,6 +142,7 @@ class ParametroReservaControllerTest {
 
             @BeforeEach
             void setUp() {
+                when(baseServiceInterface.buscarPorId(idExistente)).thenReturn(mockFactory.parametroReservaExistente());
                 when(baseServiceInterface.excluir(idExistente)).thenReturn(mockFactory.parametroReservaExistente());
                 when(mapper.toDTO(any(ParametroReserva.class))).thenReturn(mockFactory.parametroReservaDTO());
             }

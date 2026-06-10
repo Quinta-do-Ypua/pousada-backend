@@ -142,6 +142,7 @@ class MeioPagamentoControllerTest {
 
             @BeforeEach
             void setUp() {
+                when(baseServiceInterface.buscarPorId(idExistente)).thenReturn(mockFactory.meioPagamentoExistente());
                 when(baseServiceInterface.excluir(idExistente)).thenReturn(mockFactory.meioPagamentoExistente());
                 when(mapper.toDTO(any(MeioPagamento.class))).thenReturn(mockFactory.meioPagamentoDTO());
             }

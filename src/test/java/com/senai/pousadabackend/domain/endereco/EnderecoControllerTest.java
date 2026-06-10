@@ -142,6 +142,7 @@ class EnderecoControllerTest {
 
             @BeforeEach
             void setUp() {
+                when(enderecoService.buscarPorId(idExistente)).thenReturn(mockFactory.enderecoExistente());
                 when(enderecoService.excluir(idExistente)).thenReturn(mockFactory.enderecoExistente());
                 when(mapper.toDTO(any(Endereco.class))).thenReturn(mockFactory.enderecoDTO());
             }

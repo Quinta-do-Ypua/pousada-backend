@@ -142,6 +142,7 @@ class CupomControllerTest {
 
             @BeforeEach
             void setUp() {
+                when(cupomService.buscarPorId(idExistente)).thenReturn(mockFactory.cupomExistente());
                 when(cupomService.excluir(idExistente)).thenReturn(mockFactory.cupomExistente());
                 when(mapper.toDTO(any(Cupom.class))).thenReturn(mockFactory.cupomDTO());
             }

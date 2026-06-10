@@ -142,6 +142,7 @@ class ClienteControllerTest {
 
             @BeforeEach
             void setUp() {
+                when(clienteService.buscarPorId(idExistente)).thenReturn(mockFactory.clientePadrao());
                 when(clienteService.excluir(idExistente)).thenReturn(mockFactory.clientePadrao());
                 when(mapper.toDTO(any(Cliente.class))).thenReturn(mockFactory.clienteDTO());
             }

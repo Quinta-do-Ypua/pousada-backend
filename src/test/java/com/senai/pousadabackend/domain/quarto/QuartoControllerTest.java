@@ -142,6 +142,7 @@ class QuartoControllerTest {
 
             @BeforeEach
             void setUp() {
+                when(quartoService.buscarPorId(idExistente)).thenReturn(mockFactory.quartoExistente());
                 when(quartoService.excluir(idExistente)).thenReturn(mockFactory.quartoExistente());
                 when(mapper.toDTO(any(Quarto.class))).thenReturn(mockFactory.quartoDTO());
             }

@@ -206,6 +206,12 @@ public class GlobalExceptionHandler {
     private String analisarViolacaoDeConstraint(String mensagem) {
         if (mensagem == null) return null;
 
+        // Padrão: "O campo 'email' já existe"
+        var matcherCampoJaExiste = Pattern.compile("O campo '(\\w+)' já existe").matcher(mensagem);
+        if (matcherCampoJaExiste.find()) {
+            return "O campo '" + matcherCampoJaExiste.group(1) + "' já existe.";
+        }
+
         // Not-null (PT e EN)
         if (mensagem.contains("violates not-null constraint") || mensagem.contains("violação de não-nulo")) {
             var matcher = Pattern.compile("coluna \"(\\w+)\"").matcher(mensagem);

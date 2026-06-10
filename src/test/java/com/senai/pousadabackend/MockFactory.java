@@ -332,6 +332,7 @@ public class MockFactory {
         Quarto q = new Quarto();
         q.setId(1L);
         q.setNome("Suite 01");
+        q.setValorDiaria(new BigDecimal("200.00"));
         return q;
     }
 

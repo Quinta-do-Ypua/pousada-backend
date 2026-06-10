@@ -2,6 +2,8 @@ package com.senai.pousadabackend.domain.reserva;
 
 import com.senai.pousadabackend.MockFactory;
 import com.senai.pousadabackend.core.enums.StatusDaReserva;
+import com.senai.pousadabackend.domain.complemento.ComplementoService;
+import com.senai.pousadabackend.domain.cupom.CupomService;
 import com.senai.pousadabackend.domain.parametro.ParametroReservaService;
 import com.senai.pousadabackend.exceptions.*;
 import com.senai.pousadabackend.infraestructure.email.EmailService;
@@ -39,13 +41,19 @@ class ReservaServiceTest {
     @Mock
     private EmailService emailService;
 
+    @Mock
+    private CupomService cupomService;
+
+    @Mock
+    private ComplementoService complementoService;
+
     private ReservaService service;
 
     private MockFactory mockFactory;
 
     @BeforeEach
     void setUp() {
-        service = new ReservaService(reservaRepository, parametroReservaService, emailService);
+        service = new ReservaService(reservaRepository, parametroReservaService, emailService, cupomService, complementoService);
         mockFactory = new MockFactory();
         configurarParametrosPadrao();
     }
@@ -77,7 +85,7 @@ class ReservaServiceTest {
             @BeforeEach
             void setUp() {
                 reserva.setStatusDaReserva(null);
-                when(reservaRepository.findQuartosEntreCheckInECheckOut(any(), any(), any())).thenReturn(List.of());
+                when(reservaRepository.findConflitosDeQuarto(any(), any(), any(), any())).thenReturn(List.of());
                 when(reservaRepository.countReservasAtivasPorCliente(any())).thenReturn(0L);
                 when(reservaRepository.findUltimoCheckOutPorCliente(any())).thenReturn(null);
                 when(reservaRepository.save(any())).thenAnswer(inv -> {
@@ -102,7 +110,7 @@ class ReservaServiceTest {
             @BeforeEach
             void setUp() {
                 reserva.setStatusDaReserva(StatusDaReserva.ABERTA);
-                when(reservaRepository.findQuartosEntreCheckInECheckOut(any(), any(), any())).thenReturn(List.of());
+                when(reservaRepository.findConflitosDeQuarto(any(), any(), any(), any())).thenReturn(List.of());
                 when(reservaRepository.countReservasAtivasPorCliente(any())).thenReturn(0L);
                 when(reservaRepository.findUltimoCheckOutPorCliente(any())).thenReturn(null);
                 when(reservaRepository.save(any())).thenAnswer(inv -> {
@@ -302,8 +310,8 @@ class ReservaServiceTest {
 
             @BeforeEach
             void setUp() {
-                when(reservaRepository.findQuartosEntreCheckInECheckOut(any(), any(), any()))
-                        .thenReturn(List.of(new Reserva()));
+                when(reservaRepository.findConflitosDeQuarto(any(), any(), any(), any()))
+                        .thenReturn(List.of(mockFactory.reservaExistente()));
             }
 
             @Test
@@ -330,9 +338,10 @@ class ReservaServiceTest {
 
             @BeforeEach
             void setUp() {
-                when(reservaRepository.findQuartosEntreCheckInECheckOut(any(), any(), any())).thenReturn(List.of());
+                when(reservaRepository.findConflitosDeQuarto(any(), any(), any(), any())).thenReturn(List.of());
                 when(parametroReservaService.getMaxReservasAtivasPorUsuario()).thenReturn(2);
                 when(reservaRepository.countReservasAtivasPorCliente(any())).thenReturn(2L);
+                when(parametroReservaService.isBloquearReservaComPendencia()).thenReturn(false);
             }
 
             @Test
@@ -360,7 +369,7 @@ class ReservaServiceTest {
             @BeforeEach
             void setUp() {
                 when(parametroReservaService.isBloquearReservaComPendencia()).thenReturn(false);
-                when(reservaRepository.findQuartosEntreCheckInECheckOut(any(), any(), any())).thenReturn(List.of());
+                when(reservaRepository.findConflitosDeQuarto(any(), any(), any(), any())).thenReturn(List.of());
                 when(reservaRepository.findUltimoCheckOutPorCliente(any())).thenReturn(null);
                 when(reservaRepository.save(any())).thenAnswer(inv -> {
                     Reserva r = inv.getArgument(0);
@@ -395,7 +404,7 @@ class ReservaServiceTest {
 
             @BeforeEach
             void setUp() {
-                when(reservaRepository.findQuartosEntreCheckInECheckOut(any(), any(), any())).thenReturn(List.of());
+                when(reservaRepository.findConflitosDeQuarto(any(), any(), any(), any())).thenReturn(List.of());
                 when(reservaRepository.countReservasAtivasPorCliente(any())).thenReturn(0L);
                 when(parametroReservaService.getTempoMinimoParaReservaDias()).thenReturn(2);
             }
@@ -426,7 +435,7 @@ class ReservaServiceTest {
 
             @BeforeEach
             void setUp() {
-                when(reservaRepository.findQuartosEntreCheckInECheckOut(any(), any(), any())).thenReturn(List.of());
+                when(reservaRepository.findConflitosDeQuarto(any(), any(), any(), any())).thenReturn(List.of());
                 when(reservaRepository.countReservasAtivasPorCliente(any())).thenReturn(0L);
                 when(parametroReservaService.getDuracaoMinimaDias()).thenReturn(3);
                 when(parametroReservaService.getDuracaoMaximaDias()).thenReturn(30);
@@ -458,7 +467,7 @@ class ReservaServiceTest {
 
             @BeforeEach
             void setUp() {
-                when(reservaRepository.findQuartosEntreCheckInECheckOut(any(), any(), any())).thenReturn(List.of());
+                when(reservaRepository.findConflitosDeQuarto(any(), any(), any(), any())).thenReturn(List.of());
                 when(reservaRepository.countReservasAtivasPorCliente(any())).thenReturn(0L);
                 when(parametroReservaService.getDuracaoMinimaDias()).thenReturn(1);
                 when(parametroReservaService.getDuracaoMaximaDias()).thenReturn(30);
@@ -490,7 +499,7 @@ class ReservaServiceTest {
 
             @BeforeEach
             void setUp() {
-                when(reservaRepository.findQuartosEntreCheckInECheckOut(any(), any(), any())).thenReturn(List.of());
+                when(reservaRepository.findConflitosDeQuarto(any(), any(), any(), any())).thenReturn(List.of());
                 when(reservaRepository.countReservasAtivasPorCliente(any())).thenReturn(0L);
                 when(parametroReservaService.getTempoEntreReservasDias()).thenReturn(10);
                 when(reservaRepository.findUltimoCheckOutPorCliente(any()))
@@ -521,7 +530,7 @@ class ReservaServiceTest {
 
             @BeforeEach
             void setUp() {
-                when(reservaRepository.findQuartosEntreCheckInECheckOut(any(), any(), any())).thenReturn(List.of());
+                when(reservaRepository.findConflitosDeQuarto(any(), any(), any(), any())).thenReturn(List.of());
                 when(reservaRepository.countReservasAtivasPorCliente(any())).thenReturn(0L);
                 when(parametroReservaService.getTempoEntreReservasDias()).thenReturn(10);
                 when(reservaRepository.findUltimoCheckOutPorCliente(any())).thenReturn(null);
@@ -557,7 +566,7 @@ class ReservaServiceTest {
             @BeforeEach
             void setUp() {
                 when(parametroReservaService.getTempoEntreReservasDias()).thenReturn(0);
-                when(reservaRepository.findQuartosEntreCheckInECheckOut(any(), any(), any())).thenReturn(List.of());
+                when(reservaRepository.findConflitosDeQuarto(any(), any(), any(), any())).thenReturn(List.of());
                 when(reservaRepository.countReservasAtivasPorCliente(any())).thenReturn(0L);
                 when(reservaRepository.save(any())).thenAnswer(inv -> {
                     Reserva r = inv.getArgument(0);

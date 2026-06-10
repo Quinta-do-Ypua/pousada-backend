@@ -142,6 +142,7 @@ class ComplementoControllerTest {
 
             @BeforeEach
             void setUp() {
+                when(complementoService.buscarPorId(idExistente)).thenReturn(mockFactory.complementoExistente());
                 when(complementoService.excluir(idExistente)).thenReturn(mockFactory.complementoExistente());
                 when(mapper.toDTO(any(Complemento.class))).thenReturn(mockFactory.complementoDTO());
             }
