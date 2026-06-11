@@ -273,28 +273,6 @@ class ReservaServiceTest {
     }
 
     @Nested
-    class Dado_uma_reserva_com_status_fechado {
-
-        private Reserva reserva;
-
-        @BeforeEach
-        void setUp() {
-            reserva = mockFactory.novaReserva();
-            reserva.setStatusDaReserva(StatusDaReserva.FECHADA);
-        }
-
-        @Nested
-        class Quando_salvar {
-
-            @Test
-            void Entao_deve_informar_que_nao_e_possivel_criar_reserva_fechada() {
-                assertThatThrownBy(() -> service.salvar(reserva))
-                        .isInstanceOf(CancelamentoDeReservaConcluidaException.class);
-            }
-        }
-    }
-
-    @Nested
     class Dado_uma_reserva_com_quarto_ocupado {
 
         private Reserva reserva;
@@ -641,33 +619,6 @@ class ReservaServiceTest {
         void setUp() {
             reserva = mockFactory.reservaExistente();
             reserva.setStatusDaReserva(StatusDaReserva.CONCLUIDA);
-        }
-
-        @Nested
-        class Quando_cancelar {
-
-            @BeforeEach
-            void setUp() {
-                when(reservaRepository.findById(1L)).thenReturn(Optional.of(reserva));
-            }
-
-            @Test
-            void Entao_deve_informar_que_nao_e_possivel_cancelar() {
-                assertThatThrownBy(() -> service.cancelarPorId(1L))
-                        .isInstanceOf(CancelamentoDeReservaConcluidaException.class);
-            }
-        }
-    }
-
-    @Nested
-    class Dado_uma_reserva_fechada {
-
-        private Reserva reserva;
-
-        @BeforeEach
-        void setUp() {
-            reserva = mockFactory.reservaExistente();
-            reserva.setStatusDaReserva(StatusDaReserva.FECHADA);
         }
 
         @Nested

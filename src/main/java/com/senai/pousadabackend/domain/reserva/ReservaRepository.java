@@ -66,6 +66,13 @@ public interface ReservaRepository extends BaseRepository<Reserva, Long> {
 
     @Query("""
         SELECT r FROM Reserva r
+        WHERE r.statusDaReserva = 'ABERTA'
+        AND r.checkOut <= :agora
+    """)
+    List<Reserva> findReservasParaConcluir(@Param("agora") LocalDateTime agora);
+
+    @Query("""
+        SELECT r FROM Reserva r
         WHERE r.checkIn >= :de AND r.checkIn <= :ate
         AND (:quartoId IS NULL OR r.quarto.id = :quartoId)
         AND (:clienteId IS NULL OR r.cliente.id = :clienteId)

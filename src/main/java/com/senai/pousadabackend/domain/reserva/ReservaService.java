@@ -170,8 +170,7 @@ public class ReservaService extends BaseService<Reserva, Long, ReservaRepository
     }
 
     private void validarCancelamento(Reserva reserva) {
-        if (reserva.getStatusDaReserva() == StatusDaReserva.CONCLUIDA
-                || reserva.getStatusDaReserva() == StatusDaReserva.FECHADA) {
+        if (reserva.getStatusDaReserva() == StatusDaReserva.CONCLUIDA) {
             throw new CancelamentoDeReservaConcluidaException();
         }
 
@@ -213,9 +212,8 @@ public class ReservaService extends BaseService<Reserva, Long, ReservaRepository
     }
 
     private void validarStatusInicial(Reserva reserva) {
-        if (reserva.getStatusDaReserva() == StatusDaReserva.CANCELADA
-                || reserva.getStatusDaReserva() == StatusDaReserva.FECHADA) {
-            throw new CancelamentoDeReservaConcluidaException("Não é possível criar uma reserva cancelada ou fechada.");
+        if (reserva.getStatusDaReserva() == StatusDaReserva.CANCELADA) {
+            throw new CancelamentoDeReservaConcluidaException("Não é possível criar uma reserva cancelada.");
         }
     }
 
