@@ -1,7 +1,7 @@
 services:
   postgres:
-    container_name: QuintaIpuan
-    image: postgres:latest
+    container_name: pousada-db-v2
+    image: postgres:16
     environment:
       POSTGRES_DB: pousada
       POSTGRES_USER: admin
@@ -13,31 +13,36 @@ services:
       - "5432:5432"
     restart: unless-stopped
     networks:
-      - keycloak-net
+      - pousada-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d pousada"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   keycloak-db:
+    container_name: pousada-k-db-v2
     image: postgres:11.4
-    command:
-      [
-        "postgres",
-        "-c", "listen_addresses=*",
-        "-c", "log_statement=all",
-        "-c", "log_destination=stderr"
-      ]
     environment:
       POSTGRES_DB: keycloak
       POSTGRES_USER: keycloak
       POSTGRES_PASSWORD: keycloak
-    ports:
-      - "14092:5432"
     volumes:
       - keycloak-db:/var/lib/postgresql/data
       - ./keycloak_dump.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "14092:5432"
     networks:
-      - keycloak-net
+      - pousada-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U keycloak -d keycloak"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   keycloak:
-    image: quay.io/keycloak/keycloak:26.1.0
+    container_name: pousada-k-v2
+    image: muriloitaliano/pousada-keycloak:latest
     environment:
       KC_DB: postgres
       KC_DB_URL_HOST: keycloak-db
@@ -45,28 +50,52 @@ services:
       KC_DB_USERNAME: keycloak
       KC_DB_PASSWORD: keycloak
       KC_DB_URL_PORT: 5432
-
       KC_BOOTSTRAP_ADMIN_USERNAME: keycloak
       KC_BOOTSTRAP_ADMIN_PASSWORD: keycloak
-
     command: start-dev
     ports:
       - "14082:8080"
     depends_on:
-      - keycloak-db
+      keycloak-db:
+        condition: service_healthy
     restart: unless-stopped
     networks:
-      - keycloak-net
-    volumes:
-      - ./volumes/keycloak/app/themes:/opt/keycloak/themes
-      - ./volumes/keycloak/app/data:/opt/keycloak/data
-      - ./realm-keycloak.json:/opt/keycloak/data/import/realm.json
+      - pousada-net
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'cat < /dev/null > /dev/tcp/localhost/8080' 2>/dev/null || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
+
+  app:
+    container_name: pousada-app-v2
+    image: muriloitaliano/pousada-app:latest
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/pousada
+      DB_USER: admin
+      DB_PASSWORD: admin
+      KEYCLOAK_AUTH_SERVER: http://keycloak:8080/realms/quinta-ypua
+      KEYCLOAK_ADMIN_SERVER: http://keycloak:8080/admin/realms/quinta-ypua
+      KEYCLOAK_JWK_URI: http://keycloak:8080/realms/quinta-ypua/protocol/openid-connect/certs
+      KEYCLOAK_ISSUER_URI: http://localhost:14082/realms/quinta-ypua
+      KEYCLOAK_CLIENT_ID: quinta-ypua
+      KEYCLOAK_CLIENT_SECRET: Tseej5rltf97wJfbrp8WKnnbEU6VjtxI
+    ports:
+      - "8081:8081"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      keycloak:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - pousada-net
 
 volumes:
   postgres-data:
   keycloak-db:
 
 networks:
-  keycloak-net:
+  pousada-net:
     driver: bridge
-  keycloak-db:

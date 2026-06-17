@@ -1,0 +1,10 @@
+.git/
+.idea/
+*.iml
+volumes/keycloak/app/data/
+src/
+pom.xml
+mvnw
+mvnw.cmd
+geraExemplos.ps1
+SONARQUBE_SETUP.md

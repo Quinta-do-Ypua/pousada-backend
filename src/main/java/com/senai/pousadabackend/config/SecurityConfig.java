@@ -12,6 +12,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtValidators;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
@@ -32,6 +35,12 @@ public class SecurityConfig {
 
     @Value("${cors.allowed-origins:http://localhost:5173,http://localhost:4200}")
     private String allowedOrigins;
+
+    @Value("${keycloak.jwk-uri}")
+    private String jwkUri;
+
+    @Value("${keycloak.issuer-uri}")
+    private String issuerUri;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -128,6 +137,13 @@ public class SecurityConfig {
                 }
             }
         }
+    }
+
+    @Bean
+    public JwtDecoder jwtDecoder() {
+        NimbusJwtDecoder decoder = NimbusJwtDecoder.withJwkSetUri(jwkUri).build();
+        decoder.setJwtValidator(JwtValidators.createDefaultWithIssuer(issuerUri));
+        return decoder;
     }
 
     @Bean

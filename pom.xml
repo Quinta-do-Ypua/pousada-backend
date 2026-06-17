@@ -37,8 +37,7 @@
         <sonar.projectKey>PousadaBackend</sonar.projectKey>
         <sonar.organization>default-organization</sonar.organization>
         <sonar.host.url>http://localhost:9000</sonar.host.url>
-        <sonar.login>admin</sonar.login>
-        <sonar.password>admin</sonar.password>
+        <sonar.token>${env.SONAR_TOKEN}</sonar.token>
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
         <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
     </properties>
