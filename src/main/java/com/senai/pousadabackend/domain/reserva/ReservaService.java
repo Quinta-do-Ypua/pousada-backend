@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -256,7 +257,7 @@ public class ReservaService extends BaseService<Reserva, Long, ReservaRepository
 
     private void validarPrazoMinimoReserva(Reserva reserva) {
         Integer minDias = parametroReservaService.getTempoMinimoParaReservaDias();
-        LocalDateTime dataMinima = LocalDateTime.now().plusDays(minDias);
+        LocalDateTime dataMinima = LocalDate.now().plusDays(minDias).atStartOfDay();
         if (reserva.getCheckIn().isBefore(dataMinima)) {
             throw new PrazoMinimoNaoRespeitadoException(minDias);
         }
