@@ -32,7 +32,7 @@ public class ParametroReservaService extends BaseService<ParametroReserva, Long,
     @Scheduled(fixedDelay = 60000)
     public void recarregarCache() {
         this.cache = repository.findById(1L)
-                .orElse(ParametroReserva.comDefaults());
+                .orElseGet(() -> repository.save(ParametroReserva.comDefaults()));
     }
 
     public ParametroReserva getParametros() {
